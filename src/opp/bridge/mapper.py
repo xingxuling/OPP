@@ -30,3 +30,53 @@ def capability_envelope(report: ScanReport, f: PrimitiveFinding, issuer: str, ev
 def handshake_offer(report: ScanReport, issuer: str, capability_ids: Iterable[str], native_ids: Iterable[str], *, issued_at=DEFAULT_ISSUED_AT):
     hid=f"handshake-{_slug_hash(report.source_id,report.profile)}"
     return _env("opp.chp.v0.1","protocol",hid,issuer,{"phase":"offer","identity":{"id":f"bridge:{report.source_id}","civilizationType":"service","displayName":f"OPP bridge for {report.source_id}"},"supportedProtocols":["opp.chp.v0.1","opp.rcp.v0.1","opp.rap.v0.1","opp.rep.v0.1"],"capabilities":sorted(set(capability_ids)),"authorityScopes":[],"evidencePolicy":{"minimumConfidence":0.0,"acceptDerivedEvidence":True,"requiredProtocols":["opp.rep.v0.1"]},"extensions":{"profile":report.profile,"nativeProtocolCandidates":sorted(set(native_ids)),"boundary":"Generated bridge offer; no source-system authority is inherited / 生成的桥握手，不继承源系统权限。"}},issued_at=issued_at)
+
+def semantic_evidence_envelope(report: ScanReport, interface, issuer: str, *, issued_at=DEFAULT_ISSUED_AT):
+    """Evidence for a statically inferred interface signature（静态推断接口签名的证据）。"""
+    sid=f"source-{_slug_hash(report.source_id,interface.source_path,interface.source_digest)}"
+    bid=f"semantic-evidence-{_slug_hash(interface.interface_id,interface.source_digest)}"
+    return _env("opp.rep.v0.1","evidence",bid,issuer,{
+        "bundleId":bid,
+        "claims":[{"claimId":f"claim-{interface.interface_id}","statement":f"Static semantic extractor inferred interface {interface.operation} with {len(interface.inputs)} input port(s) and {len(interface.outputs)} output port(s) from {interface.source_path}","status":"partially-supported","sourceRefs":[sid]}],
+        "sources":[{"sourceId":sid,"sourceType":"file","locator":interface.source_path,"digest":interface.source_digest}],
+        "method":f"static-{interface.extractor}",
+        "confidence":round(interface.confidence,4),
+        "independence":"derived",
+        "negativeEvidence":[],
+        "reproduction":{"available":True,"instructions":["Run opp semantic verify against the same source snapshot / 对同一源码快照运行 opp semantic verify"],"environment":"static parser; discovered code is not executed"},
+        "boundary":"This evidence supports only the inferred signature/shape. It does not prove runtime behavior, business semantics, side-effect completeness, or authority / 此证据只支持推断出的签名和形状，不证明运行行为、业务语义、副作用完备性或权限。",
+        "authority":"none"
+    },issued_at=issued_at)
+
+
+def semantic_capability_envelope(interface, issuer: str, evidence_id: str, *, issued_at=DEFAULT_ISSUED_AT):
+    """Project candidate capability from verified static semantics（从静态语义验证投影项目候选能力）。"""
+    cid=f"native.candidate.{_slug_hash(interface.interface_id,interface.operation)}"
+    eid=f"semantic-capability-{_slug_hash(interface.interface_id,cid)}"
+    input_props={p.name:p.shape for p in interface.inputs}
+    required=[p.name for p in interface.inputs if p.required]
+    for p in interface.inputs:
+        if not p.required and p.default is not None:
+            input_props[p.name]={**p.shape,"default":p.default}
+    input_schema={"type":"object","properties":input_props,"required":required,"additionalProperties":False} if interface.inputs else {"type":"object","properties":{},"required":[],"additionalProperties":False}
+    output_schema=interface.outputs[0].shape if len(interface.outputs)==1 else {"type":"array","prefixItems":[p.shape for p in interface.outputs]} if interface.outputs else {"type":"null"}
+    return _env("opp.rcp.v0.1","capability",eid,issuer,{
+        "capabilityId":cid,
+        "name":f"Candidate native interface: {interface.name}",
+        "domain":"bridge.semantic-inference",
+        "operation":interface.operation,
+        "inputModalities":sorted(set(p.modality for p in interface.inputs)) or ["none"],
+        "outputModalities":sorted(set(p.modality for p in interface.outputs)) or ["none"],
+        "inputSchema":input_schema,
+        "outputSchema":output_schema,
+        "determinism":"unknown",
+        "statefulness":"unknown",
+        "streaming":False,
+        "authorityRequired":list(interface.authority_required),
+        "sideEffects":list(interface.side_effects),
+        "reversibility":"unknown" if interface.side_effects else "reversible",
+        "availability":"candidate-only",
+        "rights":{"sourceAuthorityInherited":False,"canonicalPromotionPerformed":False,"runtimeSupport":interface.runtime_support},
+        "evidence":[evidence_id],
+        "claimBoundary":"Static semantic candidate only. Presence of a callable/schema declaration does not establish runtime availability or interoperability / 仅静态语义候选；存在可调用项或模式声明不证明运行可用性或互操作性。"
+    },issued_at=issued_at)

@@ -1,0 +1,121 @@
+artifact opp_semantic_bridge_v02 kind=project {
+goal "Upgrade OPP Bridge Compiler from lexical discovery into bounded semantic verification and automatic bridge synthesis across unfamiliar software projects, preserving candidate-only authority and never executing scanned source during discovery."
+success "infer callable/interface input-output semantics with explicit confidence and evidence"
+success "compare producer outputs to consumer inputs and classify compatibility"
+success "synthesize deterministic safe bridge plans for structurally convertible mismatches"
+success "refuse unsafe, ambiguous, authority-escalating, or executable-code synthesis without proof"
+success "emit machine-readable verification and bridge-plan artifacts with tests"
+constraint "No source execution during scan or semantic verification"
+constraint "No canonical or authority promotion"
+constraint "Semantic inference must expose confidence and evidence"
+constraint "Auto synthesis defaults to declarative transformation plans; generated executable code is out of scope unless separately verified"
+invariant "Unknown semantics remain unknown rather than guessed"
+invariant "Type compatibility and semantic compatibility are distinct"
+invariant "A bridge may reduce representation mismatch but may not invent unavailable information or authority"
+owner "OPP"
+
+unit semantic_ir output=mixed {
+ title "Semantic Interface IR"
+ goal "Define callable, port, data-shape, effects, authority, confidence and provenance representation for verified interface semantics"
+ accept "non_empty,contract_preserved"
+ need "architecture,code"
+}
+unit semantic_extractors output=mixed {
+ title "Static semantic extractors"
+ goal "Extract Python function signatures and JS/TS function signatures plus JSON-schema shapes without execution"
+ depends "semantic_ir"
+ accept "non_empty,contract_preserved"
+ need "code,analysis"
+}
+unit verifier output=mixed {
+ title "Semantic Bridge Verifier"
+ goal "Convert lexical findings and static signatures into bounded semantic claims and verification reports"
+ depends "semantic_ir,semantic_extractors"
+ accept "non_empty,contract_preserved"
+ need "analysis,code"
+}
+unit compatibility output=mixed {
+ title "Compatibility engine"
+ goal "Compare producer output and consumer input shapes, modalities, effects, authority and confidence; classify exact, structural, lossy, incompatible or unknown"
+ depends "verifier"
+ accept "non_empty,contract_preserved"
+ need "reasoning,code"
+}
+unit transform_ir output=mixed {
+ title "Declarative transform IR"
+ goal "Define auditable operations such as rename, select, inject-default, cast-safe, wrap, unwrap and object-map with preconditions"
+ depends "semantic_ir"
+ accept "non_empty,contract_preserved"
+ need "architecture,code"
+}
+unit synthesizer output=mixed {
+ title "Automatic bridge synthesizer"
+ goal "Generate deterministic declarative transform plans for safe structural mismatches and refuse information/authority invention"
+ depends "compatibility,transform_ir"
+ accept "non_empty,contract_preserved"
+ need "reasoning,code"
+}
+unit runtime output=mixed {
+ title "Bounded transform runtime"
+ goal "Execute only OPP-owned declarative transform plans against JSON-like values, never arbitrary discovered code"
+ depends "transform_ir,synthesizer"
+ accept "non_empty,contract_preserved"
+ need "code,safety"
+}
+unit schemas output=mixed {
+ title "Machine schemas"
+ goal "Add schemas for semantic verification reports, compatibility reports and bridge plans"
+ depends "semantic_ir,transform_ir"
+ accept "non_empty,contract_preserved"
+ need "schema,code"
+}
+unit compiler_integration output=mixed {
+ title "Bridge Compiler integration"
+ goal "Integrate semantic report and bridge planning into compile bundle without changing six core OPP protocol IDs"
+ depends "verifier,compatibility,synthesizer,schemas"
+ accept "non_empty,contract_preserved"
+ need "code,integration"
+}
+unit cli output=mixed {
+ title "CLI surfaces"
+ goal "Add semantic verify, compatibility and synthesis commands with Chinese explanations"
+ depends "compiler_integration,runtime"
+ accept "non_empty,contract_preserved"
+ need "code,product"
+}
+unit positive_tests output=mixed {
+ title "Positive interoperability tests"
+ goal "Verify exact match, field rename, subset projection, safe wrapping and deterministic execution"
+ depends "compiler_integration,runtime"
+ accept "non_empty,contract_preserved"
+ need "test"
+}
+unit negative_tests output=mixed {
+ title "Negative safety tests"
+ goal "Verify no source execution, no authority invention, incompatible type refusal, required information refusal, ambiguity refusal and deterministic roots"
+ depends "compiler_integration,runtime"
+ accept "non_empty,contract_preserved"
+ need "test,safety"
+}
+unit real_project_dogfood output=mixed {
+ title "Real project dogfood"
+ goal "Run against DWAC and current RCL source fixtures, measure inferred semantic interfaces and bridge-plan validity without claiming runtime interoperability"
+ depends "positive_tests,negative_tests"
+ accept "non_empty,contract_preserved"
+ need "evaluation,evidence"
+}
+unit docs output=text {
+ title "Bilingual specification"
+ goal "Document semantics, compatibility classes, transform operations, boundaries and examples in Chinese with English terminology translated"
+ depends "compiler_integration,real_project_dogfood"
+ accept "non_empty,contract_preserved"
+ need "documentation"
+}
+unit release output=mixed {
+ title "Release receipt"
+ goal "Produce DWAC planning receipt, verification evidence and one coherent Git commit without GitHub Actions"
+ depends "docs"
+ accept "non_empty,contract_preserved"
+ need "review,evidence"
+}
+}

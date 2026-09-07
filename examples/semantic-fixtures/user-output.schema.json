@@ -1,0 +1,9 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"taowind.fixture.user-output.v0.1",
+  "title":"User Output",
+  "type":"object",
+  "additionalProperties":false,
+  "required":["user_name","age"],
+  "properties":{"user_name":{"type":"string"},"age":{"type":"integer"}}
+}

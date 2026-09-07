@@ -1,0 +1,85 @@
+{
+  "format": "taowind.opp.semantic-bridge-development-receipt.v0.2",
+  "status": "CANDIDATE",
+  "dwac": {
+    "planningSource": "evidence/OPP_SEMANTIC_BRIDGE_v0.2.dpal",
+    "semanticUnits": 15,
+    "waves": 10,
+    "criticalPathDepth": 10,
+    "mechanicsPass": true,
+    "workerBoundary": "DWAC ReferenceSemanticWorker compiled the SWU DAG; ChatGPT materialized CODE/TEST/REVIEW work packets.",
+    "canonicalPromotionPerformed": false
+  },
+  "implementation": {
+    "semanticExtractors": [
+      "python-ast",
+      "javascript-typescript-static-signature",
+      "json-schema"
+    ],
+    "compatibilityClasses": [
+      "exact",
+      "structural",
+      "lossy",
+      "incompatible",
+      "unknown"
+    ],
+    "declarativeOperations": [
+      "identity",
+      "rename",
+      "select",
+      "inject-default"
+    ],
+    "autoConnect": true,
+    "sourceExecutionAllowed": false,
+    "arbitraryBridgeCodeGenerationAllowed": false,
+    "authorityInventionAllowed": false,
+    "informationInventionAllowed": false
+  },
+  "verification": {
+    "unitTests": 25,
+    "unitTestsPassed": 25,
+    "realDwacSemanticSmoke": {
+      "interfaces": 2681,
+      "callables": 2634,
+      "jsonSchemas": 47,
+      "interfacesWithTypedShapes": 1237,
+      "interfacesWithStaticSideEffects": 271,
+      "primitiveFindings": 855
+    },
+    "realDwacFullCompile": {
+      "semanticCapabilities": 2681,
+      "totalCapabilities": 3536,
+      "evidenceBundles": 3536,
+      "invalidEnvelopes": 0,
+      "manifestRoot": "349c9558fe323107b636187bbb17eedced7bc6c26118d8924c2c589949fd6541"
+    },
+    "realDwacAutoConnectDogfood": {
+      "producerInterfaces": 2681,
+      "consumerInterfaces": 1,
+      "pairsComparedAfterPrefilter": 3,
+      "prefilterSkipped": 996,
+      "acceptedPlans": 1,
+      "matchedProducer": "AdaptiveProfileIR",
+      "matchedSource": "ADAPTIVE_PROFILE_IR_SCHEMA_v1.3.json",
+      "classification": "exact",
+      "operation": "identity"
+    },
+    "currentRclEvidence": {
+      "repo": "xingxuling/RCL",
+      "ref": "main",
+      "path": "src/relational-transaction-protocol.mjs",
+      "blobSha": "502bc9b9aed649778d759d2a4b91043c4923cedd",
+      "observedSurface": "export function createRelationalSchema(input = {})",
+      "boundary": "Current plain-JavaScript signature exposes callable identity but not a typed return contract; OPP must keep missing shape semantics unknown unless stronger static evidence is added."
+    },
+    "wheelIsolationInstall": {
+      "status": "PASS",
+      "package": "taowind-opp",
+      "version": "0.2.0.dev1",
+      "installedCoreProtocolCount": 6,
+      "semanticVerifyAfterInstall": "PASS",
+      "declarativeBridgeAfterInstall": "PASS"
+    }
+  },
+  "boundary": "Static semantic inference and declarative conversion are not proof of native runtime interoperability. No GitHub Actions are used."
+}
