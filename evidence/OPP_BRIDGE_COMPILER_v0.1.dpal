@@ -1,0 +1,105 @@
+artifact opp_bridge_compiler kind=software {
+goal "Build a generic OPP Bridge Compiler that discovers protocol-like primitives in arbitrary repositories and emits valid OPP RCP/RAP/REP/CHP envelopes without executing source code or promoting authority"
+owner OPP,RCL,DWAC,RNCS
+success "Generic scanner handles JSON Schema, JSON contracts, Python/JavaScript constants, RCL text and documentation hints"
+success "First-party profiles exist for RCL, RNCS and DWAC without hard-coding their repositories into core scanner"
+success "Compiler emits deterministic bridge manifest plus valid sealed OPP envelopes"
+success "CLI scans/compiles local repositories and writes a portable output bundle"
+success "Positive, negative, tamper and real-DWAC smoke tests pass locally"
+constraint "Never import or execute discovered source files"
+constraint "Never infer authority from capability or naming"
+constraint "Unknown or ambiguous discoveries remain candidate"
+invariant "Discovery != truth, capability != authority, bridge != canonical promotion"
+
+unit model output=schema {
+ title "Bridge IR"
+ goal "Define primitive finding, source provenance, scan report, bridge manifest and compile result data contracts"
+ need meta_architecture,code
+}
+unit profiles output=code {
+ title "First-party profiles"
+ goal "Define generic and RCL/RNCS/DWAC profile hints as data only"
+ depends model
+ need code,reasoning
+}
+unit scanner output=code {
+ title "Bounded repository scanner"
+ goal "Walk files with skip rules and hard limits; never execute source"
+ depends model,profiles
+ need code,tool_use
+}
+unit extract_json output=code {
+ title "JSON and JSON-Schema extractor"
+ goal "Detect schemas/contracts/protocols/receipts/ledgers/capability documents and extract identifiers"
+ depends model
+ need code,reasoning
+}
+unit extract_source output=code {
+ title "Source constant extractor"
+ goal "Detect protocol/contract/schema/interface format constants in Python/JS/MJS/RCL/text without importing code"
+ depends model
+ need code,reasoning
+}
+unit classify output=code {
+ title "Primitive classifier"
+ goal "Merge filename/content/profile evidence into bounded primitive classification with confidence and authority-safe defaults"
+ depends profiles,extract_json,extract_source
+ need reasoning,code
+}
+unit mapper output=code {
+ title "OPP envelope mapper"
+ goal "Map findings into sealed RCP/RAP/REP/CHP envelopes using existing OPP schemas"
+ depends classify
+ need code,reasoning
+ invariant "Generated capabilities require no authority unless source explicitly declares a bounded requirement"
+}
+unit compiler output=code {
+ title "Bridge compiler orchestrator"
+ goal "Compile scan findings into deterministic manifest and output bundle"
+ depends scanner,mapper
+ need planning,code
+}
+unit cli output=code {
+ title "Bridge CLI"
+ goal "Add opp bridge scan and opp bridge compile commands"
+ depends compiler
+ need code,language
+}
+unit schemas output=schema {
+ title "Bridge manifest schemas"
+ goal "Define machine-readable scan and manifest schemas without adding a seventh core protocol"
+ depends model
+ need code
+}
+unit fixtures output=file {
+ title "Cross-system fixtures"
+ goal "Provide minimal RCL, RNCS and DWAC fixture repositories for deterministic tests"
+ depends profiles
+ need code
+}
+unit tests output=test {
+ title "Bridge compiler test suite"
+ goal "Test discovery, profiles, deterministic IDs, OPP validation, authority boundaries, unknown semantics, no-execution safety and CLI"
+ depends compiler,cli,schemas,fixtures
+ need code,reasoning,tool_use
+}
+unit real_smoke output=test {
+ title "Real DWAC and RCL smoke scan"
+ goal "Scan current local DWAC and current RCL assets and record bounded evidence without treating scan counts as semantic truth"
+ depends compiler,tests
+ need code,tool_use,evidence
+}
+unit docs output=text {
+ title "Bridge compiler documentation"
+ goal "Document architecture, CLI, safety boundary, emitted artifacts and profile extension path in Chinese-first bilingual terminology"
+ depends tests,real_smoke
+ need language,reasoning
+}
+unit delivery output=mixed {
+ title "Release candidate assembly"
+ goal "Run full tests, package/install smoke test and assemble evidence receipt"
+ depends docs,real_smoke
+ need code,tool_use,evidence
+ accept non_empty,contract_preserved
+}
+}

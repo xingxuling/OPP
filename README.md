@@ -62,3 +62,13 @@ python -m unittest discover -s tests -v
 - 所有跨系统 Canonical（规范所有权）提升、世界事实提升、权威委托必须由上层治理系统另行批准。
 
 更多内容见 `docs/SPECIFICATION.md`、`docs/PRIMITIVES.md`、`docs/ARCHAEOLOGY.md` 与 `docs/GOVERNANCE.md`。
+
+
+## Bridge Compiler（桥编译器）
+
+OPP v0.1 现包含静态 Bridge Compiler，可扫描任意代码/文档仓库中的协议性原语，并生成 REP/RAP/RCP/CHP 候选桥接包。详见 `docs/BRIDGE_COMPILER.md`。
+
+```bash
+opp bridge scan ./repo --profile auto
+opp bridge compile ./repo --out ./bridge-output
+```

@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://taowind.company/opp/schemas/bridge-scan.v0.1.schema.json",
+  "title": "OPP Bridge Scan（OPP 桥扫描报告）",
+  "type": "object",
+  "required": [
+    "format",
+    "sourceId",
+    "profile",
+    "filesSeen",
+    "filesScanned",
+    "bytesScanned",
+    "truncated",
+    "findings",
+    "warnings",
+    "boundary"
+  ],
+  "properties": {
+    "format": {
+      "const": "taowind.opp.bridge-scan.v0.1"
+    },
+    "sourceId": {
+      "type": "string"
+    },
+    "root": {
+      "type": "string"
+    },
+    "profile": {
+      "enum": [
+        "generic",
+        "rcl",
+        "rncs",
+        "dwac"
+      ]
+    },
+    "filesSeen": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "filesScanned": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "bytesScanned": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "truncated": {
+      "type": "boolean"
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "finding_id",
+          "kind",
+          "native_id",
+          "confidence",
+          "source",
+          "semantics"
+        ],
+        "properties": {
+          "finding_id": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "protocol",
+              "contract",
+              "interface",
+              "schema",
+              "capability",
+              "evidence",
+              "receipt",
+              "ledger",
+              "bridge"
+            ]
+          },
+          "native_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "profile": {
+            "type": "string"
+          },
+          "source": {
+            "type": "object"
+          },
+          "evidence": {
+            "type": "array"
+          },
+          "authority_scopes": {
+            "type": "array"
+          },
+          "semantics": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "boundary": {
+      "type": "string"
+    }
+  }
+}

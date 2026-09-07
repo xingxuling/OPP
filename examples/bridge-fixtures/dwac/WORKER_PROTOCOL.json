@@ -1,0 +1,5 @@
+{
+  "format": "dwac.worker-protocol.v0.2",
+  "capability": "artifact.code.generate",
+  "authority_scope": []
+}

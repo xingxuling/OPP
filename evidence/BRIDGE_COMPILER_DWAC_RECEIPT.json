@@ -1,0 +1,70 @@
+{
+  "format": "taowind.opp.bridge-compiler-development-receipt.v0.1",
+  "status": "CANDIDATE",
+  "dwac": {
+    "inputZip": "DWAC-main (1)(4).zip",
+    "inputZipSha256": "8d77f42f58cb10c01c1cd7945f84864d5f852e4a48b6a31dfb8b346899ae3888",
+    "dpal": "evidence/OPP_BRIDGE_COMPILER_v0.1.dpal",
+    "dpalSha256": "45bd7c9429d5f68d473b1aeb28cf42bcbfc562965b474656b9c80a402e42d359",
+    "semanticUnits": 15,
+    "waves": 10,
+    "criticalPathDepth": 10,
+    "mechanicsPass": true,
+    "workerBoundary": "DWAC ReferenceSemanticWorker compiled the DAG; ChatGPT acted as CODE/TEST/REVIEW worker to materialize source from the work graph.",
+    "canonicalPromotionPerformed": false
+  },
+  "implementation": {
+    "feature": "OPP Bridge Compiler / OPP 桥编译器",
+    "profiles": [
+      "generic",
+      "rcl",
+      "rncs",
+      "dwac"
+    ],
+    "coreProtocolsAdded": 0,
+    "generatedProtocolProjection": [
+      "RCP",
+      "RAP",
+      "REP",
+      "CHP"
+    ],
+    "sourceExecutionAllowed": false,
+    "sourceAuthorityInherited": false
+  },
+  "verification": {
+    "unitTests": 14,
+    "unitTestsPassed": 14,
+    "wheelIsolationInstall": "PASS",
+    "installedCoreProtocolCount": 6,
+    "realDwacSmoke": {
+      "filesScanned": 1170,
+      "bytesScanned": 7205346,
+      "findings": 855,
+      "emittedFindings": 855,
+      "generatedEnvelopes": 2566,
+      "invalidEnvelopes": 0,
+      "manifestRoot": "cd280b895b1fbab0987f4350136cb52060967e97b804e976de7d2e8a239103ad"
+    },
+    "currentGithubSmokeSources": [
+      {
+        "repo": "xingxuling/RCL",
+        "ref": "main",
+        "path": "src/relational-transaction-protocol.mjs",
+        "blobSha": "502bc9b9aed649778d759d2a4b91043c4923cedd"
+      },
+      {
+        "repo": "xingxuling/RCL",
+        "ref": "main",
+        "path": "src/real-world-data-ingestion-layer.mjs",
+        "blobSha": "c9ab0f1939446a2e8aa52777ac9084cc8a28d5d0"
+      },
+      {
+        "repo": "xingxuling/RNCS-Unified-Platform-",
+        "ref": "main-95",
+        "path": "packages/languages/reality-computation-language/README.md",
+        "blobSha": "09ade9f28f966470604becc82a40c5901da1f88f"
+      }
+    ]
+  },
+  "boundary": "Static discovery is not runtime support or truth. Profile recognition is not semantic proof. No GitHub Actions were used."
+}

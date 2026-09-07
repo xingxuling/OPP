@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "taowind-opp"
-version = "0.1.0.dev1"
+version = "0.1.0.dev2"
 description = "TaoWind Open Reality Protocols reference candidate / 道风开放现实协议族参考候选实现"
 requires-python = ">=3.10"
 dependencies = ["jsonschema>=4.23"]

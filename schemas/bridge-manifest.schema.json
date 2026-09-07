@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://taowind.company/opp/schemas/bridge-manifest.v0.1.schema.json",
+  "title": "OPP Bridge Manifest（OPP 桥编译清单）",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "version",
+    "sourceId",
+    "profile",
+    "scanRoot",
+    "findingCount",
+    "emittedFindingCount",
+    "truncated",
+    "artifacts",
+    "validation",
+    "authority",
+    "boundary",
+    "manifestRoot"
+  ],
+  "properties": {
+    "format": {
+      "const": "taowind.opp.bridge-manifest.v0.1"
+    },
+    "version": {
+      "type": "string"
+    },
+    "sourceId": {
+      "type": "string"
+    },
+    "profile": {
+      "type": "string"
+    },
+    "scanRoot": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "findingCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "emittedFindingCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "truncated": {
+      "type": "boolean"
+    },
+    "artifacts": {
+      "type": "object"
+    },
+    "validation": {
+      "type": "object",
+      "required": [
+        "valid",
+        "invalidEnvelopeCount"
+      ]
+    },
+    "authority": {
+      "type": "object",
+      "required": [
+        "canonicalPromotionPerformed",
+        "sourceAuthorityInherited"
+      ]
+    },
+    "boundary": {
+      "type": "string"
+    },
+    "manifestRoot": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}
