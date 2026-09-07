@@ -1,0 +1,31 @@
+{
+  "compiler_version": "0.6.0",
+  "goal": "为 TaoWind Open Reality Protocols 设计并生成一个可执行协议族仓库候选。目标：将现有 RCL/RNCS/DWAC 中的 protocol/contract/interface/schema/capability/evidence/receipt/ledger/bridge 原语统一为开放标准。第一版必须包含协议注册表、核心 Reality Envelope、Capability、Artifact、Evidence、State、Handshake 六类协议、JSON Schema、RCL 表达/接口层、验证器、示例、兼容层、版本治理和测试；不能依赖 GitHub Actions；所有未经真实验证的能力必须明确标记 candidate/experimental。中文为主，英文标识必须附中文解释。",
+  "artifact_scope": "mixed",
+  "unit_count": 8,
+  "cache_hits": 0,
+  "compiled_units": 8,
+  "execution_layers": [
+    [{"unit": "existing", "mode": "COMPILE"}, {"unit": "objective", "mode": "COMPILE"}],
+    [{"unit": "architecture", "mode": "COMPILE"}],
+    [{"unit": "outline", "mode": "COMPILE"}],
+    [{"unit": "semantic", "mode": "COMPILE"}],
+    [{"unit": "execution", "mode": "COMPILE"}],
+    [{"unit": "validation", "mode": "COMPILE"}],
+    [{"unit": "delivery", "mode": "COMPILE"}]
+  ],
+  "unit_hashes": {
+    "objective": "11b4bf75c271704bed16d2962bd811191111ace02e5daa215517b0c643858647",
+    "existing": "c3f1512c884f501d527107a257314d7bfcdebf4328cc0a5c80bd71b09be5aa94",
+    "architecture": "e3423ab1191c8556e5fe978a7f95f127dfae507ed10ef8222fc088821c2b6bc2",
+    "outline": "860fafaae71907b3b0adf303c263c38aec7612f290d7def4135aac0684755727",
+    "semantic": "cf576a4040738c9f658161b4c2619653e1640c4060575da5953d9e062bf7cfbc",
+    "execution": "71900a249293a73260271f547c201fb1e53c9aa08e10443e4cda5751207e5a34",
+    "validation": "295ef876e4d66c756972077a540210ea46132cd9f7831f415ebf7ea52f3d54ac",
+    "delivery": "049203e2f30ce087e50e9a17c653c6c61e5353b41a551e736019e932a3a3b75f"
+  },
+  "status": "CANDIDATE",
+  "true_distributed_backend": false,
+  "worker_backend": "REFERENCE",
+  "wall_seconds": 0.003725
+}

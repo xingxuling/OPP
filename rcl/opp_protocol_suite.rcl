@@ -1,0 +1,29 @@
+reality TaoWindOpenRealityProtocols {
+  facet candidate_mode : Truth = true
+
+  meta protocol_registry {
+    facet revision : Number = 1
+    inspect program
+    inspect foundation
+    preserve protocol_registry.revision >= 1
+  }
+
+  host opp_runtime {
+    offers validate -> Text
+    offers seal -> Text
+    offers negotiate -> Text
+  }
+
+  quantitative validation_evidence {
+    measure schema_coverage : Number = 1
+      uncertainty 0
+      confidence 1
+      unit "ratio"
+      scale ratio
+      evidence "opp:local-schema-suite"
+      calibrated by "opp:v0.1-candidate-tests"
+    preserve confidence(validation_evidence.schema_coverage) >= 0.95
+  }
+
+  reflect protocol_registry
+}

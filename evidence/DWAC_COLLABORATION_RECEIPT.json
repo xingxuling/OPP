@@ -1,0 +1,24 @@
+{
+  "format": "taowind.opp.dwac-collaboration-receipt.v0.1",
+  "status": "CANDIDATE",
+  "input": {
+    "file": "DWAC-main (1)(4).zip",
+    "sha256": "8d77f42f58cb10c01c1cd7945f84864d5f852e4a48b6a31dfb8b346899ae3888"
+  },
+  "dwac": {
+    "compilerVersion": "0.6.0",
+    "artifactScope": "mixed",
+    "unitCount": 8,
+    "compiledUnits": 8,
+    "workerBackend": "REFERENCE",
+    "trueDistributedBackend": false,
+    "status": "CANDIDATE"
+  },
+  "integration": {
+    "dwacRole": "任务分解、全工件 DAG 与候选边界 / task decomposition, artifact DAG, candidate boundary",
+    "assistantRole": "资产考古、协议抽象、规范、Schema、参考运行时、测试与仓库装配 / archaeology, protocol abstraction, schemas, runtime, tests, assembly",
+    "canonicalPromotionPerformed": false,
+    "externalStandardClaimed": false
+  },
+  "boundary": "DWAC 本轮使用 REFERENCE backend（参考后端）生成结构化候选计划；最终实现由协作流程实化并通过本地测试。"
+}
