@@ -1,0 +1,44 @@
+{
+  "format": "taowind.opp.native-interop-development-receipt.v0.3",
+  "status": "CANDIDATE",
+  "dwac": {
+    "planningSource": "evidence/OPP_NATIVE_INTEROP_v0.3.dpal",
+    "planningSourceSha256": "3439176ccceaa27c5cdac0207db08656621aec73568d0dde5eeed668c130a44b",
+    "semanticUnits": 15,
+    "waves": 10,
+    "criticalPathDepth": 10,
+    "mechanicsPass": true,
+    "workerBoundary": "DWAC reference semantic worker compiled the SWU DAG; ChatGPT materialized CODE/TEST/REVIEW work packets.",
+    "canonicalPromotionPerformed": false
+  },
+  "implementation": {
+    "adapterKinds": ["python-function"],
+    "callingConventions": ["kwargs", "single"],
+    "shellUsed": false,
+    "explicitConsentRequired": true,
+    "sourceExecutionDuringDiscovery": false,
+    "strongOsSandboxClaimed": false,
+    "authorityPromotionAllowed": false,
+    "hiddenRetries": false,
+    "invocationSpecRuntimeFormatGate": true,
+    "pythonTextOutputEarlyBound": true
+  },
+  "verification": {
+    "unitTests": 39,
+    "unitTestsPassed": 39,
+    "wheelIsolationInstall": {
+      "status": "PASS",
+      "packageVersion": "0.3.0.dev1",
+      "wheelSha256": "a29e1413504b490dbe3030ec97c9659ff37e1af734c7840036892b7b20ec3ffe",
+      "nativeInteropAfterInstall": "PASS"
+    },
+    "fixtureInterop": {
+      "status": "PASS",
+      "receiptRoot": "77b4cdfaa0f95a9cc75a4c7d08f9d8cc3b94d40f2a9b46b87c51b2b1496f7ff2",
+      "transformed": {"age": 20, "locale": "zh-HK", "username": "Ada"},
+      "result": {"accepted": true, "age": 20, "locale": "zh-HK", "username": "Ada"}
+    }
+  },
+  "rclBoundary": "RCL candidate bridge expresses host/warrant/evidence semantics only; Python process spawning remains host-runtime owned and no RCL Canonical promotion is claimed.",
+  "boundary": "v0.3 proves bounded explicit child-process invocation and concrete fixture interoperability. It does not prove arbitrary third-party code is safe, strong-sandboxed, or universally interoperable. No GitHub Actions were used."
+}

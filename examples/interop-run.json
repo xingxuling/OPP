@@ -1,0 +1,78 @@
+{
+  "format": "taowind.opp.interop-run.v0.1",
+  "version": "0.3.0-candidate.1",
+  "runId": "example-native-interop",
+  "producer": {
+    "format": "taowind.opp.invocation-spec.v0.1",
+    "version": "0.3.0-candidate.1",
+    "adapterKind": "python-function",
+    "sourceRoot": ".",
+    "callingConvention": "kwargs",
+    "timeoutMs": 3000,
+    "maxOutputBytes": 262144,
+    "cwdPolicy": "ephemeral",
+    "environmentPolicy": "sanitized",
+    "authorityRequired": [],
+    "status": "candidate",
+    "specId": "fixture-producer",
+    "entrypoint": "examples/native-fixtures/producer.py:produce_user"
+  },
+  "bridgePlan": {
+    "format": "taowind.opp.auto-bridge-plan.v0.1",
+    "version": "0.2.0-candidate.1",
+    "bridgeId": "bridge-plan-f10b692c39daa44dcd631a67",
+    "status": "candidate",
+    "producerPort": "fixture.producer.user",
+    "consumerPort": "fixture.consumer.user",
+    "compatibility": {
+      "format": "taowind.opp.bridge-compatibility.v0.1",
+      "classification": "lossy",
+      "producerPort": "fixture.producer.user",
+      "consumerPort": "fixture.consumer.user",
+      "typeCompatible": true,
+      "semanticCompatible": true,
+      "confidence": 0.99,
+      "reasons": [
+        "$.username:exact-shape",
+        "$.username:normalized-name-rename:user_name->username",
+        "$.age:integer-is-safe-number",
+        "$.locale:default-injected",
+        "$:drop-extra-fields:['debug']"
+      ],
+      "operations": [
+        {"op": "rename", "from": "user_name", "to": "username"},
+        {"op": "inject-default", "field": "locale", "value": "zh-HK"},
+        {"op": "select", "fields": ["age", "locale", "username"]}
+      ],
+      "missingInformation": [],
+      "authorityGap": [],
+      "boundary": "Compatibility is inferred from declared/static shapes and tags. It is not proof that either native runtime actually interoperates / 兼容性来自声明或静态形状与语义标签推断，不证明原生运行时实际互操作。"
+    },
+    "operations": [
+      {"op": "rename", "from": "user_name", "to": "username"},
+      {"op": "inject-default", "field": "locale", "value": "zh-HK"},
+      {"op": "select", "fields": ["age", "locale", "username"]}
+    ],
+    "executionModel": "opp-declarative-json-transform",
+    "authority": {"required": [], "available": [], "promotionPerformed": false},
+    "safety": {"sourceCodeExecution": false, "arbitraryCodeGeneration": false, "informationInvention": false, "authorityInvention": false, "lossyAllowed": true},
+    "boundary": "Generated plans only transform supplied JSON-like values. They cannot create missing required information, privileges, native runtime support, or semantic truth / 生成计划只转换已提供的 JSON 类数据；不能创造缺失的必需信息、权限、原生运行支持或语义真实性。",
+    "planRoot": "d8ff9c1508d7a2928043a372009b8c456c0c5b1745c952d74c3eea39967be46a"
+  },
+  "consumer": {
+    "format": "taowind.opp.invocation-spec.v0.1",
+    "version": "0.3.0-candidate.1",
+    "adapterKind": "python-function",
+    "sourceRoot": ".",
+    "callingConvention": "kwargs",
+    "timeoutMs": 3000,
+    "maxOutputBytes": 262144,
+    "cwdPolicy": "ephemeral",
+    "environmentPolicy": "sanitized",
+    "authorityRequired": [],
+    "status": "candidate",
+    "specId": "fixture-consumer",
+    "entrypoint": "examples/native-fixtures/consumer.py:consume_user"
+  },
+  "status": "candidate"
+}

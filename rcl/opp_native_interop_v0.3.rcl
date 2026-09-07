@@ -1,0 +1,33 @@
+reality OPPNativeInteropV03 {
+  facet candidate_mode : Truth = true
+
+  subject caller {
+    facet execution_consent : Truth = false
+    warrant runtime.invoke on runtime
+  }
+
+  host runtime {
+    offers invoke -> Text
+    offers interop -> Text
+  }
+
+  meta execution_policy {
+    facet revision : Number = 3
+    inspect program
+    inspect foundation
+    preserve execution_policy.revision >= 3
+  }
+
+  quantitative runtime_evidence {
+    measure strong_os_sandbox_claimed : Number = 0
+      uncertainty 0
+      confidence 1
+      unit "flag"
+      scale ratio
+      evidence "opp:v0.3-process-boundary"
+      calibrated by "opp:native-interop-tests"
+    preserve runtime_evidence.strong_os_sandbox_claimed == 0
+  }
+
+  reflect execution_policy
+}

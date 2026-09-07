@@ -81,8 +81,10 @@ class SemanticBridgeTests(unittest.TestCase):
             self.assertEqual('candidate-only',env['payload']['availability'])
             self.assertFalse(env['payload']['rights']['sourceAuthorityInherited'])
 
+
     def test_auto_connect_between_project_shapes(self):
         producer=verify_repository_semantics(FIX,source_id='producer-project',profile='generic')
+        # use a consumer-only temporary project so the planner cannot cheat by connecting fixture to itself
         with tempfile.TemporaryDirectory() as td:
             Path(td,'consumer.py').write_text((FIX/'consumer.py').read_text(encoding='utf-8'),encoding='utf-8')
             consumer=verify_repository_semantics(td,source_id='consumer-project',profile='generic')

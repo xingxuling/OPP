@@ -1,0 +1,99 @@
+artifact opp_native_interop_v03 kind=software {
+goal "Upgrade OPP from static semantic compatibility into explicit, bounded native invocation and end-to-end interoperability proof: Producer invocation -> OPP declarative bridge -> Consumer invocation -> receipt/evidence, while default scanning remains non-executing and arbitrary repositories are never executed without an explicit invocation spec and allow-execution decision."
+owner OPP,DWAC,RCL
+invariant "Static discovery never implies permission to execute source"
+invariant "Invocation requires explicit target, explicit adapter kind, explicit timeout and explicit allow-execution"
+invariant "No shell invocation; argv execution only"
+invariant "No authority or environment inheritance by default"
+invariant "Interop PASS proves only the tested fixture/run, not universal compatibility"
+invariant "Strong OS sandboxing is not claimed unless separately evidenced"
+unit invocation_ir output=schema {
+ title "Invocation Spec IR"
+ goal "Define explicit adapter kind, source root, entrypoint, input/output JSON binding, timeout, environment policy, authority and execution consent"
+ need meta_architecture,code,safety
+}
+unit invocation_receipt output=schema {
+ title "Invocation Receipt"
+ goal "Define deterministic request/result metadata, exit status, timing, stdout/stderr bounds, content roots and authority boundary"
+ depends invocation_ir
+ need schema,evidence
+}
+unit python_adapter output=code {
+ title "Python Function Adapter"
+ goal "Invoke one explicitly named top-level Python function in a child process using JSON stdin/stdout without shell expansion"
+ depends invocation_ir,invocation_receipt
+ need code,safety
+}
+unit child_runner output=code {
+ title "OPP-owned Python Child Runner"
+ goal "Load only the explicitly selected source file and function, call with JSON object kwargs or one JSON value, and emit one JSON result envelope"
+ depends python_adapter
+ need code
+}
+unit sandbox_policy output=code {
+ title "Bounded Process Sandbox Policy"
+ goal "Enforce source-root containment, reject symlink entrypoints, sanitize environment, fixed cwd, timeout, output byte limits and explicit execution consent"
+ depends invocation_ir
+ need code,safety
+}
+unit interop_ir output=schema {
+ title "Interop Run Spec and Receipt"
+ goal "Represent producer invocation, bridge plan, consumer invocation, stage receipts and final candidate interoperability verdict"
+ depends invocation_ir,invocation_receipt
+ need architecture,schema,evidence
+}
+unit interop_runner output=code {
+ title "Sandbox Interop Runner"
+ goal "Execute Producer -> transform -> Consumer with fail-closed stage handling and no hidden retries"
+ depends python_adapter,sandbox_policy,interop_ir
+ need code,integration
+}
+unit bridge_binding output=code {
+ title "Semantic Plan to Invocation Binding"
+ goal "Bind an Auto Connect bridge plan to explicit producer and consumer invocation specs without inventing missing runtime targets"
+ depends interop_runner
+ need code,reasoning
+}
+unit cli output=code {
+ title "CLI invocation and interop surfaces"
+ goal "Add opp invoke run and opp interop run commands with explicit --allow-execution gate and bilingual boundary output"
+ depends bridge_binding
+ need code,product
+}
+unit fixtures output=code {
+ title "Benign producer and consumer fixtures"
+ goal "Create deterministic Python fixtures where producer emits user_name/age/debug and consumer accepts username/age/locale"
+ depends python_adapter
+ need code,test
+}
+unit positive_tests output=test {
+ title "End-to-end interoperability tests"
+ goal "Prove exact and structural Producer -> Bridge -> Consumer execution, deterministic receipts and CLI execution"
+ depends cli,fixtures
+ need test
+}
+unit negative_tests output=test {
+ title "Execution safety tests"
+ goal "Reject missing consent, path escape, symlink entrypoint, shell adapter, timeout, non-JSON output, output overflow and bridge rejection"
+ depends cli,fixtures
+ need test,safety
+}
+unit evidence output=mixed {
+ title "Interop evidence receipt"
+ goal "Record DWAC planning boundary, test results, fixture end-to-end result and sandbox limitations without claiming strong isolation"
+ depends positive_tests,negative_tests
+ need evidence,review
+}
+unit docs output=text {
+ title "Native invocation and interoperability docs"
+ goal "Document execution consent, adapter model, process-isolation limits, receipts and exact meaning of interoperability PASS in Chinese with English terminology translated"
+ depends evidence
+ need documentation
+}
+unit release output=mixed {
+ title "v0.3 release package"
+ goal "Update package/status and produce one coherent Git commit without GitHub Actions"
+ depends docs
+ need review,evidence
+}
+}

@@ -2,7 +2,7 @@
 
 > **OPP = Open Reality Protocols（开放现实协议族）**。本仓库把 TaoWind / RCL / RNCS / DWAC 中已经出现的协议、契约、接口、模式、能力、证据、回执、账本与桥接原语，收束成一套可读、可验证、可协商的开放协议候选。
 
-当前协议族版本：`0.1.0-candidate.1`（核心协议 ID 不变）；当前 Bridge / Semantic Tooling（桥 / 语义工具链）版本：`0.2.0-candidate.1`。当前状态：**CANDIDATE（候选）**，不是互联网标准、生产安全标准或外部权威认证标准。
+当前协议族版本：`0.1.0-candidate.1`（核心协议 ID 不变）；当前 Runtime / Bridge / Semantic Tooling（运行时 / 桥 / 语义工具链）版本：`0.3.0-candidate.1`。当前状态：**CANDIDATE（候选）**，不是互联网标准、生产安全标准或外部权威认证标准。
 
 ## 第一批 6 个核心协议
 
@@ -43,6 +43,8 @@ OPP 明确区分以下九种东西，避免把所有东西都叫 API（应用程
 - Semantic Bridge Verifier（语义桥验证器）：静态提取 Python / JavaScript / TypeScript / JSON Schema 接口形状；
 - Auto Bridge Synthesizer（自动桥合成器）：生成可审计的声明式字段转换计划；
 - Auto Connect（自动连接）：直接搜索两个项目之间的 `output → input` 兼容路径；
+- Native Invocation Adapter（原生调用适配器）：显式调用受支持的 Python 顶层函数；
+- Sandbox Interop Runner（沙箱互操作运行器）：真实执行 `Producer → Bridge → Consumer（生产端→桥→消费端）` 并生成回执；
 - DWAC 协作编译证据与资产考古映射。
 
 ## 本地使用
@@ -53,7 +55,7 @@ python -m opp validate examples/capability.json
 python -m opp validate examples/artifact.json
 python -m opp semantic verify ./repo --profile auto
 python -m opp semantic connect ./producer-repo ./consumer-repo --out ./connect.json
-python -m unittest discover -s tests -v
+python -m unittest discover -s tests -v  # 已执行 pip install -e . 后运行 / run after editable install
 ```
 
 `python -m opp validate ...` 的中文意思是“用 OPP 验证器检查一个现实信封及其协议负载”。
@@ -86,3 +88,19 @@ Bridge Compiler v0.2 在“发现协议声明”之上增加静态语义接口�
 自动生成的桥只使用 OPP 自有声明式操作：`identity / rename / select / inject-default`（恒等 / 重命名 / 字段投影 / 注入已声明默认值）。不会生成或执行任意 Python、Shell 或源仓库代码。
 
 详见 `docs/SEMANTIC_BRIDGE.md` 与 `docs/AUTO_CONNECT.md`。
+
+
+## Native Invocation + Real Interop（原生调用 + 真实互操作）
+
+v0.3 第一次把 v0.2 找到的静态连接路径真正执行成：
+
+`Producer invocation（生产端调用） → OPP declarative bridge（OPP 声明式桥） → Consumer invocation（消费端调用） → Interop Receipt（互操作回执）`
+
+静态扫描仍然不会执行源码。只有显式 Invocation Spec（调用规范）并提供 `--allow-execution（允许执行）` 才会进入原生调用。当前只支持 `python-function（Python 函数）` 适配器，不使用 Shell（命令解释器），并使用路径包含检查、符号链接拒绝、清理环境、临时工作目录、超时、输出接受上限和 JSON 失败关闭。
+
+```bash
+opp invoke run examples/invocation-producer.json examples/interop-input.json --allow-execution
+opp interop run examples/interop-run.json examples/interop-input.json --allow-execution --out interop-result.json
+```
+
+当前 Sandbox（沙箱）是 **bounded child process（有界子进程）**，不是 Linux namespace / seccomp / container / VM（Linux 命名空间 / 系统调用过滤 / 容器 / 虚拟机）级强安全沙箱。Interop PASS（互操作通过）只证明这一条具体调用链真实成功，不证明任意第三方代码安全或普遍兼容。详见 `docs/NATIVE_INTEROP.md`。

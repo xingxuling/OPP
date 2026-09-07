@@ -47,6 +47,22 @@ def _semantic_cmd(args) -> int:
     plan=load(args.plan); value=load(args.value); result=apply_transform(value,plan.get('operations') or [])
     print(json.dumps(result,ensure_ascii=False,indent=2)); return 0
 
+def _runtime_cmd(args) -> int:
+    from .runtime import run_invocation, run_interop, InvocationError, InteropError
+    try:
+        if args.command == "invoke":
+            result=run_invocation(load(args.spec),load(args.input),allow_execution=args.allow_execution)
+        else:
+            result=run_interop(load(args.spec),load(args.input),allow_execution=args.allow_execution)
+    except (InvocationError,InteropError) as exc:
+        print(json.dumps({"status":"FAIL","状态":"失败","error":str(exc),"boundary":"执行必须显式授权；扫描本身不会执行源码 / execution requires explicit consent; scanning never executes source"},ensure_ascii=False,indent=2))
+        return 4
+    text=json.dumps(result,ensure_ascii=False,indent=2)
+    if args.out: Path(args.out).write_text(text+'\n',encoding='utf-8')
+    print(text)
+    status=(result.get('receipt') or {}).get('status')
+    return 0 if status=='PASS' else 5
+
 def main(argv=None) -> int:
     parser=argparse.ArgumentParser(description="TaoWind OPP 验证、文明握手、桥编译与语义互操作工具 / validator, handshake, bridge compiler and semantic interoperability toolkit")
     sub=parser.add_subparsers(dest="command",required=True)
@@ -67,9 +83,16 @@ def main(argv=None) -> int:
     p_connect=ssub.add_parser("connect",help="自动搜索两个项目之间的桥 / automatically search bridges between two projects")
     p_connect.add_argument("producer_source"); p_connect.add_argument("consumer_source"); p_connect.add_argument("--producer-profile",default="auto",choices=["auto","generic","rcl","rncs","dwac"]); p_connect.add_argument("--consumer-profile",default="auto",choices=["auto","generic","rcl","rncs","dwac"]); p_connect.add_argument("--producer-id"); p_connect.add_argument("--consumer-id"); p_connect.add_argument("--allow-lossy",action='store_true'); p_connect.add_argument("--include-rejected",action='store_true'); p_connect.add_argument("--max-plans",type=int,default=100); p_connect.add_argument("--max-pairs",type=int,default=100000); p_connect.add_argument("--out")
     p_apply=ssub.add_parser("apply",help="执行 OPP 声明式桥计划 / apply OPP declarative bridge plan"); p_apply.add_argument("plan"); p_apply.add_argument("value")
+    p_invoke=sub.add_parser("invoke",help="显式执行一个原生调用规范 / explicitly execute one native invocation spec")
+    isub=p_invoke.add_subparsers(dest="invoke_command",required=True)
+    p_irun=isub.add_parser("run",help="在有界子进程中运行 / run in bounded child process"); p_irun.add_argument("spec"); p_irun.add_argument("input"); p_irun.add_argument("--allow-execution",action="store_true"); p_irun.add_argument("--out")
+    p_interop=sub.add_parser("interop",help="执行 Producer → Bridge → Consumer 互操作 / execute producer-to-bridge-to-consumer interoperability")
+    rsub=p_interop.add_subparsers(dest="interop_command",required=True)
+    p_run=rsub.add_parser("run",help="执行一个互操作运行规范 / execute one interoperability run spec"); p_run.add_argument("spec"); p_run.add_argument("input"); p_run.add_argument("--allow-execution",action="store_true"); p_run.add_argument("--out")
     args=parser.parse_args(argv)
     if args.command=="bridge": return _bridge_cmd(args)
     if args.command=="semantic": return _semantic_cmd(args)
+    if args.command in {"invoke","interop"}: return _runtime_cmd(args)
     if args.command=="validate":
         issues=validate_envelope(load(args.file))
         if issues:

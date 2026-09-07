@@ -1,22 +1,26 @@
-# OPP v0.2 Tooling Status（工具链状态）
+# OPP v0.3 Tooling Status（工具链状态）
 
-- Core protocol suite（核心协议族）：`0.1.0-candidate.1`，6 个核心协议，**本轮不增加第七个协议**
-- Bridge / Semantic Tooling（桥 / 语义工具链）：`0.2.0-candidate.1`
-- Python package（Python 包）：`0.2.0.dev1`
-- Primitive kinds（原语类型）：9
-- JSON Schema：Draft 2020-12
-- Bridge Compiler（桥编译器）：implemented candidate（候选实现）
-- Semantic Bridge Verifier（语义桥验证器）：implemented candidate
-- Auto Bridge Synthesizer（自动桥合成器）：implemented candidate，声明式转换，不生成任意代码
-- Auto Connect（自动连接）：implemented candidate，跨仓库 output → input 搜索
-- Static semantic extractors（静态语义提取器）：Python AST / JavaScript-TypeScript signature / JSON Schema
-- Compatibility classes（兼容等级）：exact / structural / lossy / incompatible / unknown
-- Declarative transform ops（声明式转换操作）：identity / rename / select / inject-default
-- Safety（安全边界）：no source execution / no symlink follow / no information invention / no authority invention / no silent promotion
-- DWAC dogfood（DWAC 自用测试）：2681 semantic interfaces（语义接口），3536 total candidate capabilities（总候选能力），0 invalid envelopes（无效信封）
-- Unit tests（单元测试）：25 / 25 PASS
-- RCL bridge（RCL 桥）：plain-JavaScript interfaces can be discovered; missing typed shapes remain unknown（普通 JavaScript 接口可发现；缺失类型形状保持未知）
-- Native invocation adapters（原生调用适配器）：next layer / 下一层
-- Independent interoperability（独立互操作）：unverified（未验证）
-- External standard status（外部标准地位）：none（无）
-- GitHub Actions：not required / not used（不依赖 / 不使用）
+- Core protocol suite（核心协议族）：`0.1.0-candidate.1`，6 个核心协议；v0.3 不增加核心协议
+- Runtime / Bridge / Semantic Tooling（运行时 / 桥 / 语义工具链）：`0.3.0-candidate.1`
+- Python package（Python 包）：`0.3.0.dev1`
+- Bridge Compiler（桥编译器）：candidate（候选实现）
+- Semantic Bridge Verifier（语义桥验证器）：candidate
+- Auto Bridge Synthesizer（自动桥合成器）：candidate，声明式转换，不生成任意代码
+- Auto Connect（自动连接）：candidate，跨仓库 `output → input` 搜索
+- Native Invocation Adapter（原生调用适配器）：`python-function` candidate
+- Sandbox Interop Runner（沙箱互操作运行器）：candidate，真实 `Producer → Bridge → Consumer` 执行
+- Execution consent（执行同意）：required / 必须显式允许
+- Shell usage（Shell 使用）：disabled / 禁止
+- Path containment + symlink rejection（路径包含 + 符号链接拒绝）：implemented / 已实现
+- Environment / CWD（环境 / 工作目录）：sanitized + ephemeral（清理 + 临时）
+- Timeout / output acceptance gate（超时 / 输出接受闸门）：implemented / 已实现
+- Strong OS sandbox（强操作系统沙箱）：**not claimed / 不宣称**
+- Authority promotion（权限提升）：none / 无
+- Hidden retries（隐藏重试）：none / 无
+- Unit tests（单元测试）：39 / 39 PASS
+- Wheel isolation install（安装包隔离安装）：PASS
+- Concrete fixture interop（具体夹具互操作）：PASS，receipt root `77b4cdfaa0f95a9cc75a4c7d08f9d8cc3b94d40f2a9b46b87c51b2b1496f7ff2`
+- RCL bridge（RCL 桥）：host / warrant / evidence（宿主 / 授权 / 证据）候选语义已表达；进程创建仍由 Python host runtime（Python 宿主运行时）所有
+- Independent third-party interoperability（独立第三方互操作）：unverified / 未验证
+- External standard status（外部标准地位）：none / 无
+- GitHub Actions：not required / not used（不依赖 / 未使用）
