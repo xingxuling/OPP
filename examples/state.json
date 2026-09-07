@@ -1,0 +1,26 @@
+{
+  "format": "taowind.opp.reality-envelope.v0.1",
+  "protocol": "opp.rsp.v0.1",
+  "version": "0.1.0-candidate.1",
+  "kind": "protocol",
+  "id": "state:demo-world:1",
+  "status": "candidate",
+  "issuedAt": "2026-09-07T09:51:00Z",
+  "issuer": {"id": "rncs-demo", "type": "runtime", "displayName": "rncs-demo"},
+  "payload": {
+    "worldId": "demo-world",
+    "revision": 1,
+    "baseRoot": null,
+    "stateRoot": "caf111d6ebc0ef38ca205cb6a36e086daa727aa05c6623fe820197bddd5b0371",
+    "assertions": [
+      {"subject": "door:A", "predicate": "connectsTo", "value": "room:B", "assertionClass": "observed", "confidence": 0.95, "evidenceRefs": ["sensor:demo"], "validAt": "2026-09-07T09:51:00Z"},
+      {"subject": "door:A", "predicate": "mayConnectTo", "value": "room:C", "assertionClass": "predicted", "confidence": 0.6, "evidenceRefs": [], "validAt": "2026-09-07T09:51:00Z"}
+    ],
+    "relations": [{"from": "door:A", "type": "located-in", "to": "station:X", "assertionClass": "declared"}],
+    "branch": null,
+    "authorityRoot": null,
+    "claimBoundary": "observed 与 predicted 不得混同。"
+  },
+  "constraints": [], "evidenceRefs": [], "extensions": {},
+  "integrity": {"algorithm": "sha256", "contentRoot": "b22e65977df565fb8e85d8443ae38ed7be67c4fe866aad59a53c3eae3cc1170f"}
+}

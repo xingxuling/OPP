@@ -1,0 +1,24 @@
+{
+  "format": "taowind.opp.reality-envelope.v0.1",
+  "protocol": "opp.rep.v0.1",
+  "version": "0.1.0-candidate.1",
+  "kind": "evidence",
+  "id": "evidence:opp-local-tests",
+  "status": "candidate",
+  "issuedAt": "2026-09-07T09:51:00Z",
+  "issuer": {"id": "opp-test-runtime", "type": "runtime", "displayName": "opp-test-runtime"},
+  "payload": {
+    "bundleId": "opp-local-tests",
+    "claims": [{"claimId": "schemas-load", "statement": "OPP v0.1 schemas and examples pass the local test suite.", "status": "supported", "sourceRefs": ["local-tests"]}],
+    "sources": [{"sourceId": "local-tests", "sourceType": "test", "locator": "tests/test_protocols.py"}],
+    "method": "Python unittest + jsonschema Draft 2020-12 validation",
+    "confidence": 1.0,
+    "independence": "derived",
+    "negativeEvidence": ["尚无独立第三方互操作实现。"],
+    "reproduction": {"available": true, "instructions": ["python -m pip install -e .", "python -m unittest discover -s tests -v"], "environment": "Python 3.10+"},
+    "boundary": "本地测试只证明候选实现内部一致，不证明生产安全、外部事实或标准地位。",
+    "authority": "candidate-local"
+  },
+  "constraints": [], "evidenceRefs": [], "extensions": {},
+  "integrity": {"algorithm": "sha256", "contentRoot": "0d3c08745380e9008bd409ba17c772d53751f3286316d7af8159b70255ab5ec4"}
+}

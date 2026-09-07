@@ -1,0 +1,21 @@
+{
+  "format": "taowind.opp.reality-envelope.v0.1",
+  "protocol": "opp.chp.v0.1",
+  "version": "0.1.0-candidate.1",
+  "kind": "protocol",
+  "id": "handshake-offer:rncs",
+  "status": "candidate",
+  "issuedAt": "2026-09-07T09:51:00Z",
+  "issuer": {"id": "rncs", "type": "runtime", "displayName": "RNCS"},
+  "payload": {
+    "phase": "offer",
+    "identity": {"id": "rncs", "civilizationType": "runtime", "displayName": "RNCS 现实运行时"},
+    "supportedProtocols": ["opp.chp.v0.1", "opp.rcp.v0.1", "opp.rsp.v0.1", "opp.rep.v0.1"],
+    "capabilities": ["state.observe", "evidence.emit"],
+    "authorityScopes": ["world.observe"],
+    "evidencePolicy": {"minimumConfidence": 0.8, "acceptDerivedEvidence": false, "requiredProtocols": ["opp.chp.v0.1", "opp.rep.v0.1"]},
+    "extensions": {}
+  },
+  "constraints": [], "evidenceRefs": [], "extensions": {},
+  "integrity": {"algorithm": "sha256", "contentRoot": "c5e7bd39a595e29aa344d8ec3fc4c66a779ac9feec6f022a7a91213318134731"}
+}

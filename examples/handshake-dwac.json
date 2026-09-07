@@ -1,0 +1,21 @@
+{
+  "format": "taowind.opp.reality-envelope.v0.1",
+  "protocol": "opp.chp.v0.1",
+  "version": "0.1.0-candidate.1",
+  "kind": "protocol",
+  "id": "handshake-offer:dwac",
+  "status": "candidate",
+  "issuedAt": "2026-09-07T09:51:00Z",
+  "issuer": {"id": "dwac", "type": "runtime", "displayName": "DWAC"},
+  "payload": {
+    "phase": "offer",
+    "identity": {"id": "dwac", "civilizationType": "runtime", "displayName": "DWAC 全工件运行时"},
+    "supportedProtocols": ["opp.chp.v0.1", "opp.rcp.v0.1", "opp.rap.v0.1", "opp.rep.v0.1"],
+    "capabilities": ["artifact.compile", "evidence.emit"],
+    "authorityScopes": ["artifact.structure.compile"],
+    "evidencePolicy": {"minimumConfidence": 0.7, "acceptDerivedEvidence": true, "requiredProtocols": ["opp.chp.v0.1"]},
+    "extensions": {}
+  },
+  "constraints": [], "evidenceRefs": [], "extensions": {},
+  "integrity": {"algorithm": "sha256", "contentRoot": "ddcb53acdb3c926c1133dad1c295a0c6b4fba5ba0444f3be24742689725b7b04"}
+}
