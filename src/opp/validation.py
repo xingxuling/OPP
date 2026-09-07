@@ -1,11 +1,10 @@
 """Validation（验证）运行时：验证现实信封、协议负载与完整性根。"""
 from __future__ import annotations
 from dataclasses import dataclass
-import json
 from typing import Any
 from jsonschema import Draft202012Validator, FormatChecker
 from .integrity import verify_envelope_root
-from .registry import load_registry, protocol_entry, schema_path
+from .registry import load_registry, protocol_entry, read_json_resource
 
 
 @dataclass(frozen=True)
@@ -26,8 +25,7 @@ def _schema_issues(instance: Any, schema: dict, prefix: str) -> list[ValidationI
 
 def validate_envelope(envelope: dict) -> list[ValidationIssue]:
     """返回问题列表；空列表代表结构候选验证通过，不代表现实主张为真。"""
-    root = schema_path(load_registry()["baseEnvelopeSchema"])
-    base_schema = json.loads(root.read_text(encoding="utf-8"))
+    base_schema = read_json_resource(load_registry()["baseEnvelopeSchema"])
     issues = _schema_issues(envelope, base_schema, "envelope")
     if issues:
         return issues
@@ -38,7 +36,7 @@ def validate_envelope(envelope: dict) -> list[ValidationIssue]:
     if envelope["kind"] != entry["kind"]:
         issues.append(ValidationIssue("KIND_MISMATCH", f"原语类型应为 {entry['kind']} / primitive kind mismatch", "envelope.kind"))
 
-    payload_schema = json.loads(schema_path(entry["payloadSchema"]).read_text(encoding="utf-8"))
+    payload_schema = read_json_resource(entry["payloadSchema"])
     issues.extend(_schema_issues(envelope["payload"], payload_schema, "payload"))
     if not verify_envelope_root(envelope):
         issues.append(ValidationIssue("INTEGRITY_ROOT_MISMATCH", "SHA-256 内容根不匹配 / content root mismatch", "envelope.integrity"))
