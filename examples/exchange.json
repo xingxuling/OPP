@@ -1,0 +1,13 @@
+{
+  "format": "taowind.opp.reality-envelope.v0.1",
+  "protocol": "opp.rxp.v0.1",
+  "version": "0.1.0-candidate.1",
+  "kind": "protocol",
+  "id": "exchange:demo:1",
+  "status": "candidate",
+  "issuedAt": "2026-09-07T09:51:00Z",
+  "issuer": {"id": "opp-runtime", "type": "runtime", "displayName": "opp-runtime"},
+  "payload": {"semanticClass": "mixed", "content": {"message": "hello reality / 你好，现实协议"}, "intent": {"goal": "discover-compatible-peer"}, "actions": [], "rollback": null, "authority": [], "claimBoundary": "描述语义，不执行动作。"},
+  "constraints": [], "evidenceRefs": [], "extensions": {},
+  "integrity": {"algorithm": "sha256", "contentRoot": "2ebc74a1e955ac9d4bd7da5fba2be3db8c44699692cd05ade0755e9f484f9ad2"}
+}
