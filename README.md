@@ -60,6 +60,8 @@ python -m unittest discover -s tests -v  # 已执行 pip install -e . 后运行 
 
 `python -m opp validate ...` 的中文意思是“用 OPP 验证器检查一个现实信封及其协议负载”。
 
+RCP capability declarations are negotiated by OPP itself with `opp.negotiate_capability(local, remote)`. The operation validates both `opp.rcp.v0.1` envelopes and accepts only an exact capability ID plus input/output schema match. A DHSC or other control plane may use that result for routing, but does not own the capability agreement or gain authority from it.
+
 ## 权威边界
 
 - OPP 当前只证明：本仓库中的模式、验证器、完整性根、协商逻辑和测试在本地候选环境中可工作。

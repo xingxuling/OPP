@@ -2,6 +2,7 @@ from __future__ import annotations
 import json, unittest
 from pathlib import Path
 from opp.handshake import negotiate_handshake
+from opp.capability import negotiate_capability
 from opp.integrity import seal_envelope, verify_envelope_root
 from opp.registry import load_registry, repository_root
 from opp.validation import validate_envelope
@@ -51,6 +52,29 @@ class OPPTests(unittest.TestCase):
         env.pop("integrity", None)
         env["protocol"] = "opp.unknown.v9"
         self.assertTrue(any(i.code == "PROTOCOL_UNKNOWN" for i in validate_envelope(env)))
+
+    def test_capability_contract_negotiation_is_exact_and_non_authoritative(self):
+        capability = self.load("capability.json")
+        remote = json.loads(json.dumps(capability))
+        remote["issuer"] = {"id": "rncs", "type": "runtime", "displayName": "rncs"}
+        remote["id"] = "capability:rncs.structural.whole-artifact.compile.v1"
+        remote["payload"]["capabilityId"] = capability["payload"]["capabilityId"]
+        remote = seal_envelope({k: v for k, v in remote.items() if k != "integrity"})
+        result = negotiate_capability(capability, remote)
+        self.assertEqual("accepted", result["status"])
+        self.assertEqual(capability["payload"]["capabilityId"], result["capabilityId"])
+        self.assertFalse(result["authorityGranted"])
+        self.assertTrue(result["contentRoot"])
+
+    def test_capability_contract_negotiation_rejects_schema_drift(self):
+        capability = self.load("capability.json")
+        remote = json.loads(json.dumps(capability))
+        remote["issuer"] = {"id": "rncs", "type": "runtime", "displayName": "rncs"}
+        remote["payload"]["inputSchema"] = {"type": "object", "properties": {"extra": {"type": "string"}}}
+        remote = seal_envelope({k: v for k, v in remote.items() if k != "integrity"})
+        result = negotiate_capability(capability, remote)
+        self.assertEqual("rejected", result["status"])
+        self.assertIn("INPUT_SCHEMA_MISMATCH", result["reasons"])
 
 if __name__ == "__main__":
     unittest.main()

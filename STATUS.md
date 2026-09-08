@@ -17,7 +17,8 @@
 - Strong OS sandbox（强操作系统沙箱）：**not claimed / 不宣称**
 - Authority promotion（权限提升）：none / 无
 - Hidden retries（隐藏重试）：none / 无
-- Unit tests（单元测试）：39 / 39 PASS
+- Unit tests（单元测试）：41 / 41 PASS
+- RCP capability negotiation（RCP 能力契约协商）：candidate，OPP-owned exact ID/schema agreement（OPP 所有的能力 ID/模式精确协商）
 - Wheel isolation install（安装包隔离安装）：PASS
 - Concrete fixture interop（具体夹具互操作）：PASS，receipt root `77b4cdfaa0f95a9cc75a4c7d08f9d8cc3b94d40f2a9b46b87c51b2b1496f7ff2`
 - RCL bridge（RCL 桥）：host / warrant / evidence（宿主 / 授权 / 证据）候选语义已表达；进程创建仍由 Python host runtime（Python 宿主运行时）所有
