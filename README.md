@@ -58,6 +58,10 @@ python -m opp semantic connect ./producer-repo ./consumer-repo --out ./connect.j
 python -m unittest discover -s tests -v  # 已执行 pip install -e . 后运行 / run after editable install
 ```
 
+CLI stdout emits ASCII-safe JSON escapes so machine callers and legacy Windows
+code pages receive the same parseable payload. Files written with `--out`
+remain UTF-8 and preserve native characters.
+
 `python -m opp validate ...` 的中文意思是“用 OPP 验证器检查一个现实信封及其协议负载”。
 
 RCP capability declarations are negotiated by OPP itself with `opp.negotiate_capability(local, remote)`. The operation validates both `opp.rcp.v0.1` envelopes and accepts only an exact capability ID plus input/output schema match. A DHSC or other control plane may use that result for routing, but does not own the capability agreement or gain authority from it.

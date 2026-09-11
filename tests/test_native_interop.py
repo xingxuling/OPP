@@ -46,6 +46,11 @@ class NativeInteropTests(unittest.TestCase):
         schema=json.loads((ROOT/'schemas'/'invocation-receipt.schema.json').read_text(encoding='utf-8'))
         self.assertEqual([],list(Draft202012Validator(schema).iter_errors(result['receipt'])))
 
+    def test_utf8_payload_survives_isolated_child_runner(self):
+        result=run_invocation(inv('examples/native-fixtures/producer.py:produce_user','utf8'),{'user_name':'张三','age':20},allow_execution=True)
+        self.assertEqual('PASS',result['receipt']['status'])
+        self.assertEqual({'user_name':'张三','age':20,'debug':True},result['result'])
+
     def test_path_escape_rejected(self):
         spec=inv('../escape.py:run')
         with self.assertRaises(InvocationError): run_invocation(spec,{},allow_execution=True)
@@ -107,5 +112,12 @@ class NativeInteropTests(unittest.TestCase):
             p=subprocess.run([sys.executable,'-m','opp','interop','run',str(runp),str(inp),'--allow-execution','--out',str(out)],capture_output=True,text=True,cwd=ROOT,env={**os.environ,'PYTHONPATH':str(ROOT/'src')})
             self.assertEqual(0,p.returncode,p.stderr+p.stdout)
             data=json.loads(out.read_text(encoding='utf-8')); self.assertEqual('PASS',data['receipt']['status'])
+
+    def test_cli_json_stdout_is_ascii_safe_under_legacy_code_page(self):
+        env={**os.environ,'PYTHONIOENCODING':'cp950','PYTHONPATH':str(ROOT/'src')}
+        p=subprocess.run([sys.executable,'-m','opp','validate',str(ROOT/'examples'/'capability.json')],capture_output=True,text=True,cwd=ROOT,env=env)
+        self.assertEqual(0,p.returncode,p.stderr+p.stdout)
+        p.stdout.encode('ascii')
+        self.assertEqual('PASS',json.loads(p.stdout)['status'])
 
 if __name__=='__main__': unittest.main()

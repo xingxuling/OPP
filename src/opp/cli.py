@@ -1,6 +1,6 @@
 """OPP CLI（命令行接口）。"""
 from __future__ import annotations
-import argparse, json
+import argparse, json, sys
 from pathlib import Path
 from .handshake import negotiate_handshake
 from .validation import validate_envelope
@@ -8,15 +8,35 @@ from .validation import validate_envelope
 def load(path: str) -> dict: return json.loads(Path(path).read_text(encoding="utf-8"))
 def _csv(value:str|None): return [x.strip() for x in (value or '').split(',') if x.strip()]
 
+def _print_json(value: object) -> None:
+    """Write locale-independent JSON to stdout.
+
+    CLI stdout is commonly consumed by a parent process that decodes with its
+    own legacy Windows code page.  ASCII JSON escapes keep that transport
+    stable while ``--out`` files continue to use UTF-8 with native characters.
+    """
+    print(json.dumps(value, ensure_ascii=True, indent=2))
+
+
+def _configure_stdio() -> None:
+    """Avoid console failures for non-ASCII help and diagnostic text."""
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if reconfigure is not None:
+            try:
+                reconfigure(errors="backslashreplace")
+            except (OSError, ValueError):
+                pass
+
 def _bridge_cmd(args) -> int:
     from .bridge import scan_repository, compile_bridge
     if args.bridge_command=="scan":
         result=scan_repository(args.source,source_id=args.source_id,profile=args.profile,max_files=args.max_files,max_total_bytes=args.max_bytes).to_dict()
         text=json.dumps(result,ensure_ascii=False,indent=2)
         if args.out: Path(args.out).write_text(text+"\n",encoding='utf-8')
-        print(text); return 0
+        _print_json(result); return 0
     result=compile_bridge(args.source,output_dir=args.out,source_id=args.source_id,profile=args.profile,max_findings=args.max_findings,max_semantic_interfaces=args.max_semantic_interfaces)
-    print(json.dumps({"status":"PASS" if result['manifest']['validation']['valid'] else "FAIL","状态":"通过" if result['manifest']['validation']['valid'] else "失败","output":str(args.out),"profile":result['manifest']['profile'],"findings":result['manifest']['findingCount'],"semanticInterfaces":result['manifest']['artifacts']['semanticInterfaceCount'],"semanticCapabilities":result['manifest']['artifacts']['semanticCapabilityCount'],"canonicalPromotionPerformed":False,"boundary":result['manifest']['boundary']},ensure_ascii=False,indent=2))
+    _print_json({"status":"PASS" if result['manifest']['validation']['valid'] else "FAIL","状态":"通过" if result['manifest']['validation']['valid'] else "失败","output":str(args.out),"profile":result['manifest']['profile'],"findings":result['manifest']['findingCount'],"semanticInterfaces":result['manifest']['artifacts']['semanticInterfaceCount'],"semanticCapabilities":result['manifest']['artifacts']['semanticCapabilityCount'],"canonicalPromotionPerformed":False,"boundary":result['manifest']['boundary']})
     return 0 if result['manifest']['validation']['valid'] else 2
 
 def _semantic_cmd(args) -> int:
@@ -26,26 +46,26 @@ def _semantic_cmd(args) -> int:
         result=verify_repository_semantics(args.source,source_id=args.source_id,profile=args.profile).to_dict()
         text=json.dumps(result,ensure_ascii=False,indent=2)
         if args.out: Path(args.out).write_text(text+'\n',encoding='utf-8')
-        print(text); return 0
+        _print_json(result); return 0
     if args.semantic_command=='compatible':
         producer=port_from_dict(load(args.producer)); consumer=port_from_dict(load(args.consumer))
         result=compare_ports(producer,consumer,producer_authority=_csv(args.producer_authority),consumer_authority=_csv(args.consumer_authority)).to_dict()
-        print(json.dumps(result,ensure_ascii=False,indent=2)); return 0 if result['classification'] not in {'incompatible'} else 2
+        _print_json(result); return 0 if result['classification'] not in {'incompatible'} else 2
     if args.semantic_command=='synthesize':
         producer=port_from_dict(load(args.producer)); consumer=port_from_dict(load(args.consumer))
         result=synthesize_bridge(producer,consumer,producer_authority=_csv(args.producer_authority),consumer_authority=_csv(args.consumer_authority),allow_lossy=args.allow_lossy)
         text=json.dumps(result,ensure_ascii=False,indent=2)
         if args.out: Path(args.out).write_text(text+'\n',encoding='utf-8')
-        print(text); return 0 if result['status']=='candidate' else 2
+        _print_json(result); return 0 if result['status']=='candidate' else 2
     if args.semantic_command=='connect':
         producer=verify_repository_semantics(args.producer_source,source_id=args.producer_id,profile=args.producer_profile)
         consumer=verify_repository_semantics(args.consumer_source,source_id=args.consumer_id,profile=args.consumer_profile)
         result=plan_repository_connection(producer,consumer,allow_lossy=args.allow_lossy,max_plans=args.max_plans,max_pairs=args.max_pairs,include_rejected=args.include_rejected)
         text=json.dumps(result,ensure_ascii=False,indent=2)
         if args.out: Path(args.out).write_text(text+'\n',encoding='utf-8')
-        print(text); return 0 if result['acceptedPlanCount']>0 else 3
+        _print_json(result); return 0 if result['acceptedPlanCount']>0 else 3
     plan=load(args.plan); value=load(args.value); result=apply_transform(value,plan.get('operations') or [])
-    print(json.dumps(result,ensure_ascii=False,indent=2)); return 0
+    _print_json(result); return 0
 
 def _runtime_cmd(args) -> int:
     from .runtime import run_invocation, run_interop, InvocationError, InteropError
@@ -55,15 +75,16 @@ def _runtime_cmd(args) -> int:
         else:
             result=run_interop(load(args.spec),load(args.input),allow_execution=args.allow_execution)
     except (InvocationError,InteropError) as exc:
-        print(json.dumps({"status":"FAIL","状态":"失败","error":str(exc),"boundary":"执行必须显式授权；扫描本身不会执行源码 / execution requires explicit consent; scanning never executes source"},ensure_ascii=False,indent=2))
+        _print_json({"status":"FAIL","状态":"失败","error":str(exc),"boundary":"执行必须显式授权；扫描本身不会执行源码 / execution requires explicit consent; scanning never executes source"})
         return 4
     text=json.dumps(result,ensure_ascii=False,indent=2)
     if args.out: Path(args.out).write_text(text+'\n',encoding='utf-8')
-    print(text)
+    _print_json(result)
     status=(result.get('receipt') or {}).get('status')
     return 0 if status=='PASS' else 5
 
 def main(argv=None) -> int:
+    _configure_stdio()
     parser=argparse.ArgumentParser(description="TaoWind OPP 验证、文明握手、桥编译与语义互操作工具 / validator, handshake, bridge compiler and semantic interoperability toolkit")
     sub=parser.add_subparsers(dest="command",required=True)
     p_validate=sub.add_parser("validate",help="验证现实信封 / validate envelope"); p_validate.add_argument("file")
@@ -96,8 +117,8 @@ def main(argv=None) -> int:
     if args.command=="validate":
         issues=validate_envelope(load(args.file))
         if issues:
-            print(json.dumps({"status":"FAIL","状态":"失败","issues":[i.__dict__ for i in issues]},ensure_ascii=False,indent=2)); return 1
-        print(json.dumps({"status":"PASS","状态":"通过","boundary":"结构通过不等于现实主张为真 / structural validation is not truth validation"},ensure_ascii=False,indent=2)); return 0
-    result=negotiate_handshake(load(args.local),load(args.remote)); print(json.dumps(result,ensure_ascii=False,indent=2)); return 0
+            _print_json({"status":"FAIL","状态":"失败","issues":[i.__dict__ for i in issues]}); return 1
+        _print_json({"status":"PASS","状态":"通过","boundary":"结构通过不等于现实主张为真 / structural validation is not truth validation"}); return 0
+    result=negotiate_handshake(load(args.local),load(args.remote)); _print_json(result); return 0
 
 if __name__=='__main__': raise SystemExit(main())

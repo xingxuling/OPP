@@ -31,6 +31,10 @@ v0.2 能证明“项目 A 的输出形状可以通过一个声明式桥变成项
 
 目标函数自己的 stdout / stderr（标准输出 / 标准错误）被捕获并进入调用回执。
 
+由于 Python `-I` isolated mode（隔离模式）忽略 `PYTHON*` 环境变量，child runner（子运行器）在自己的字节边界明确使用 UTF-8 读取 stdin 和写入 stdout；父运行时也只按 UTF-8 解码 child receipt（子回执）。这保证非 ASCII payload（负载）不会依赖宿主 Windows code page（代码页）。
+
+CLI stdout（命令行标准输出）使用 ASCII-safe JSON escape（ASCII 安全 JSON 转义），而 `--out` 文件保持 UTF-8。这样旧 Windows code page、管道消费者和 JSON 解析器不会因双语边界字段而失败。
+
 ## Process Sandbox（进程沙箱）的真实边界
 
 当前是 **bounded child process（有界子进程）**，不是强安全沙箱。已经实现：

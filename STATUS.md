@@ -17,7 +17,7 @@
 - Strong OS sandbox（强操作系统沙箱）：**not claimed / 不宣称**
 - Authority promotion（权限提升）：none / 无
 - Hidden retries（隐藏重试）：none / 无
-- Unit tests（单元测试）：41 / 41 PASS
+- Unit tests（单元测试）：43 / 43 PASS（2026-09-11 Windows 本机候选分支复验）
 - RCP capability negotiation（RCP 能力契约协商）：candidate，OPP-owned exact ID/schema agreement（OPP 所有的能力 ID/模式精确协商）
 - Wheel isolation install（安装包隔离安装）：PASS
 - Concrete fixture interop（具体夹具互操作）：PASS，receipt root `77b4cdfaa0f95a9cc75a4c7d08f9d8cc3b94d40f2a9b46b87c51b2b1496f7ff2`
@@ -25,3 +25,22 @@
 - Independent third-party interoperability（独立第三方互操作）：unverified / 未验证
 - External standard status（外部标准地位）：none / 无
 - GitHub Actions：not required / not used（不依赖 / 未使用）
+
+## Latest Reality Audit（2026-09-11）
+
+本轮以 GitHub `xingxuling/OPP` `main@61cc3828a58a7bffa8b1dbeb8c44ff3a9cb471d1` 为源码基线，在独立候选分支 `codex/opp-windows-utf8-v01` 上审计并修复 Windows 编码边界。
+
+- 基线运行：41 个测试中 37 个通过，4 个 CLI 用例因默认 `cp950` 无法编码双语 JSON 输出而失败；这是宿主输出边界故障，不是协议兼容性通过。
+- 本轮修改：隔离 child runner（子运行器）显式以 UTF-8 字节读写；CLI stdout 使用 ASCII-safe JSON，`--out` 文件仍使用 UTF-8；加入中文 payload 和旧 code page 回归测试。
+- 当前证据：43 / 43 本机测试通过；`compileall` 通过；强制安装本轮 wheel 到独立虚拟环境后，安装包 `opp validate` 通过；具体 fixture interop receipt root 保持 `77b4cdfaa0f95a9cc75a4c7d08f9d8cc3b94d40f2a9b46b87c51b2b1496f7ff2`。
+- 本轮不宣称：跨主机、独立第三方、强操作系统沙箱、网络隔离、staging 或 production verified。
+- 集成法院与机器证据：`docs/INTEGRATION_COURT_2026-09-11.md`、`evidence/OPP_WINDOWS_UTF8_AUDIT_2026-09-11.json`。
+
+## Production Gap Frontier（当前真实缺口）
+
+| Gap ID | 缺口 | 当前状态 | 最小下一验证 |
+|---|---|---|---|
+| OPP-WIN-UTF8-001 | Windows legacy code page 下的 child/CLI UTF-8 传输 | 本轮本机候选验证通过 | 独立安装环境的更多 Windows locale 与真实第三方 CLI consumer |
+| OPP-THIRD-PARTY-001 | 独立第三方系统互操作 | 未验证 | 选一个 OPP 从未见过的非 TaoWind producer/consumer，保留完整 receipt/evidence |
+| OPP-SANDBOX-001 | 强 OS sandbox / 网络与文件系统隔离 | 未宣称 | 评估成熟外部 sandbox adapter，不在 OPP 内重造 sandbox |
+| OPP-DISTRIBUTED-001 | 跨主机 transport、分区、重启和凭据轮换 | 未验证 | 复用 TINP 或成熟 transport，完成双主机最小故障实验 |

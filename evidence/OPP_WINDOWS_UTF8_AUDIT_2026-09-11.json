@@ -1,0 +1,67 @@
+{
+  "format": "taowind.opp.production-audit-receipt.v0.1",
+  "status": "CANDIDATE_EVIDENCE",
+  "repository": "xingxuling/OPP",
+  "sourceBaseRevision": "61cc3828a58a7bffa8b1dbeb8c44ff3a9cb471d1",
+  "candidateBranch": "codex/opp-windows-utf8-v01",
+  "frontier": {
+    "gapId": "OPP-WIN-UTF8-001",
+    "classification": "AUXILIARY_HOST_RUNTIME",
+    "rclGap": false,
+    "before": [
+      "Python -I child runner depended on ignored PYTHONIOENCODING and host locale",
+      "CLI stdout could fail before returning JSON under Windows cp950"
+    ],
+    "change": [
+      "Explicit UTF-8 bytes for child stdin/stdout",
+      "ASCII-safe JSON stdout for CLI and locale-safe diagnostics",
+      "UTF-8 preserved for --out files"
+    ]
+  },
+  "verification": {
+    "baseline": {
+      "tests": 41,
+      "passed": 37,
+      "failed": 4,
+      "failureClass": "WINDOWS_CODE_PAGE_UNICODE_ENCODE_ERROR"
+    },
+    "localTests": {
+      "command": "python -m unittest discover -s tests -v",
+      "tests": 43,
+      "passed": 43,
+      "failed": 0,
+      "host": "Windows Python 3.11"
+    },
+    "compileall": "PASS",
+    "utf8Payload": "PASS",
+    "legacyCodePageCli": "PASS",
+    "exampleInterop": {
+      "status": "PASS",
+      "receiptRoot": "77b4cdfaa0f95a9cc75a4c7d08f9d8cc3b94d40f2a9b46b87c51b2b1496f7ff2"
+    },
+    "wheelIsolation": {
+      "status": "PASS",
+      "package": "taowind-opp==0.3.0.dev1",
+      "installedValidateExit": 0,
+      "utf8Invocation": "PASS",
+      "wheelSha256": "2323f17a55edcf04c2e44d6c499dcb95757d5d961b957e85a7291fa0e8c41505"
+    }
+  },
+  "claimsPromoted": [
+    "Local candidate UTF-8 payload transport on the audited Windows host",
+    "Local candidate CLI JSON parseability under the tested legacy Windows code page"
+  ],
+  "claimsStillForbidden": [
+    "strong OS sandbox",
+    "network or filesystem isolation",
+    "independent third-party interoperability",
+    "cross-host or production verification",
+    "authority or canonical promotion"
+  ],
+  "nextFrontier": "OPP-THIRD-PARTY-001",
+  "boundary": "This receipt records local candidate evidence only; it does not establish production readiness, external standard status, or universal interoperability.",
+  "integrity": {
+    "algorithm": "sha256",
+    "contentRoot": "132751eecd2a7f220ca29eb61b98356f532910e3e9e2431c559ea7307f6812a7"
+  }
+}
