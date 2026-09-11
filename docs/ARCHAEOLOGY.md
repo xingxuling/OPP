@@ -51,3 +51,13 @@ DWAC Whole-Artifact Compiler（全工件编译器）v0.6.0 将 OPP 任务拆为 
 - `adapters/opp-bridge.mjs` 与 `adapters/opp-negotiate.py` 复用 OPP CHP/RCP 协商，不复制 OPP agreement semantics；
 - 当前资产没有证明公网 HTTP/REST、NAT、DNS、真实异机 enrollment 或生产网络 policy；其 OPP child adapter 仍 pinned 到旧 `f7b76582...`，不是本轮 OPP `main@61cc382...`；
 - 因此 OPP 本轮只记录 TINP 为 transport donor/owner，禁止把 TINP loopback 证据改称第三方网络互操作，也禁止把 TINP transport 复制进 OPP Core。下一步应先做明确的 TINP↔OPP adapter version/policy binding。
+
+## RCL OpenAPI donor archaeology（2026-09-11）
+
+AI001 `codex/fix-ai001-index-v02@d80cd08` was inspected before extending the transport boundary:
+
+- `src/openapi-source-frontend.mjs` parses OpenAPI 3.x JSON, resolves local references and emits one RCL capability specification per operation;
+- its declared boundary says it does not execute HTTP, resolve remote references or prove full OpenAPI conformance;
+- no executable HTTP provider, credential policy or receipt transport was found in the inspected source path.
+
+Decision: retain AI001 as an RCL source-frontend donor only. TINP keeps HTTP transport/provider ownership, OPP keeps CHP/RCP and handoff semantics, and no parallel OpenAPI transport was added.

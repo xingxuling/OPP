@@ -18,6 +18,13 @@
       "tests": 46,
       "passed": 46,
       "failed": 0
+    },
+    "tinpCandidate": {
+      "source": "codex/tinp-transport-policy-v01@a9e10b9334cda09f6f3834eae632472fb568db28",
+      "adapterTests": "10/10 PASS",
+      "fullSuite": "184/184 PASS",
+      "defaultTransport": "node:https.request with per-request explicit https.Agent",
+      "standardGlobalProxyBypassObserved": true
     }
   },
   "negativeCases": [
@@ -30,15 +37,15 @@
     "Re-rooted extra receipt field"
   ],
   "handoff": {
-    "path": "evidence/OPP_TINP_HTTP_HANDOFF_2026-09-11.json",
-    "providerReceiptRoot": "678062d0333113b7c3f3bba66ae3e93aeebdbf65bf401812d85f210c546dcf41",
+    "path": "evidence/OPP_TINP_HTTP_HANDOFF_NATIVE_2026-09-11.json",
+    "providerReceiptRoot": "d16b35f2fbf660d52c58fcda7b4148a9a8d98300e0955480ae5e2aa871ca4b34",
     "providerResponseRoot": "a97a84ea4b0b782a102fd59c7cae8e03368271e0430a77da848553cbfe131130",
-    "handoffRoot": "a23df78c116d5fb3ef9d9e420fa2357cf617303e688c755a8397caf4a67ddcb5",
+    "handoffRoot": "4944846a4716128644b1a641fce88fd51ebba14183d9fabf4a2e423f8b024716",
     "consumerAccepted": true
   },
   "authority": {
     "authorityGranted": false,
     "promotionPerformed": false
   },
-  "boundary": "OPP independently validates one TINP policy-bound observation before one explicit bounded consumer; this does not prove general interoperability, independent third-party status, cross-host transport or production authority."
+  "boundary": "OPP independently validates one TINP policy-bound native HTTPS observation before one explicit bounded consumer; this does not prove general interoperability, independent third-party status, cross-host transport, arbitrary runtime-hook resistance or production authority."
 }

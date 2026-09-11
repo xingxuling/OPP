@@ -17,7 +17,9 @@ The K400 references above are candidate stress locations observed in the surroun
 
 ## Donor advantage and provider boundary
 
-TINP base `codex/next-internet-v01@1aa235d9f5718f87c959e275da10a7bf12d58e9f` provides reusable UDP/TCP/TLS loopback transport, TINP DATA framing, peer public-key admission, timeout/overload handling, and a thin OPP negotiation adapter. The follow-up candidate `codex/tinp-transport-policy-v01@6314cb0f84be725a388996119783be5e3c4fa2bb` adds a policy-bound read-only HTTP provider, hardened receipt/response boundaries and one receipt-bound OPP consumer handoff. Neither branch provides physical cross-host or production network evidence.
+TINP base `codex/next-internet-v01@1aa235d9f5718f87c959e275da10a7bf12d58e9f` provides reusable UDP/TCP/TLS loopback transport, TINP DATA framing, peer public-key admission, timeout/overload handling, and a thin OPP negotiation adapter. The follow-up candidate `codex/tinp-transport-policy-v01@678ea875d432adfe833dc390bd236bbf03b7c9bb` adds a policy-bound read-only HTTP provider, hardened receipt/response boundaries, a native `https.request` path with a per-request Agent, and one receipt-bound OPP consumer handoff. Neither branch provides physical cross-host or production network evidence.
+
+AI001 `codex/fix-ai001-index-v02@d80cd08` was inspected as a source donor: `src/openapi-source-frontend.mjs` extracts one RCL capability spec per OpenAPI 3.x operation, but its own boundary explicitly excludes HTTP execution. No transport code was copied and no OpenAPI execution capability is promoted.
 
 Decision: reuse through the explicit TINP↔OPP adapter and policy binding candidate; do not copy TINP transport into OPP Core and do not call this TaoWind-to-TaoWind handoff independent third-party interoperability.
 
@@ -28,7 +30,8 @@ Decision: reuse through the explicit TINP↔OPP adapter and policy binding candi
 3. `THIRD_PARTY_CHILD_NETWORK_FAIL_CLOSED`: the child fails closed when the sanitized environment cannot resolve the public host.
 4. `THIRD_PARTY_NO_HIDDEN_AUTHORITY`: no ambient proxy, credential inheritance, hidden retry, shell execution, bridge execution, or consumer execution is introduced.
 5. `GENERIC_DYNAMIC_OUTPUT_NO_GUESSED_SEMANTICS`: static Auto Connect refuses to invent field mappings for a dynamic HTTP response.
-6. `AUTHORITY_ZERO`: all receipts remain evidence-only; no agreement, protocol, or canonical authority is promoted.
+6. `NATIVE_TRANSPORT_GLOBAL_PROXY_BOUNDARY`: the default native path completes the bounded read while Node's standard global proxy API points at an unavailable loopback endpoint.
+7. `AUTHORITY_ZERO`: all receipts remain evidence-only; no agreement, protocol, or canonical authority is promoted.
 
 ## Lowering / provider evidence
 
@@ -55,4 +58,4 @@ The nine gates are non-compensatory. No K400 PASS, RCL Core absorption, or autho
 
 ## Next frontier
 
-Define and review the TINP↔OPP adapter version, network/proxy policy, and receipt contract before repeating the same read-only public HTTP experiment. Until that owner contract exists, the correct status is `FAIL_CLOSED` / `NOT_VERIFIED`.
+Review the existing TINP↔OPP adapter version, native network/proxy policy and receipt contract, then obtain a genuinely independent provider/producer replay. Until that external owner and replay evidence exists, the correct status remains candidate-only / `NOT_VERIFIED`.

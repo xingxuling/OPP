@@ -10,7 +10,8 @@
 - Static OPP audit scanned 5 files and found 2 callable interfaces; Auto Connect compared 0 pairs and accepted 0 because the dynamic HTTP response stayed a generic object.
 - OPP child attempt: explicit consent was supplied, but the producer failed closed with `GITHUB_NETWORK_ERROR:gaierror` before the bridge or consumer ran.
 - Donor archaeology: TINP `codex/next-internet-v01@1aa235d9f5718f87c959e275da10a7bf12d58e9f` owns reusable UDP/TCP/TLS loopback transport and an OPP negotiation adapter, but does not provide public HTTP/REST or cross-host production network evidence.
-- Follow-up candidate: TINP `codex/tinp-transport-policy-v01@6314cb0` now provides an explicit read-only HTTP policy/receipt adapter with hardened header, object-shape, prototype-key and receipt-semantic boundaries; the separate handoff Court records its bounded PASS into an OPP consumer.
+- Follow-up candidate: TINP `codex/tinp-transport-policy-v01@678ea87` now provides an explicit read-only HTTP policy/receipt adapter with hardened header, object-shape, prototype-key and receipt-semantic boundaries; its default native `https.request` path uses a per-request Agent, and the separate handoff Court records its bounded PASS into an OPP consumer.
+- RCL donor archaeology: AI001 `codex/fix-ai001-index-v02@d80cd08` provides an OpenAPI 3.x source frontend that extracts capability specifications from JSON and explicitly does not execute HTTP; it is a static source donor, not an HTTP Provider.
 
 ## What Changed
 
