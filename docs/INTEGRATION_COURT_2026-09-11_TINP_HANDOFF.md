@@ -2,7 +2,7 @@
 
 ## Current Reality
 
-- OPP consumer branch: `codex/opp-third-party-boundary-v01@97b770b`.
+- OPP consumer branch: `codex/opp-third-party-boundary-v01@66efb18` (handoff verifier source at `97b770b`).
 - TINP provider candidate: `codex/tinp-transport-policy-v01@6314cb0f84be725a388996119783be5e3c4fa2bb`.
 - TINP policy format: `twni.opp-http-readonly-policy.v1`.
 - TINP receipt format: `twni.opp-http-readonly-receipt.v1`.
