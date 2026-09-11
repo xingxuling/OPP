@@ -10,18 +10,21 @@
 - Static OPP audit scanned 5 files and found 2 callable interfaces; Auto Connect compared 0 pairs and accepted 0 because the dynamic HTTP response stayed a generic object.
 - OPP child attempt: explicit consent was supplied, but the producer failed closed with `GITHUB_NETWORK_ERROR:gaierror` before the bridge or consumer ran.
 - Donor archaeology: TINP `codex/next-internet-v01@1aa235d9f5718f87c959e275da10a7bf12d58e9f` owns reusable UDP/TCP/TLS loopback transport and an OPP negotiation adapter, but does not provide public HTTP/REST or cross-host production network evidence.
+- Follow-up candidate: TINP `codex/tinp-transport-policy-v01@159948b` now provides an explicit read-only HTTP policy/receipt adapter; the separate handoff Court records its bounded PASS into an OPP consumer.
 
 ## What Changed
 
 - Added a manual read-only third-party fixture under `examples/third-party-fixtures/`.
 - Added a candidate interop run spec with an exact declarative identity bridge.
 - Recorded both the host-level external observation and the OPP child negative receipt.
+- Added a separate TINP policy-bound handoff fixture and OPP-side receipt verifier; this is provider-bound candidate evidence, not direct OPP child network access.
 - No OPP Core protocol, RCL semantic owner, or authority boundary was changed.
 
 ## Evidence
 
 - Machine evidence: `evidence/OPP_THIRD_PARTY_BOUNDARY_2026-09-11.json`
 - RCL stress ledger: `docs/RCL_STRESS_FIELD_2026-09-11.md`
+- Handoff Court: `docs/INTEGRATION_COURT_2026-09-11_TINP_HANDOFF.md`
 - Evidence root: `dec1dbf2e2dd8ee5b9129bbfe4039b7c945abec2920e4b122934eeb72cc4aa58`
 - Host selected response root: `a97a84ea4b0b782a102fd59c7cae8e03368271e0430a77da848553cbfe131130`
 - Failed OPP interop receipt root: `c4be98a06bd59dc35ad1aedef028368a3e13b675100fd806373b16975b07d911`
@@ -50,11 +53,11 @@ This does not promote third-party interoperability, HTTP adapter support, or pro
 
 ## Remaining Production Gaps
 
-`OPP-TRANSPORT-001` is open: TINP or a mature external HTTP adapter must own the declared proxy/network policy and receipts. OPP must consume that adapter without copying the transport stack, and the child must not silently inherit ambient network authority.
+`OPP-TRANSPORT-001` has a concrete TINP candidate policy/receipt contract, but it remains open until review, independent replay and production owner evidence. OPP must consume that adapter without copying the transport stack, and the child must not silently inherit ambient network authority.
 
 ## Next Frontier
 
-Resolve the TINP↔OPP adapter version/policy binding first. Re-run the same public GET only after an explicit transport owner, proxy policy and receipt contract exist.
+The TINP↔OPP adapter version/policy binding now exists as a candidate and has produced one bounded handoff. The next step is Court review plus a genuinely independent producer/provider replay; do not promote this TaoWind-to-TaoWind handoff to universal third-party interoperability.
 
 ## Merge / Release Decision
 

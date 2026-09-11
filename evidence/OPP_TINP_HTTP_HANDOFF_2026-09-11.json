@@ -1,0 +1,22 @@
+{
+  "format": "taowind.opp.tinp-http-handoff.v0.1",
+  "status": "PASS",
+  "providerPolicyRoot": "0b0626c2784f40ab7afade7f69f9f7374710cc6fac621accd1089bac32cedc0d",
+  "providerRequestRoot": "98683026a23aa9dcc444f28a03a52f778277b0547737a773b477f5ce2b02ad29",
+  "providerReceiptRoot": "678062d0333113b7c3f3bba66ae3e93aeebdbf65bf401812d85f210c546dcf41",
+  "providerResponseRoot": "a97a84ea4b0b782a102fd59c7cae8e03368271e0430a77da848553cbfe131130",
+  "consumerReceiptRoot": "169ce0158098e5c61500b221d0bc65088ed6484948b705d310d2255f18c6eece",
+  "consumerResultRoot": "d0c61f21f04cdff863ebeeb2ef398dc0afafef8b9c17752970996c927d45bdca",
+  "consumerResult": {
+    "accepted": true,
+    "full_name": "xingxuling/OPP",
+    "default_branch": "main",
+    "private": false
+  },
+  "authority": {
+    "promotionPerformed": false,
+    "authorityGranted": false
+  },
+  "boundary": "This handoff proves one TINP policy-bound observation was accepted by one explicit OPP consumer; it does not prove general interoperability or production network authority.",
+  "handoffRoot": "a23df78c116d5fb3ef9d9e420fa2357cf617303e688c755a8397caf4a67ddcb5"
+}

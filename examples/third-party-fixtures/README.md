@@ -14,3 +14,9 @@ but the OPP child failed closed with `GITHUB_NETWORK_ERROR:gaierror` because
 the sanitized child environment does not implicitly inherit the host proxy or
 network configuration. That negative result is intentional evidence, not a
 third-party interoperability PASS.
+
+The follow-up TINP policy-bound adapter handoff is recorded separately in
+`tinp-http-handoff.json` and `evidence/OPP_TINP_HTTP_HANDOFF_2026-09-11.json`.
+It proves only that one explicit TINP provider receipt was verified before one
+bounded OPP consumer invocation; it does not turn the direct child failure into
+general OPP network access or independent third-party verification.

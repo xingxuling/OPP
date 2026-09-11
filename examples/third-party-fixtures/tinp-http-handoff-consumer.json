@@ -1,0 +1,15 @@
+{
+  "format": "taowind.opp.invocation-spec.v0.1",
+  "version": "0.3.0-candidate.1",
+  "adapterKind": "python-function",
+  "sourceRoot": ".",
+  "callingConvention": "kwargs",
+  "timeoutMs": 3000,
+  "maxOutputBytes": 262144,
+  "cwdPolicy": "ephemeral",
+  "environmentPolicy": "sanitized",
+  "authorityRequired": [],
+  "status": "candidate",
+  "specId": "tinp-http-handoff-consumer",
+  "entrypoint": "examples/third-party-fixtures/local_consumer.py:accept_repository"
+}

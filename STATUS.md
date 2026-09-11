@@ -41,13 +41,14 @@
 - 宿主对 GitHub REST `GET /repos/xingxuling/OPP` 获得 HTTP `200`，但 OPP 显式授权的 child process 在清理环境中以 `GITHUB_NETWORK_ERROR:gaierror` 失败关闭；没有继承代理、凭据或隐藏重试。
 - 这只产生负证据，不产生 `THIRD_PARTY_VERIFIED` 互操作声明。详见 `docs/INTEGRATION_COURT_2026-09-11_THIRD_PARTY.md`、`evidence/OPP_THIRD_PARTY_BOUNDARY_2026-09-11.json`。
 - RCL/K400 候选压力账本见 `docs/RCL_STRESS_FIELD_2026-09-11.md`；九门均不自宣 PASS。
+- 后续 TINP policy-bound HTTP adapter 已将同一 projected response 通过显式 handoff 交给 OPP consumer，handoff PASS 见 `docs/INTEGRATION_COURT_2026-09-11_TINP_HANDOFF.md`、`evidence/OPP_TINP_HTTP_HANDOFF_2026-09-11.json`；仍不升级为独立第三方或生产声明。
 
 ## Production Gap Frontier（当前真实缺口）
 
 | Gap ID | 缺口 | 当前状态 | 最小下一验证 |
 |---|---|---|---|
 | OPP-WIN-UTF8-001 | Windows legacy code page 下的 child/CLI UTF-8 传输 | 本轮本机候选验证通过 | 独立安装环境的更多 Windows locale 与真实第三方 CLI consumer |
-| OPP-THIRD-PARTY-001 | 独立第三方系统互操作 | 宿主观察到第三方响应；child interop FAIL_CLOSED | 先完成显式 transport policy，再重跑同一只读第三方 GET |
-| OPP-TRANSPORT-001 | 第三方网络 transport、代理与权限边界 | 未实现；已有负证据 | 复用 TINP 或成熟 HTTP adapter，声明网络策略并生成 receipt |
+| OPP-THIRD-PARTY-001 | 独立第三方系统互操作 | TINP policy-bound provider → OPP explicit consumer handoff PASS；direct child FAIL_CLOSED | 第二个独立 provider/producer 与 Court replay |
+| OPP-TRANSPORT-001 | 第三方网络 transport、代理与权限边界 | TINP candidate policy/receipt 已实现，未合并/未生产 | 独立审查、跨主机/凭据生命周期与故障实验 |
 | OPP-SANDBOX-001 | 强 OS sandbox / 网络与文件系统隔离 | 未宣称 | 评估成熟外部 sandbox adapter，不在 OPP 内重造 sandbox |
 | OPP-DISTRIBUTED-001 | 跨主机 transport、分区、重启和凭据轮换 | 未验证 | 复用 TINP 或成熟 transport，完成双主机最小故障实验 |
