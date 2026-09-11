@@ -40,6 +40,7 @@
 
 - 宿主对 GitHub REST `GET /repos/xingxuling/OPP` 获得 HTTP `200`，但 OPP 显式授权的 child process 在清理环境中以 `GITHUB_NETWORK_ERROR:gaierror` 失败关闭；没有继承代理、凭据或隐藏重试。
 - 这只产生负证据，不产生 `THIRD_PARTY_VERIFIED` 互操作声明。详见 `docs/INTEGRATION_COURT_2026-09-11_THIRD_PARTY.md`、`evidence/OPP_THIRD_PARTY_BOUNDARY_2026-09-11.json`。
+- RCL/K400 候选压力账本见 `docs/RCL_STRESS_FIELD_2026-09-11.md`；九门均不自宣 PASS。
 
 ## Production Gap Frontier（当前真实缺口）
 

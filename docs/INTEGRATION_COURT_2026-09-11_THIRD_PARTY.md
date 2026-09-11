@@ -21,6 +21,7 @@
 ## Evidence
 
 - Machine evidence: `evidence/OPP_THIRD_PARTY_BOUNDARY_2026-09-11.json`
+- RCL stress ledger: `docs/RCL_STRESS_FIELD_2026-09-11.md`
 - Evidence root: `dec1dbf2e2dd8ee5b9129bbfe4039b7c945abec2920e4b122934eeb72cc4aa58`
 - Host selected response root: `a97a84ea4b0b782a102fd59c7cae8e03368271e0430a77da848553cbfe131130`
 - Failed OPP interop receipt root: `c4be98a06bd59dc35ad1aedef028368a3e13b675100fd806373b16975b07d911`
@@ -57,4 +58,4 @@ Resolve the TINP↔OPP adapter version/policy binding first. Re-run the same pub
 
 ## Merge / Release Decision
 
-The fixture and negative evidence are candidate-only and may be reviewed independently. Do not merge them as proof of third-party interoperability; the network boundary remains open.
+The fixture and negative evidence are candidate-only and may be reviewed independently. Do not merge them as proof of third-party interoperability; the network boundary remains open. The RCL stress ledger records candidate input only and grants no K400 or RCL Core promotion.

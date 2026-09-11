@@ -17,6 +17,7 @@
 ## Evidence
 
 - Machine evidence: `evidence/OPP_WINDOWS_UTF8_AUDIT_2026-09-11.json`
+- RCL stress ledger: `docs/RCL_STRESS_FIELD_2026-09-11.md`
 - Evidence root: `132751eecd2a7f220ca29eb61b98356f532910e3e9e2431c559ea7307f6812a7`
 - Source boundary: `src/opp/cli.py`, `src/opp/runtime/child_python.py`
 - Concrete interop receipt root: `77b4cdfaa0f95a9cc75a4c7d08f9d8cc3b94d40f2a9b46b87c51b2b1496f7ff2`
@@ -53,4 +54,4 @@ Select one structurally unfamiliar third-party producer/consumer and run a conse
 
 ## Merge / Release Decision
 
-Candidate branch is ready for review after local verification. Do not label the package production-ready or stable; merge requires review of the evidence and the remaining sandbox/distributed/third-party boundaries.
+Candidate branch is ready for review after local verification. Do not label the package production-ready or stable; merge requires review of the evidence, the RCL stress ledger, and the remaining sandbox/distributed/third-party boundaries.
