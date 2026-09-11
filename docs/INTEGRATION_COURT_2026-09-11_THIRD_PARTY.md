@@ -12,6 +12,7 @@
 - Donor archaeology: TINP `codex/next-internet-v01@1aa235d9f5718f87c959e275da10a7bf12d58e9f` owns reusable UDP/TCP/TLS loopback transport and an OPP negotiation adapter, but does not provide public HTTP/REST or cross-host production network evidence.
 - Follow-up candidate: TINP `codex/tinp-transport-policy-v01@678ea87` now provides an explicit read-only HTTP policy/receipt adapter with hardened header, object-shape, prototype-key and receipt-semantic boundaries; its default native `https.request` path uses a per-request Agent, and the separate handoff Court records its bounded PASS into an OPP consumer.
 - RCL donor archaeology: AI001 `codex/fix-ai001-index-v02@d80cd08` provides an OpenAPI 3.x source frontend that extracts capability specifications from JSON and explicitly does not execute HTTP; it is a static source donor, not an HTTP Provider.
+- Independent runtime replay: system curl/libcurl completed the same public read with `--noproxy *`; the declared selected-field root matched TINP native, while the unprojected wire root differed and was not merged into the TINP receipt.
 
 ## What Changed
 
@@ -24,6 +25,7 @@
 ## Evidence
 
 - Machine evidence: `evidence/OPP_THIRD_PARTY_BOUNDARY_2026-09-11.json`
+- Independent runtime differential: `evidence/OPP_INDEPENDENT_CURL_REPLAY_2026-09-11.json`
 - RCL stress ledger: `docs/RCL_STRESS_FIELD_2026-09-11.md`
 - Handoff Court: `docs/INTEGRATION_COURT_2026-09-11_TINP_HANDOFF.md`
 - Evidence root: `dec1dbf2e2dd8ee5b9129bbfe4039b7c945abec2920e4b122934eeb72cc4aa58`
@@ -36,6 +38,7 @@
 - Parent host read-only GitHub REST preflight: `PASS`, HTTP `200`.
 - OPP `interop run --allow-execution`: `FAIL_CLOSED`, `PRODUCER_FAILED`.
 - OPP static Auto Connect: `0` accepted plans; no field semantics were guessed.
+- Independent curl/libcurl replay: `PASS`, HTTP `200`, selected-field root matched TINP native; wire roots intentionally differed.
 - Bridge and consumer were not executed after producer failure.
 - No hidden retry or proxy/credential inheritance occurred.
 
@@ -58,7 +61,7 @@ This does not promote third-party interoperability, HTTP adapter support, or pro
 
 ## Next Frontier
 
-The TINP↔OPP adapter version/policy binding now exists as a candidate and has produced one bounded handoff. The next step is Court review plus a genuinely independent producer/provider replay; do not promote this TaoWind-to-TaoWind handoff to universal third-party interoperability.
+The TINP↔OPP adapter version/policy binding now exists as a candidate and has produced one bounded handoff plus an independent curl differential replay. The next step is Court review plus a separately owned producer/provider with its own receipt/authority boundary; do not promote these observations to universal third-party interoperability.
 
 ## Merge / Release Decision
 

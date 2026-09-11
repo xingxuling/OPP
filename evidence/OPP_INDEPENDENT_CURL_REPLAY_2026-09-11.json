@@ -1,0 +1,48 @@
+{
+  "format": "taowind.opp.independent-curl-replay.v1",
+  "status": "PASS",
+  "producer": {
+    "binary": "curl",
+    "version": "8.21.0",
+    "tlsBackend": "Schannel",
+    "runtime": "libcurl"
+  },
+  "request": {
+    "method": "GET",
+    "url": "https://api.github.com/repos/xingxuling/OPP",
+    "headers": {
+      "accept": "application/vnd.github+json",
+      "user-agent": "TINP-OPP-independent-replay/0.1"
+    },
+    "proxyPolicy": "--noproxy *",
+    "redirectPolicy": "no -L option; no redirect following",
+    "connectTimeoutSeconds": 10,
+    "maxTimeSeconds": 20,
+    "maxResponseBytes": 16777216,
+    "credentialsProvided": false
+  },
+  "response": {
+    "httpStatus": 200,
+    "responseBytes": 4975,
+    "selectedFields": {
+      "default_branch": "main",
+      "full_name": "xingxuling/OPP",
+      "private": false
+    },
+    "wireResponseRoot": "7112cdbb240a06aeafcf1f3a6b4284a05237393f86bbcb39cf05bbff042120f1",
+    "projectedResponseRoot": "a97a84ea4b0b782a102fd59c7cae8e03368271e0430a77da848553cbfe131130"
+  },
+  "differentialComparison": {
+    "tinpNativeProjectedResponseRoot": "a97a84ea4b0b782a102fd59c7cae8e03368271e0430a77da848553cbfe131130",
+    "projectedRootsEqual": true,
+    "tinpNativeWireResponseRoot": "f5b9960baa7d746aa892224c353944d8d672f66c4b6bd3b554c3596fdb40bc6e",
+    "wireRootsEqual": false,
+    "wireRootDifferenceReason": "The two independent HTTP responses can contain different unprojected repository metadata; only the declared selected-field root is compared."
+  },
+  "authority": {
+    "authorityGranted": false,
+    "thirdPartyVerified": false,
+    "productionPromoted": false
+  },
+  "boundary": "This is an independent curl/libcurl replay of one public read and a differential check of the declared selected-field root. It is not an OPP protocol receipt, not a TINP provider receipt, not independent third-party ownership, and not proof of cross-host or production network readiness."
+}

@@ -31,7 +31,8 @@ Decision: reuse through the explicit TINP↔OPP adapter and policy binding candi
 4. `THIRD_PARTY_NO_HIDDEN_AUTHORITY`: no ambient proxy, credential inheritance, hidden retry, shell execution, bridge execution, or consumer execution is introduced.
 5. `GENERIC_DYNAMIC_OUTPUT_NO_GUESSED_SEMANTICS`: static Auto Connect refuses to invent field mappings for a dynamic HTTP response.
 6. `NATIVE_TRANSPORT_GLOBAL_PROXY_BOUNDARY`: the default native path completes the bounded read while Node's standard global proxy API points at an unavailable loopback endpoint.
-7. `AUTHORITY_ZERO`: all receipts remain evidence-only; no agreement, protocol, or canonical authority is promoted.
+7. `CURL_NATIVE_DIFFERENTIAL_ROOT`: an independent curl/libcurl replay matches the declared selected-field root while intentionally not equating unprojected wire roots.
+8. `AUTHORITY_ZERO`: all receipts remain evidence-only; no agreement, protocol, or canonical authority is promoted.
 
 ## Lowering / provider evidence
 
@@ -58,4 +59,4 @@ The nine gates are non-compensatory. No K400 PASS, RCL Core absorption, or autho
 
 ## Next frontier
 
-Review the existing TINP↔OPP adapter version, native network/proxy policy and receipt contract, then obtain a genuinely independent provider/producer replay. Until that external owner and replay evidence exists, the correct status remains candidate-only / `NOT_VERIFIED`.
+Review the existing TINP↔OPP adapter version, native network/proxy policy and receipt contract, then obtain a separately owned provider/producer with its own receipt and authority boundary. The curl replay is only differential runtime evidence; the correct status remains candidate-only / `NOT_VERIFIED`.

@@ -41,7 +41,7 @@
 - 宿主对 GitHub REST `GET /repos/xingxuling/OPP` 获得 HTTP `200`，但 OPP 显式授权的 child process 在清理环境中以 `GITHUB_NETWORK_ERROR:gaierror` 失败关闭；没有继承代理、凭据或隐藏重试。
 - 这只产生负证据，不产生 `THIRD_PARTY_VERIFIED` 互操作声明。详见 `docs/INTEGRATION_COURT_2026-09-11_THIRD_PARTY.md`、`evidence/OPP_THIRD_PARTY_BOUNDARY_2026-09-11.json`。
 - RCL/K400 候选压力账本见 `docs/RCL_STRESS_FIELD_2026-09-11.md`；九门均不自宣 PASS。
-- 后续 TINP policy-bound HTTP adapter 已将同一 projected response 通过显式 handoff 交给 OPP consumer；OPP 侧现在独立复验 HTTP status/media/error/size/boundary/shape 语义，并拒绝重算根后的伪造回执。最新 TINP 默认路径改为 Node 内置 `https.request` 与每请求显式 Agent，且标准全局 proxy API 的 loopback 负例仍得到 HTTP 200。handoff PASS 见 `docs/INTEGRATION_COURT_2026-09-11_TINP_HANDOFF.md`、`evidence/OPP_TINP_HTTP_HANDOFF_NATIVE_2026-09-11.json` 与 `evidence/OPP_TINP_HANDOFF_HARDENING_2026-09-11.json`；仍不升级为独立第三方或生产声明。
+- 后续 TINP policy-bound HTTP adapter 已将同一 projected response 通过显式 handoff 交给 OPP consumer；OPP 侧现在独立复验 HTTP status/media/error/size/boundary/shape 语义，并拒绝重算根后的伪造回执。最新 TINP 默认路径改为 Node 内置 `https.request` 与每请求显式 Agent，且标准全局 proxy API 的 loopback 负例仍得到 HTTP 200。另用系统 curl/libcurl 做了禁止代理、禁止重定向的独立 runtime replay，选定字段 root 与 TINP native root 一致；这仍不是第三方 Owner 或生产证明。handoff PASS 见 `docs/INTEGRATION_COURT_2026-09-11_TINP_HANDOFF.md`、`evidence/OPP_TINP_HTTP_HANDOFF_NATIVE_2026-09-11.json`、`evidence/OPP_TINP_HANDOFF_HARDENING_2026-09-11.json` 与 `evidence/OPP_INDEPENDENT_CURL_REPLAY_2026-09-11.json`；仍不升级为独立第三方或生产声明。
 
 ## Production Gap Frontier（当前真实缺口）
 
