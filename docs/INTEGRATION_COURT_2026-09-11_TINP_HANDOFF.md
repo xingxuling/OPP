@@ -29,7 +29,7 @@
 
 ## Tests
 
-- TINP adapter tests: `8/8 PASS`; full suite: `182/182 PASS`.
+- TINP adapter tests: `9/9 PASS`; full suite: `183/183 PASS`.
 - OPP source-tree suite: `46/46 PASS` (`43` baseline tests plus `3` handoff-boundary tests).
 - OPP handoff verifier and bounded consumer: `PASS`.
 - Provider response root equals the OPP canonical root of the projected fields.
@@ -52,7 +52,7 @@ This remains a candidate handoff claim, not a universal or independent third-par
 
 ## Remaining Production Gaps
 
-`OPP-TRANSPORT-001` now has a concrete TINP candidate contract, but it is not merged, independently reviewed or production-ready. Physical cross-host transport, external certificate/credential lifecycle, proxy policy, failure recovery and independent external producer behavior remain open.
+`OPP-TRANSPORT-001` now has a concrete TINP candidate contract, but it is not merged, independently reviewed or production-ready. Physical cross-host transport, external certificate/credential lifecycle, dynamic process-global dispatcher state, proxy policy, failure recovery and independent external producer behavior remain open.
 
 `OPP-THIRD-PARTY-001` remains below independent third-party verification: GitHub supplied the observed data, but the executable provider is a TaoWind TINP candidate and the OPP consumer is an explicit local fixture.
 
