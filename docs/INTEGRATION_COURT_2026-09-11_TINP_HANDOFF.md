@@ -2,8 +2,8 @@
 
 ## Current Reality
 
-- OPP consumer branch: `codex/opp-third-party-boundary-v01@51e4e619e5cc3df18e99a21b4272286426d757c5`.
-- TINP provider candidate: `codex/tinp-transport-policy-v01@159948b`.
+- OPP consumer branch: `codex/opp-third-party-boundary-v01@39c93d0f90f03db617b7b8ca47734ccdaaa6f3fe`.
+- TINP provider candidate: `codex/tinp-transport-policy-v01@6314cb0f84be725a388996119783be5e3c4fa2bb`.
 - TINP policy format: `twni.opp-http-readonly-policy.v1`.
 - TINP receipt format: `twni.opp-http-readonly-receipt.v1`.
 - Public GitHub REST request: explicit HTTPS `GET`, exact host/path allowlist, no credentials, no redirect, one attempt; host response was HTTP `200`.
@@ -18,6 +18,7 @@
 ## Evidence
 
 - TINP live run: [OPP_HTTP_READONLY_GITHUB_2026-09-11.json](C:/Users/User/Documents/RCL/_worktrees/tinp-transport-policy-v01/evidence/OPP_HTTP_READONLY_GITHUB_2026-09-11.json)
+- TINP hardening evidence: [OPP_HTTP_READONLY_HARDENING_2026-09-11.json](C:/Users/User/Documents/RCL/_worktrees/tinp-transport-policy-v01/evidence/OPP_HTTP_READONLY_HARDENING_2026-09-11.json)
 - OPP handoff evidence: [OPP_TINP_HTTP_HANDOFF_2026-09-11.json](C:/Users/User/Documents/RCL/_worktrees/opp-production-audit-v01/evidence/OPP_TINP_HTTP_HANDOFF_2026-09-11.json)
 - TINP policy root: `0b0626c2784f40ab7afade7f69f9f7374710cc6fac621accd1089bac32cedc0d`
 - TINP provider receipt root: `678062d0333113b7c3f3bba66ae3e93aeebdbf65bf401812d85f210c546dcf41`
@@ -27,7 +28,7 @@
 
 ## Tests
 
-- TINP full suite: `180/180 PASS`.
+- TINP adapter tests: `8/8 PASS`; full suite: `182/182 PASS`.
 - OPP source-tree suite: `43/43 PASS`.
 - OPP handoff verifier and bounded consumer: `PASS`.
 - Provider response root equals the OPP canonical root of the projected fields.

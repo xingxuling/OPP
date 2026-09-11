@@ -17,7 +17,7 @@ The K400 references above are candidate stress locations observed in the surroun
 
 ## Donor advantage and provider boundary
 
-TINP base `codex/next-internet-v01@1aa235d9f5718f87c959e275da10a7bf12d58e9f` provides reusable UDP/TCP/TLS loopback transport, TINP DATA framing, peer public-key admission, timeout/overload handling, and a thin OPP negotiation adapter. The follow-up candidate `codex/tinp-transport-policy-v01@159948b` adds a policy-bound read-only HTTP provider and one receipt-bound OPP consumer handoff. Neither branch provides physical cross-host or production network evidence.
+TINP base `codex/next-internet-v01@1aa235d9f5718f87c959e275da10a7bf12d58e9f` provides reusable UDP/TCP/TLS loopback transport, TINP DATA framing, peer public-key admission, timeout/overload handling, and a thin OPP negotiation adapter. The follow-up candidate `codex/tinp-transport-policy-v01@6314cb0f84be725a388996119783be5e3c4fa2bb` adds a policy-bound read-only HTTP provider, hardened receipt/response boundaries and one receipt-bound OPP consumer handoff. Neither branch provides physical cross-host or production network evidence.
 
 Decision: reuse through the explicit TINP↔OPP adapter and policy binding candidate; do not copy TINP transport into OPP Core and do not call this TaoWind-to-TaoWind handoff independent third-party interoperability.
 
