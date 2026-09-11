@@ -1,0 +1,44 @@
+{
+  "format": "taowind.opp.tinp-http-handoff-hardening-evidence.v1",
+  "status": "PASS",
+  "source": {
+    "repository": "https://github.com/xingxuling/OPP",
+    "branch": "codex/opp-third-party-boundary-v01",
+    "commit": "97b770baf9b2a14a1e87228bc5db7298ea1d53d7"
+  },
+  "tests": {
+    "handoffBoundary": {
+      "command": "python -m unittest tests.test_third_party_handoff -v",
+      "tests": 3,
+      "passed": 3,
+      "failed": 0
+    },
+    "fullSuite": {
+      "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
+      "tests": 46,
+      "passed": 46,
+      "failed": 0
+    }
+  },
+  "negativeCases": [
+    "Re-rooted HTTP 500 receipt",
+    "Re-rooted non-JSON content type",
+    "Re-rooted non-null error on PASS",
+    "Re-rooted oversized responseBytes",
+    "Re-rooted authority boundary mutation",
+    "Re-rooted retry count mutation",
+    "Re-rooted extra receipt field"
+  ],
+  "handoff": {
+    "path": "evidence/OPP_TINP_HTTP_HANDOFF_2026-09-11.json",
+    "providerReceiptRoot": "678062d0333113b7c3f3bba66ae3e93aeebdbf65bf401812d85f210c546dcf41",
+    "providerResponseRoot": "a97a84ea4b0b782a102fd59c7cae8e03368271e0430a77da848553cbfe131130",
+    "handoffRoot": "a23df78c116d5fb3ef9d9e420fa2357cf617303e688c755a8397caf4a67ddcb5",
+    "consumerAccepted": true
+  },
+  "authority": {
+    "authorityGranted": false,
+    "promotionPerformed": false
+  },
+  "boundary": "OPP independently validates one TINP policy-bound observation before one explicit bounded consumer; this does not prove general interoperability, independent third-party status, cross-host transport or production authority."
+}

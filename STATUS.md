@@ -17,7 +17,7 @@
 - Strong OS sandbox（强操作系统沙箱）：**not claimed / 不宣称**
 - Authority promotion（权限提升）：none / 无
 - Hidden retries（隐藏重试）：none / 无
-- Unit tests（单元测试）：43 / 43 PASS（2026-09-11 Windows 本机候选分支复验）
+- Unit tests（单元测试）：46 / 46 PASS（43 个既有测试 + 3 个 TINP handoff receipt boundary 负例，2026-09-11 本机候选分支复验）
 - RCP capability negotiation（RCP 能力契约协商）：candidate，OPP-owned exact ID/schema agreement（OPP 所有的能力 ID/模式精确协商）
 - Wheel isolation install（安装包隔离安装）：PASS
 - Concrete fixture interop（具体夹具互操作）：PASS，receipt root `77b4cdfaa0f95a9cc75a4c7d08f9d8cc3b94d40f2a9b46b87c51b2b1496f7ff2`
@@ -41,7 +41,7 @@
 - 宿主对 GitHub REST `GET /repos/xingxuling/OPP` 获得 HTTP `200`，但 OPP 显式授权的 child process 在清理环境中以 `GITHUB_NETWORK_ERROR:gaierror` 失败关闭；没有继承代理、凭据或隐藏重试。
 - 这只产生负证据，不产生 `THIRD_PARTY_VERIFIED` 互操作声明。详见 `docs/INTEGRATION_COURT_2026-09-11_THIRD_PARTY.md`、`evidence/OPP_THIRD_PARTY_BOUNDARY_2026-09-11.json`。
 - RCL/K400 候选压力账本见 `docs/RCL_STRESS_FIELD_2026-09-11.md`；九门均不自宣 PASS。
-- 后续 TINP policy-bound HTTP adapter 已将同一 projected response 通过显式 handoff 交给 OPP consumer，handoff PASS 见 `docs/INTEGRATION_COURT_2026-09-11_TINP_HANDOFF.md`、`evidence/OPP_TINP_HTTP_HANDOFF_2026-09-11.json`；仍不升级为独立第三方或生产声明。
+- 后续 TINP policy-bound HTTP adapter 已将同一 projected response 通过显式 handoff 交给 OPP consumer；OPP 侧现在独立复验 HTTP status/media/error/size/boundary/shape 语义，并拒绝重算根后的伪造回执。handoff PASS 见 `docs/INTEGRATION_COURT_2026-09-11_TINP_HANDOFF.md`、`evidence/OPP_TINP_HTTP_HANDOFF_2026-09-11.json` 与 `evidence/OPP_TINP_HANDOFF_HARDENING_2026-09-11.json`；仍不升级为独立第三方或生产声明。
 
 ## Production Gap Frontier（当前真实缺口）
 

@@ -17,7 +17,7 @@
 - Added a manual read-only third-party fixture under `examples/third-party-fixtures/`.
 - Added a candidate interop run spec with an exact declarative identity bridge.
 - Recorded both the host-level external observation and the OPP child negative receipt.
-- Added a separate TINP policy-bound handoff fixture and OPP-side receipt verifier; this is provider-bound candidate evidence, not direct OPP child network access.
+- Added a separate TINP policy-bound handoff fixture and OPP-side receipt verifier. The verifier independently rejects re-rooted semantic receipt mutations before invoking the consumer; this remains provider-bound candidate evidence, not direct OPP child network access.
 - No OPP Core protocol, RCL semantic owner, or authority boundary was changed.
 
 ## Evidence
