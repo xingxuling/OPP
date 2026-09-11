@@ -29,6 +29,20 @@
       "reason": "Dynamic HTTP response output remained a generic object; OPP did not guess field semantics"
     }
   },
+  "donorArchaeology": {
+    "repository": "xingxuling/TINP",
+    "revision": "1aa235d9f5718f87c959e275da10a7bf12d58e9f",
+    "transportOwner": "TINP",
+    "observedAssets": [
+      "UDP/TCP/TLS loopback transport",
+      "TINP DATA framing and peer public-key admission",
+      "adapters/opp-bridge.mjs and adapters/opp-negotiate.py"
+    ],
+    "publicHttpRestEvidence": false,
+    "physicalCrossHostEvidence": false,
+    "pinnedOppCommitObservedInDonor": "f7b76582a720d9d18af5153affa0fc2d78bc0410",
+    "decision": "Reuse through an explicit adapter and policy binding; do not copy the transport stack into OPP"
+  },
   "oppAttempt": {
     "explicitConsent": true,
     "status": "FAIL_CLOSED",
@@ -60,6 +74,6 @@
   "boundary": "A host-level third-party HTTP observation is not an OPP interop PASS. The child failure remains explicit negative evidence until transport ownership and policy are implemented.",
   "integrity": {
     "algorithm": "sha256",
-    "contentRoot": "9ff025c92de9ed41b301058de9fccdeaa6a4a04d6f02a5a6b994f82870d22044"
+    "contentRoot": "dec1dbf2e2dd8ee5b9129bbfe4039b7c945abec2920e4b122934eeb72cc4aa58"
   }
 }

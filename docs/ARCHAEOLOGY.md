@@ -42,3 +42,12 @@ RNCS 的 Reality Computation Language（现实计算语言）文档已出现 cap
 ## 本轮 DWAC 协作
 
 DWAC Whole-Artifact Compiler（全工件编译器）v0.6.0 将 OPP 任务拆为 8 个工作单元：objective / existing / architecture / outline / semantic / execution / validation / delivery（目标 / 既有资产 / 架构 / 大纲 / 语义 / 执行 / 验证 / 交付）。其结果明确标记 `CANDIDATE`、`REFERENCE backend`（参考后端）且 `true_distributed_backend=false`（非真实分布式后端），因此本仓库保留该计划作为协作证据，而不把它误称为自动完成的最终实现。
+
+## TINP transport archaeology（2026-09-11）
+
+本轮 GitHub 考古核对 `xingxuling/TINP` `codex/next-internet-v01@1aa235d9f5718f87c959e275da10a7bf12d58e9f`：
+
+- `src/transport.mjs` 已有 TINP-owned UDP/TCP/TLS loopback transport、DATA framing、peer public-key admission、timeout/overload boundary 和 TLS 1.3 loopback 证据；
+- `adapters/opp-bridge.mjs` 与 `adapters/opp-negotiate.py` 复用 OPP CHP/RCP 协商，不复制 OPP agreement semantics；
+- 当前资产没有证明公网 HTTP/REST、NAT、DNS、真实异机 enrollment 或生产网络 policy；其 OPP child adapter 仍 pinned 到旧 `f7b76582...`，不是本轮 OPP `main@61cc382...`；
+- 因此 OPP 本轮只记录 TINP 为 transport donor/owner，禁止把 TINP loopback 证据改称第三方网络互操作，也禁止把 TINP transport 复制进 OPP Core。下一步应先做明确的 TINP↔OPP adapter version/policy binding。

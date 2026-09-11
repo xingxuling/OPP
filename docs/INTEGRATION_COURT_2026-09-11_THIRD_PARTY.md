@@ -9,6 +9,7 @@
 - Host preflight: HTTP `200`; selected fields were `full_name`, `default_branch`, and `private`.
 - Static OPP audit scanned 5 files and found 2 callable interfaces; Auto Connect compared 0 pairs and accepted 0 because the dynamic HTTP response stayed a generic object.
 - OPP child attempt: explicit consent was supplied, but the producer failed closed with `GITHUB_NETWORK_ERROR:gaierror` before the bridge or consumer ran.
+- Donor archaeology: TINP `codex/next-internet-v01@1aa235d9f5718f87c959e275da10a7bf12d58e9f` owns reusable UDP/TCP/TLS loopback transport and an OPP negotiation adapter, but does not provide public HTTP/REST or cross-host production network evidence.
 
 ## What Changed
 
@@ -20,7 +21,7 @@
 ## Evidence
 
 - Machine evidence: `evidence/OPP_THIRD_PARTY_BOUNDARY_2026-09-11.json`
-- Evidence root: `9ff025c92de9ed41b301058de9fccdeaa6a4a04d6f02a5a6b994f82870d22044`
+- Evidence root: `dec1dbf2e2dd8ee5b9129bbfe4039b7c945abec2920e4b122934eeb72cc4aa58`
 - Host selected response root: `a97a84ea4b0b782a102fd59c7cae8e03368271e0430a77da848553cbfe131130`
 - Failed OPP interop receipt root: `c4be98a06bd59dc35ad1aedef028368a3e13b675100fd806373b16975b07d911`
 - Failed producer receipt root: `a5d3fee7b21a9d83f4462e61d1e958df264b2cb4f2fb5742104c4727b61e7280`
@@ -48,11 +49,11 @@ This does not promote third-party interoperability, HTTP adapter support, or pro
 
 ## Remaining Production Gaps
 
-`OPP-TRANSPORT-001` is open: OPP needs an explicit transport boundary, likely through TINP or a mature external HTTP adapter, with a declared proxy/network policy and receipts. The child must not silently inherit ambient network authority.
+`OPP-TRANSPORT-001` is open: TINP or a mature external HTTP adapter must own the declared proxy/network policy and receipts. OPP must consume that adapter without copying the transport stack, and the child must not silently inherit ambient network authority.
 
 ## Next Frontier
 
-Resolve transport ownership and implement the smallest explicit read-only HTTP adapter contract, or record a TINP adapter if one already exists. Re-run the same public GET only after the transport boundary is explicit.
+Resolve the TINP↔OPP adapter version/policy binding first. Re-run the same public GET only after an explicit transport owner, proxy policy and receipt contract exist.
 
 ## Merge / Release Decision
 
