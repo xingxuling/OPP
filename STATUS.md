@@ -36,11 +36,17 @@
 - 本轮不宣称：跨主机、独立第三方、强操作系统沙箱、网络隔离、staging 或 production verified。
 - 集成法院与机器证据：`docs/INTEGRATION_COURT_2026-09-11.md`、`evidence/OPP_WINDOWS_UTF8_AUDIT_2026-09-11.json`。
 
+### Third-party Boundary Follow-up（第三方边界跟进）
+
+- 宿主对 GitHub REST `GET /repos/xingxuling/OPP` 获得 HTTP `200`，但 OPP 显式授权的 child process 在清理环境中以 `GITHUB_NETWORK_ERROR:gaierror` 失败关闭；没有继承代理、凭据或隐藏重试。
+- 这只产生负证据，不产生 `THIRD_PARTY_VERIFIED` 互操作声明。详见 `docs/INTEGRATION_COURT_2026-09-11_THIRD_PARTY.md`、`evidence/OPP_THIRD_PARTY_BOUNDARY_2026-09-11.json`。
+
 ## Production Gap Frontier（当前真实缺口）
 
 | Gap ID | 缺口 | 当前状态 | 最小下一验证 |
 |---|---|---|---|
 | OPP-WIN-UTF8-001 | Windows legacy code page 下的 child/CLI UTF-8 传输 | 本轮本机候选验证通过 | 独立安装环境的更多 Windows locale 与真实第三方 CLI consumer |
-| OPP-THIRD-PARTY-001 | 独立第三方系统互操作 | 未验证 | 选一个 OPP 从未见过的非 TaoWind producer/consumer，保留完整 receipt/evidence |
+| OPP-THIRD-PARTY-001 | 独立第三方系统互操作 | 宿主观察到第三方响应；child interop FAIL_CLOSED | 先完成显式 transport policy，再重跑同一只读第三方 GET |
+| OPP-TRANSPORT-001 | 第三方网络 transport、代理与权限边界 | 未实现；已有负证据 | 复用 TINP 或成熟 HTTP adapter，声明网络策略并生成 receipt |
 | OPP-SANDBOX-001 | 强 OS sandbox / 网络与文件系统隔离 | 未宣称 | 评估成熟外部 sandbox adapter，不在 OPP 内重造 sandbox |
 | OPP-DISTRIBUTED-001 | 跨主机 transport、分区、重启和凭据轮换 | 未验证 | 复用 TINP 或成熟 transport，完成双主机最小故障实验 |

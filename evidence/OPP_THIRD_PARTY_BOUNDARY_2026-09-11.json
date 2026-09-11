@@ -1,0 +1,65 @@
+{
+  "format": "taowind.opp.third-party-boundary-receipt.v0.1",
+  "status": "NEGATIVE_EVIDENCE",
+  "repository": "xingxuling/OPP",
+  "sourceBaseRevision": "22ff5830c8c080bf2e5f8ed58073119445aeecad",
+  "externalSystem": {
+    "provider": "GitHub REST API",
+    "method": "GET",
+    "endpoint": "https://api.github.com/repos/xingxuling/OPP",
+    "hostPreflight": "PASS",
+    "httpStatus": 200,
+    "selectedFields": {
+      "full_name": "xingxuling/OPP",
+      "default_branch": "main",
+      "private": false
+    },
+    "selectedFieldsRoot": "a97a84ea4b0b782a102fd59c7cae8e03368271e0430a77da848553cbfe131130",
+    "etag": "W/\"c628b51179a46c0989ce00056e95d65125070d560a16b16e796f9734a6af8dbb\"",
+    "lastModified": "Thu, 10 Sep 2026 03:46:55 GMT"
+  },
+  "staticAudit": {
+    "filesScanned": 5,
+    "primitiveFindings": 3,
+    "semanticInterfaces": 2,
+    "autoConnect": {
+      "exitCode": 3,
+      "pairsCompared": 0,
+      "acceptedPlanCount": 0,
+      "reason": "Dynamic HTTP response output remained a generic object; OPP did not guess field semantics"
+    }
+  },
+  "oppAttempt": {
+    "explicitConsent": true,
+    "status": "FAIL_CLOSED",
+    "exitCode": 5,
+    "interopError": "PRODUCER_FAILED",
+    "producerError": "GITHUB_NETWORK_ERROR:gaierror",
+    "interopReceiptRoot": "c4be98a06bd59dc35ad1aedef028368a3e13b675100fd806373b16975b07d911",
+    "producerReceiptRoot": "a5d3fee7b21a9d83f4462e61d1e958df264b2cb4f2fb5742104c4727b61e7280",
+    "bridgeExecuted": false,
+    "consumerExecuted": false,
+    "hiddenRetry": false,
+    "ambientProxyOrCredentialInherited": false
+  },
+  "frontier": {
+    "gapId": "OPP-TRANSPORT-001",
+    "ownerBoundary": "OPP remains transport-agnostic; TINP or an explicit mature transport adapter must own network policy",
+    "rclGap": false,
+    "nextVerification": "Explicit read-only HTTP transport contract with declared proxy/network policy and receipt"
+  },
+  "claimsPromoted": [
+    "Negative cross-process evidence that the sanitized OPP child does not silently inherit host network configuration"
+  ],
+  "claimsStillForbidden": [
+    "THIRD_PARTY_VERIFIED interoperability",
+    "general HTTP/OpenAPI/MCP adapter support",
+    "child-process network reachability",
+    "production or cross-host readiness"
+  ],
+  "boundary": "A host-level third-party HTTP observation is not an OPP interop PASS. The child failure remains explicit negative evidence until transport ownership and policy are implemented.",
+  "integrity": {
+    "algorithm": "sha256",
+    "contentRoot": "9ff025c92de9ed41b301058de9fccdeaa6a4a04d6f02a5a6b994f82870d22044"
+  }
+}
