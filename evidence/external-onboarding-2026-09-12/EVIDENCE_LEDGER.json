@@ -8,9 +8,9 @@
   },
   "wheel": {
     "filename": "taowind_opp-0.3.0.dev1-py3-none-any.whl",
-    "sha256": "39ea2cef53306fc1bd8956ce2feaa40f1e0c30d7a53c6ac01a0ea3ffe0914627"
+    "sha256": "6b89250900fbebd2e1ed5c2a6107e4be629774e46e47c8d079f878b07ac24ada"
   },
-  "installedReplay": "final-wheel-replay/summary.json",
+  "installedReplay": "current-wheel-summary.json",
   "externalOperators": "NOT_RUN",
   "production": "NOT_DEPLOYED",
   "hostedCI": "HOSTED_CI.json",
@@ -251,5 +251,9 @@
       "path": "examples/external-projects/requirements.txt",
       "sha256": "7952271b7e10750f166e3c8eaf6b5e42d3457394fe4b21066209c10c424968a5"
     }
-  ]
+  ],
+  "installedReplayArchive": {
+    "path": "current-wheel-replay.zip",
+    "sha256": "3081f18a9d78233fefae01e53bf5756d12dbd67584ba64b165709426db1a3e6e"
+  }
 }

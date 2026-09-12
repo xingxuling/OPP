@@ -58,3 +58,5 @@ hashes identify the code that actually ran, avoiding a false HEAD/package match.
 
 RCL ownership and nine-gate treatment are recorded in `RCL_STRESS.json` in the
 evidence directory. No RCL Core change or K400 promotion is claimed.
+
+Final code replay: [34692507409](https://github.com/xingxuling/TINP/actions/runs/34692507409), all three hosted jobs PASS; OPP `7c4970c`, TINP `692c0e4`. The earlier run is retained as historical evidence.
