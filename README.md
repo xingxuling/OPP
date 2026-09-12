@@ -12,6 +12,30 @@ OPP 做的事很直接：
 > Core Protocols：`0.1.0-candidate.1`  
 > Runtime / Bridge / Semantic Tooling：`0.3.0-candidate.1`
 
+## 先看一个业务 Demo
+
+最容易理解 OPP 的方式，不是先读协议，而是看一个很普通的系统对接：
+
+```text
+旧预约表单                 新 CRM
+name            ->         customer_name
+service         ->         service_code
+slot            ->         preferred_time
+缺少 channel    ->         注入默认来源
+多余 debug      ->         不传给 CRM
+```
+
+直接运行：
+
+```bash
+python -m pip install -e .
+python examples/business_demo.py
+```
+
+这个 Demo 会真实跑一条本地 `旧预约表单 -> OPP Bridge -> CRM` 链路，并打印原始输入、旧系统输出、转换后的数据、新系统结果和回执根。
+
+它不会访问真实 CRM，也不会假装已经完成生产集成。完整说明见 [`BUSINESS_DEMO.md`](BUSINESS_DEMO.md)。
+
 ## 为什么我不直接写一个 Adapter？
 
 如果你只有两个稳定系统，直接写几十行 Adapter 往往更简单，**这时候不一定需要 OPP**。
@@ -40,7 +64,9 @@ OPP 开始有价值，是在下面这种情况：
 
 完整说明见 [`docs/COMPARISON.md`](docs/COMPARISON.md)。
 
-## 3 分钟试一下
+## 技术最小 Demo（3 分钟）
+
+如果想看更纯粹的接口扫描和互操作夹具：
 
 ```bash
 python -m pip install -e .
@@ -175,7 +201,8 @@ OPP 当前**不声称**：
 
 ## 文档入口
 
-- [`DEMO.md`](DEMO.md) — 3 分钟演示
+- [`BUSINESS_DEMO.md`](BUSINESS_DEMO.md) — 业务化 Demo：旧预约表单接新 CRM
+- [`DEMO.md`](DEMO.md) — 技术最小 Demo
 - [`docs/COMPARISON.md`](docs/COMPARISON.md) — 和 Adapter / SDK / MCP / A2A 的关系
 - [`docs/USE_CASES.md`](docs/USE_CASES.md) — 什么时候值得用 OPP
 - [`docs/REAL_WORLD_EXAMPLES.md`](docs/REAL_WORLD_EXAMPLES.md) — 三个现实业务映射
