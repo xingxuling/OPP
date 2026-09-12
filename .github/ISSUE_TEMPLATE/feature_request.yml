@@ -1,0 +1,40 @@
+name: Feature request
+about: Propose a concrete improvement to OPP
+title: "[Feature] "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 你遇到的具体问题是什么？
+      description: 先描述问题，不要只写“希望支持某某技术”。
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 你建议怎么解决？
+      description: 如果涉及新 extractor、bridge op、runtime adapter 或协议字段，请说明最小行为。
+    validations:
+      required: true
+  - type: textarea
+    id: example
+    attributes:
+      label: 最小使用例子
+      description: 最好给出输入、期望输出或一个简短场景。
+  - type: textarea
+    id: boundary
+    attributes:
+      label: 失败边界 / 安全影响
+      description: 这个功能在什么情况下应该拒绝、返回 unknown 或 fail closed？
+  - type: dropdown
+    id: area
+    attributes:
+      label: 主要涉及哪一部分？
+      options:
+        - Bridge / compatibility
+        - Semantic extraction
+        - Runtime / invocation
+        - Protocol / schema
+        - Evidence / receipt
+        - Documentation / examples
+        - Other
