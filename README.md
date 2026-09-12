@@ -1,108 +1,200 @@
-# TaoWind OPP — Open Reality Protocols（道风开放现实协议族）
+# OPP — Open Reality Protocols
 
-> **OPP = Open Reality Protocols（开放现实协议族）**。本仓库把 TaoWind / RCL / RNCS / DWAC 中已经出现的协议、契约、接口、模式、能力、证据、回执、账本与桥接原语，收束成一套可读、可验证、可协商的开放协议候选。
+**A protocol and tooling layer for describing, negotiating, connecting, and verifying software capabilities.**  
+**用于描述、协商、连接和验证软件能力的协议与工具层。**
 
-当前协议族版本：`0.1.0-candidate.1`（核心协议 ID 不变）；当前 Runtime / Bridge / Semantic Tooling（运行时 / 桥 / 语义工具链）版本：`0.3.0-candidate.1`。当前状态：**CANDIDATE（候选）**，不是互联网标准、生产安全标准或外部权威认证标准。
+OPP 解决一个很具体的问题：两个系统都“会做事”，但接口、字段、权限和证据格式不同，接起来仍然需要大量人工工作。OPP 把这些差异变成可读取、可检查、可转换的结构。
 
-## 第一批 6 个核心协议
+> 当前协议族：`0.1.0-candidate.1`  
+> Runtime / Bridge / Semantic Tooling：`0.3.0-candidate.1`  
+> 状态：**Candidate**。不是互联网标准，也不是生产安全认证。
 
-| 缩写 | 英文名 | 中文名 | 机器协议 ID | 作用 |
-|---|---|---|---|---|
-| RXP | Reality Exchange Protocol | 现实交换协议 | `opp.rxp.v0.1` | 统一 Reality Envelope（现实信封），负责跨系统承载事实、状态、意图、能力、约束、证据与动作描述。 |
-| RCP | Reality Capability Protocol | 现实能力协议 | `opp.rcp.v0.1` | 描述实体会什么、输入输出、权限、成本、确定性、副作用和证据。 |
-| RAP | Reality Artifact Protocol | 现实工件协议 | `opp.rap.v0.1` | 描述代码、文档、模型、世界、数据库等任意工件的目标、依赖、来源、验证与生命周期。 |
-| REP | Reality Evidence Protocol | 现实证据协议 | `opp.rep.v0.1` | 让 Claim（主张）绑定 Source（来源）、Method（方法）、Confidence（置信度）、Negative Evidence（负证据）和可复现信息。 |
-| RSP | Reality State Protocol | 现实状态协议 | `opp.rsp.v0.1` | 交换对象、关系、事实、观察、预测、假设、分支与状态根，强制区分“事实”和“预测”。 |
-| CHP | Civilization Handshake Protocol | 文明握手协议 | `opp.chp.v0.1` | 两个陌生系统先协商协议、能力、权限与证据政策，再建立会话。 |
+## 一分钟理解
 
-## 9 类标准原语
+假设系统 A 输出：
 
-OPP 明确区分以下九种东西，避免把所有东西都叫 API（应用程序接口）：
+```json
+{
+  "name": "Alice",
+  "phone": "+852..."
+}
+```
 
-1. `protocol` — Protocol（协议）：规定双方如何互动。
-2. `contract` — Contract（契约）：规定参与方必须满足的条件。
-3. `interface` — Interface（接口）：规定如何调用能力。
-4. `schema` — Schema（模式）：规定数据结构。
-5. `capability` — Capability（能力）：规定实体能做什么。
-6. `evidence` — Evidence（证据）：规定为什么相信一个结果。
-7. `receipt` — Receipt（回执）：证明某次动作或验证实际发生。
-8. `ledger` — Ledger（账本）：保存按时间组织的事实、动作或证据历史。
-9. `bridge` — Bridge（桥）：在不同协议、运行时或语义体系之间做受约束的转换。
+系统 B 需要：
 
-## 可执行部分
+```json
+{
+  "customer_name": "string",
+  "phone": "string"
+}
+```
 
-仓库不只放规范文档，还提供：
+OPP 可以做三件事：
 
-- Draft 2020-12 JSON Schema（JSON 模式）验证；
-- 协议注册表；
-- SHA-256 canonical content root（规范化内容根）完整性封装；
-- CHP 文明握手的确定性协商运行时；
-- Python CLI（命令行接口）；
-- RCL（Reality Compiler Language，现实编译语言）语义桥候选；
-- 示例包与单元测试；
-- Semantic Bridge Verifier（语义桥验证器）：静态提取 Python / JavaScript / TypeScript / JSON Schema 接口形状；
-- Auto Bridge Synthesizer（自动桥合成器）：生成可审计的声明式字段转换计划；
-- Auto Connect（自动连接）：直接搜索两个项目之间的 `output → input` 兼容路径；
-- Native Invocation Adapter（原生调用适配器）：显式调用受支持的 Python 顶层函数；
-- Sandbox Interop Runner（沙箱互操作运行器）：真实执行 `Producer → Bridge → Consumer（生产端→桥→消费端）` 并生成回执；
-- DWAC 协作编译证据与资产考古映射。
+1. 扫描双方的输入和输出；
+2. 判断它们是精确兼容、结构兼容、有损、不兼容还是未知；
+3. 在规则允许时生成一个可审计的转换计划，并实际验证这条连接。
 
-## 本地使用
+它的目标不是替代现有 API，而是减少“每接一个系统都重新理解、重新写胶水代码”的工作。
+
+## 现在能做什么
+
+- 校验 OPP 协议对象和 JSON Schema；
+- 描述系统的能力、输入输出、约束和证据；
+- 从 Python、JavaScript、TypeScript 和 JSON Schema 提取接口形状；
+- 比较两个接口是否兼容；
+- 生成受限的声明式字段转换：`identity`、`rename`、`select`、`inject-default`；
+- 自动搜索 `producer output -> consumer input` 的连接路径；
+- 显式调用受支持的 Python 顶层函数；
+- 运行 `Producer -> Bridge -> Consumer`，并生成互操作回执；
+- 为桥接、能力协商和执行结果保留可验证证据。
+
+## 适合什么场景
+
+- AI Agent / MCP / A2A 工具接入；
+- SaaS 与企业内部系统集成；
+- 两个代码仓库之间的接口兼容检查；
+- API / Schema 迁移；
+- 自动生成集成方案前的静态审计；
+- 需要留下执行回执和证据链的自动化流程。
+
+## 快速开始
+
+要求：Python 3.10+
 
 ```bash
 python -m pip install -e .
-python -m opp validate examples/capability.json
-python -m opp validate examples/artifact.json
-python -m opp semantic verify ./repo --profile auto
-python -m opp semantic connect ./producer-repo ./consumer-repo --out ./connect.json
-python -m unittest discover -s tests -v  # 已执行 pip install -e . 后运行 / run after editable install
 ```
 
-`python -m opp validate ...` 的中文意思是“用 OPP 验证器检查一个现实信封及其协议负载”。
+验证示例：
 
-RCP capability declarations are negotiated by OPP itself with `opp.negotiate_capability(local, remote)`. The operation validates both `opp.rcp.v0.1` envelopes and accepts only an exact capability ID plus input/output schema match. A DHSC or other control plane may use that result for routing, but does not own the capability agreement or gain authority from it.
+```bash
+python -m opp validate examples/capability.json
+python -m opp validate examples/artifact.json
+```
 
-## 权威边界
+扫描一个仓库：
 
-- OPP 当前只证明：本仓库中的模式、验证器、完整性根、协商逻辑和测试在本地候选环境中可工作。
-- Schema PASS（模式通过）不等于事实为真；它只说明结构与声明边界符合规范。
-- SHA-256 根证明内容一致性，不自动证明签名者身份、法律权威、外部时间戳或现实真实性。
-- Handshake PASS（握手通过）只表示双方存在可协商交集，不代表任何一方自动获得新权限。
-- 所有跨系统 Canonical（规范所有权）提升、世界事实提升、权威委托必须由上层治理系统另行批准。
+```bash
+python -m opp semantic verify ./repo --profile auto
+```
 
-更多内容见 `docs/SPECIFICATION.md`、`docs/PRIMITIVES.md`、`docs/ARCHAEOLOGY.md` 与 `docs/GOVERNANCE.md`。
+检查两个仓库能否连接：
 
+```bash
+python -m opp semantic connect ./producer-repo ./consumer-repo --out ./connect.json
+```
 
-## Bridge Compiler（桥编译器）
-
-OPP v0.1 现包含静态 Bridge Compiler，可扫描任意代码/文档仓库中的协议性原语，并生成 REP/RAP/RCP/CHP 候选桥接包。详见 `docs/BRIDGE_COMPILER.md`。
+扫描和编译桥接描述：
 
 ```bash
 opp bridge scan ./repo --profile auto
 opp bridge compile ./repo --out ./bridge-output
 ```
 
-
-## Semantic Bridge + Auto Connect（语义桥 + 自动连接）
-
-Bridge Compiler v0.2 在“发现协议声明”之上增加静态语义接口层。当前可以从 Python 类型注解、TypeScript 类型签名和 JSON Schema（JSON 模式）生成 input/output port（输入/输出端口），再按 `exact / structural / lossy / incompatible / unknown`（精确 / 结构兼容 / 有损 / 不兼容 / 未知）判断连接关系。
-
-自动生成的桥只使用 OPP 自有声明式操作：`identity / rename / select / inject-default`（恒等 / 重命名 / 字段投影 / 注入已声明默认值）。不会生成或执行任意 Python、Shell 或源仓库代码。
-
-详见 `docs/SEMANTIC_BRIDGE.md` 与 `docs/AUTO_CONNECT.md`。
-
-
-## Native Invocation + Real Interop（原生调用 + 真实互操作）
-
-v0.3 第一次把 v0.2 找到的静态连接路径真正执行成：
-
-`Producer invocation（生产端调用） → OPP declarative bridge（OPP 声明式桥） → Consumer invocation（消费端调用） → Interop Receipt（互操作回执）`
-
-静态扫描仍然不会执行源码。只有显式 Invocation Spec（调用规范）并提供 `--allow-execution（允许执行）` 才会进入原生调用。当前只支持 `python-function（Python 函数）` 适配器，不使用 Shell（命令解释器），并使用路径包含检查、符号链接拒绝、清理环境、临时工作目录、超时、输出接受上限和 JSON 失败关闭。
+显式允许执行后，运行一个真实互操作链：
 
 ```bash
-opp invoke run examples/invocation-producer.json examples/interop-input.json --allow-execution
-opp interop run examples/interop-run.json examples/interop-input.json --allow-execution --out interop-result.json
+opp interop run examples/interop-run.json examples/interop-input.json \
+  --allow-execution \
+  --out interop-result.json
 ```
 
-当前 Sandbox（沙箱）是 **bounded child process（有界子进程）**，不是 Linux namespace / seccomp / container / VM（Linux 命名空间 / 系统调用过滤 / 容器 / 虚拟机）级强安全沙箱。Interop PASS（互操作通过）只证明这一条具体调用链真实成功，不证明任意第三方代码安全或普遍兼容。详见 `docs/NATIVE_INTEROP.md`。
+运行测试：
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+当前仓库测试状态见 [`STATUS.md`](STATUS.md)。
+
+## OPP 的 6 个核心协议
+
+| 协议 | 用途 |
+|---|---|
+| **RXP** — Reality Exchange Protocol | 统一承载状态、意图、能力、约束、证据和动作描述 |
+| **RCP** — Reality Capability Protocol | 描述“这个系统会什么、怎么调用、有什么限制” |
+| **RAP** — Reality Artifact Protocol | 描述代码、文档、模型、数据库等工件的目标、依赖和验证状态 |
+| **REP** — Reality Evidence Protocol | 把主张与来源、方法、置信度和可复现信息绑定 |
+| **RSP** — Reality State Protocol | 表达对象、关系、事实、观察、预测和状态根 |
+| **CHP** — Civilization Handshake Protocol | 两个陌生系统在交互前先协商版本、能力和约束 |
+
+`Reality` 和 `Civilization` 是 OPP 协议族内部命名，不代表系统自动拥有现实世界权威，也不代表任何外部标准地位。
+
+## 工作方式
+
+```text
+Producer
+   |
+   | output schema
+   v
+OPP Semantic Scan
+   |
+   | compatibility check
+   v
+Bridge Plan
+   |
+   | allowed declarative transform
+   v
+Consumer
+   |
+   v
+Interop Receipt
+```
+
+静态扫描不会执行目标仓库代码。只有显式提供 Invocation Spec，并传入 `--allow-execution` 时才会进入原生调用。
+
+## 安全边界
+
+当前实现有意保持保守：
+
+- Shell 执行默认禁用；
+- 执行必须显式授权；
+- 路径必须留在允许目录内；
+- 拒绝符号链接逃逸；
+- 子进程使用清理后的环境和临时工作目录；
+- 有超时和输出大小限制；
+- 失败时按失败关闭处理。
+
+当前 **不声称**：
+
+- Linux namespace / seccomp / container / VM 级强沙箱；
+- 自动获得新的系统权限；
+- 任意第三方项目都能自动兼容；
+- 已通过独立第三方互操作认证；
+- 已成为任何外部标准。
+
+详细边界见 [`docs/NATIVE_INTEROP.md`](docs/NATIVE_INTEROP.md) 和 [`STATUS.md`](STATUS.md)。
+
+## 项目结构
+
+```text
+src/opp/
+  bridge/       接口扫描、兼容性判断、桥接规划和转换
+  runtime/      显式调用与真实互操作运行时
+  resources/    协议注册表与 JSON Schema
+  capability.py 能力协商
+  handshake.py  握手逻辑
+  validation.py 协议校验
+
+tests/          单元与互操作测试
+examples/       最小示例
+docs/           规范、设计和边界说明
+```
+
+## 文档
+
+- [`docs/SPECIFICATION.md`](docs/SPECIFICATION.md) — 协议规范
+- [`docs/BRIDGE_COMPILER.md`](docs/BRIDGE_COMPILER.md) — Bridge Compiler
+- [`docs/SEMANTIC_BRIDGE.md`](docs/SEMANTIC_BRIDGE.md) — 语义桥
+- [`docs/AUTO_CONNECT.md`](docs/AUTO_CONNECT.md) — 自动连接
+- [`docs/NATIVE_INTEROP.md`](docs/NATIVE_INTEROP.md) — 原生调用与互操作边界
+- [`docs/GOVERNANCE.md`](docs/GOVERNANCE.md) — 治理边界
+
+## 项目状态
+
+OPP 目前是可运行的候选实现，重点在**接口语义、能力协商、受限桥接和可验证执行**。它已经能完成具体夹具上的真实互操作，但仍需要更多第三方项目、更多运行时和独立安全审查来证明通用性。
+
+## License
+
+MIT License。见 [`LICENSE`](LICENSE)。
