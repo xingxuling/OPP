@@ -35,6 +35,11 @@ class PublicSdkTests(unittest.TestCase):
             self.assertEqual(0, json.loads(completed.stdout)['targetExecutions'])
             with patch('subprocess.Popen', side_effect=AssertionError('verification must be offline')):
                 self.assertTrue(verify_interop_result(result, run, payload))
+            # Existing Auto Connect reports wrap the sealed plan with provenance.
+            wrapped = copy.deepcopy(run)
+            wrapped['bridgePlan'].update(producerInterface={'operation': 'invoke'}, consumerInterface={'operation': 'invoke'})
+            wrapped_result = run_interop(wrapped, payload, allow_execution=True)
+            self.assertTrue(verify_interop_result(wrapped_result, wrapped, payload))
             for mutated_run, mutated_input, mutated_result in [
                 (run, {'value': 'changed'}, result),
                 (run, payload, {**result, 'result': {'value': 'changed'}}),

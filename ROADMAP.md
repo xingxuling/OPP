@@ -88,3 +88,7 @@
 An independently operated consumer/security review has not run. TINP authority,
 physical devices, trusted time and key custody cannot be substituted by OPP hashes.
 Local measurements are not production performance or availability commitments.
+
+## 无设备替代验证已完成（2026-09-12）
+
+GitHub [远端执行 34692267549](https://github.com/xingxuling/TINP/actions/runs/34692267549) 的 Linux 生产端及 Linux / Windows 复核端全部成功。真实库运行与证据交接已离开当前电脑；仍不代表双物理设备、独立操作员或真实 Authority Provider。

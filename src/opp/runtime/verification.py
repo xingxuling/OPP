@@ -1,7 +1,7 @@
 """Offline verification bound to caller-retained inputs, without re-execution."""
 from ..integrity import content_root
 from ..bridge.transform import apply_transform
-from .interop import InteropError, _interop_receipt
+from .interop import InteropError, _interop_receipt, _bridge_plan_body
 from .model import InvocationSpec
 from .invoke import _receipt_core
 from ..registry import read_json_resource
@@ -25,7 +25,7 @@ def verify_interop_result(result, run_spec, producer_input):
         _require(Draft202012Validator(read_json_resource('schemas/interop-receipt.schema.json')).is_valid(result['receipt']), 'INTEROP_RECEIPT_SCHEMA')
         _require(result['receipt']['status'] == 'PASS', 'INTEROP_SUCCESS_REQUIRED')
         plan = run_spec['bridgePlan']
-        _require(plan['planRoot'] == content_root({k: v for k, v in plan.items() if k != 'planRoot'}), 'BRIDGE_PLAN_ROOT_INVALID')
+        _require(plan['planRoot'] == content_root(_bridge_plan_body(plan)), 'BRIDGE_PLAN_ROOT_INVALID')
         _require(plan['status'] == 'candidate' and plan['executionModel'] == 'opp-declarative-json-transform', 'BRIDGE_PLAN_NOT_EXECUTABLE_CANDIDATE')
         for role, value in [('producer', producer_input), ('consumer', result['transformed'])]:
             invocation = result[role]

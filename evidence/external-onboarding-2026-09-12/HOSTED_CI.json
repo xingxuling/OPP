@@ -1,0 +1,27 @@
+{
+  "status": "PASS_HOSTED_ARTIFACT_HANDOFF",
+  "runUrl": "https://github.com/xingxuling/TINP/actions/runs/34692267549",
+  "tinpSource": "d9b956219400991e930bcd36bece10f89c171217",
+  "oppSource": "231a8a95631227b85ce58a1aaf2ad1b91210c10f",
+  "jobs": [
+    {
+      "name": "produce",
+      "status": "success",
+      "url": "https://github.com/xingxuling/TINP/actions/runs/34692267549/job/103549508768"
+    },
+    {
+      "name": "verify (ubuntu-latest)",
+      "status": "success",
+      "url": "https://github.com/xingxuling/TINP/actions/runs/34692267549/job/103549544795"
+    },
+    {
+      "name": "verify (windows-latest)",
+      "status": "success",
+      "url": "https://github.com/xingxuling/TINP/actions/runs/34692267549/job/103549544808"
+    }
+  ],
+  "physicalHostProof": false,
+  "independentOperator": false,
+  "trustedTime": false,
+  "authorityGranted": false
+}

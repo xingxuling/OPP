@@ -9,6 +9,14 @@ class InteropError(RuntimeError):
     pass
 
 
+def _bridge_plan_body(bridge):
+    # Auto Connect appends these source descriptors after synthesize_bridge seals
+    # the executable plan. They are bound by reportRoot, not the inner planRoot.
+    # Execution targets remain bound separately in the invocation specifications.
+    return {k: v for k, v in bridge.items()
+            if k not in {'planRoot', 'producerInterface', 'consumerInterface'}}
+
+
 def run_interop(run_spec: dict[str, Any], producer_input: Any, *, allow_execution: bool = False) -> dict[str, Any]:
     if not allow_execution:
         raise InteropError("EXECUTION_CONSENT_REQUIRED")
@@ -19,7 +27,7 @@ def run_interop(run_spec: dict[str, Any], producer_input: Any, *, allow_executio
         raise InteropError("BRIDGE_PLAN_NOT_EXECUTABLE_CANDIDATE")
     if bridge.get("executionModel") != "opp-declarative-json-transform":
         raise InteropError("BRIDGE_EXECUTION_MODEL_UNSUPPORTED")
-    if bridge.get("planRoot") != content_root({k: v for k, v in bridge.items() if k != "planRoot"}):
+    if bridge.get("planRoot") != content_root(_bridge_plan_body(bridge)):
         raise InteropError("BRIDGE_PLAN_ROOT_INVALID")
     producer = run_invocation(run_spec.get("producer") or {}, producer_input, allow_execution=True)
     if producer["receipt"]["status"] != "PASS":

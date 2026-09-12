@@ -13,7 +13,7 @@
   "installedReplay": "final-wheel-replay/summary.json",
   "externalOperators": "NOT_RUN",
   "production": "NOT_DEPLOYED",
-  "hostedCI": "NOT_RUN",
+  "hostedCI": "HOSTED_CI.json",
   "files": [
     {
       "path": "src/opp/__init__.py",
@@ -173,7 +173,7 @@
     },
     {
       "path": "src/opp/runtime/interop.py",
-      "sha256": "283959998d3c10418498a292a469a2017a943a238d390e56269b1a18267e9faf"
+      "sha256": "ababa5af2e3c99409e72d7faa3c30a271069188fc22dc51979a3853f0a11efc4"
     },
     {
       "path": "src/opp/runtime/invoke.py",
@@ -185,7 +185,7 @@
     },
     {
       "path": "src/opp/runtime/verification.py",
-      "sha256": "c03aee229757cb0d8556f6272eb83ece9a33b7cc7841366bf45be33490859c7e"
+      "sha256": "498236210056a671d0cf33a96c2c4113c4756ddcf10b553f003e37b04c9a3665"
     },
     {
       "path": "src/opp/sdk.py",
@@ -233,7 +233,7 @@
     },
     {
       "path": "tests/test_public_sdk.py",
-      "sha256": "78e3c6bcf125ab9c624ab691f6f18b25b436583dc5656957b901770c60b77956"
+      "sha256": "e17ae241331b65e5575a954c606a954fbb882efc2ef57db56a050a9ef7ae4656"
     },
     {
       "path": "tests/test_semantic_bridge.py",

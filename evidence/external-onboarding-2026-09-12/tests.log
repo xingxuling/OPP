@@ -45,6 +45,6 @@ test_static_python_and_ts_semantics (test_semantic_bridge.SemanticBridgeTests.te
 test_transform_runtime_rejects_arbitrary_code (test_semantic_bridge.SemanticBridgeTests.test_transform_runtime_rejects_arbitrary_code) ... ok
 
 ----------------------------------------------------------------------
-Ran 45 tests in 11.641s
+Ran 45 tests in 7.698s
 
 OK
