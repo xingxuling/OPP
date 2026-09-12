@@ -1,0 +1,136 @@
+{
+  "status": "REAL_THIRD_PARTY_LIBRARIES_LOCAL_OPERATOR",
+  "python": "3.11.6",
+  "oppImportPath": "C:\\Users\\User\\Documents\\RCL\\_inspect\\opp-external-env\\Lib\\site-packages\\opp\\__init__.py",
+  "executable": "C:\\Users\\User\\Documents\\RCL\\_inspect\\opp-external-env\\Scripts\\python.exe",
+  "cases": [
+    {
+      "project": "boltons",
+      "interfaceCount": 175,
+      "untypedOutputs": 173,
+      "scanSeconds": 0.4153,
+      "version": "26.2.0",
+      "automatedRunSeconds": 2.5374,
+      "humanMinutes": null,
+      "humanTimingStatus": "NOT_MEASURED",
+      "manualInterventions": [
+        "choose API",
+        "write thin library wrapper",
+        "declare JSON field schema",
+        "install pinned packages"
+      ],
+      "automatic": [
+        "static signature discovery",
+        "declared-shape compatibility",
+        "normalized field-rename synthesis",
+        "child execution receipts"
+      ],
+      "bridge": "PASS",
+      "negative": "TypeError:expected an iterable, not <class 'int'>",
+      "recovery": "EXPLICIT_STATELESS_REINVOKE",
+      "offlineVerified": true,
+      "independentOperator": false,
+      "physicalMultiHost": "NOT_RUN"
+    },
+    {
+      "project": "more-itertools",
+      "interfaceCount": 180,
+      "untypedOutputs": 180,
+      "scanSeconds": 0.1697,
+      "version": "11.1.0",
+      "automatedRunSeconds": 2.3773,
+      "humanMinutes": null,
+      "humanTimingStatus": "NOT_MEASURED",
+      "manualInterventions": [
+        "choose API",
+        "write thin library wrapper",
+        "declare JSON field schema",
+        "install pinned packages"
+      ],
+      "automatic": [
+        "static signature discovery",
+        "declared-shape compatibility",
+        "normalized field-rename synthesis",
+        "child execution receipts"
+      ],
+      "bridge": "PASS",
+      "negative": "TypeError:'int' object is not iterable",
+      "recovery": "EXPLICIT_STATELESS_REINVOKE",
+      "offlineVerified": true,
+      "independentOperator": false,
+      "physicalMultiHost": "NOT_RUN"
+    },
+    {
+      "project": "jmespath",
+      "interfaceCount": 32,
+      "untypedOutputs": 32,
+      "scanSeconds": 0.0632,
+      "version": "1.1.0",
+      "automatedRunSeconds": 1.8956,
+      "humanMinutes": null,
+      "humanTimingStatus": "NOT_MEASURED",
+      "manualInterventions": [
+        "choose API",
+        "write thin library wrapper",
+        "declare JSON field schema",
+        "install pinned packages"
+      ],
+      "automatic": [
+        "static signature discovery",
+        "declared-shape compatibility",
+        "normalized field-rename synthesis",
+        "child execution receipts"
+      ],
+      "bridge": "PASS",
+      "negative": "JMESPathTypeError:In function sort(), invalid type for value: 7, expected one of: ['array-string', 'array-number'], received: \"number\"",
+      "recovery": "EXPLICIT_STATELESS_REINVOKE",
+      "offlineVerified": true,
+      "independentOperator": false,
+      "physicalMultiHost": "NOT_RUN"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "adapters.py",
+      "sha256": "894dabe69ed42c982db39250b63fa946dbc325c1a04b9963024ff778ce190f10"
+    },
+    {
+      "path": "boltons-discovery.json",
+      "sha256": "cfdfa9c0563adedaec851e73308f997f31c6811323ea60f698e66fd39145538d"
+    },
+    {
+      "path": "boltons-run.json",
+      "sha256": "3a7e7b840bfd89caebd9ae7694eef4c61953c1a6c1a2b7e8496a7e5b75515288"
+    },
+    {
+      "path": "boltons-source.json",
+      "sha256": "acc8bd1ae5c79489709e4dab1bb896b6e6ef263335fa5560f53949d6bd9639b9"
+    },
+    {
+      "path": "jmespath-discovery.json",
+      "sha256": "6499d6c7c043a1605003982483b2983fe837f5d01ac68836621770ddd567e140"
+    },
+    {
+      "path": "jmespath-run.json",
+      "sha256": "2e8e855071bc1669d2b935cfa9810bf9ea1878e3bfe11a2ea43252b79a2fb30f"
+    },
+    {
+      "path": "jmespath-source.json",
+      "sha256": "8edb7f5d21169dcfe3e6fbcb369c4abab055cc2c87fe846f7512c8416ca785c9"
+    },
+    {
+      "path": "more-itertools-discovery.json",
+      "sha256": "d1627072ac8a51f386b8edbce42854891fe4e1b84477bc5fd6a5ba23fd5f14e4"
+    },
+    {
+      "path": "more-itertools-run.json",
+      "sha256": "50e39f246ab7179f494069d7b58ed773100f4ea619b9f78e3edaeaf061f5f291"
+    },
+    {
+      "path": "more-itertools-source.json",
+      "sha256": "b79004abe2977cc776d782f06bb79e54df3f0d95fc765467a872c5ed37cfd4b7"
+    }
+  ],
+  "artifactRoot": "79d6684c8b5c60e6d399e36905fd6152da2ad34e236dd980d1d38d5c67ef52ac",
+  "boundary": "Real installed library execution with human-authored adapters; no independent consumer acceptance, physical devices, authority or production claim. Timings exclude install and authoring."
+}

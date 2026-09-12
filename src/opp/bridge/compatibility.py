@@ -17,6 +17,7 @@ def _default_for(shape:dict[str,Any]):
 
 def _shape_compat(prod:dict[str,Any], cons:dict[str,Any], path:str='$') -> tuple[str,list[dict],list[str],list[str]]:
     """Return class, ops, reasons, missing. Classes: exact/structural/lossy/incompatible/unknown."""
+    if not prod or not cons: return 'unknown',[],[f'{path}:type-unknown'],[]
     if prod==cons: return 'exact',[],[f'{path}:exact-shape'],[]
     pt,ct=_types(prod),_types(cons)
     if not pt or not ct: return 'unknown',[],[f'{path}:type-unknown'],[]

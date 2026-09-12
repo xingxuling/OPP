@@ -64,3 +64,33 @@
 - 用更多协议数量代替真实互操作证据。
 
 当前状态以 [`STATUS.md`](STATUS.md) 为准。
+
+## 2026-09-12 external onboarding update
+
+## Completed in the external-onboarding candidate
+
+- Public `opp.sdk` surface backed by existing OPP implementations; legacy imports retained.
+- Windows UTF-8 repair reused from the previous candidate branch.
+- Unknown type comparison stays unknown; bridge plan root checked before execution.
+- Offline, original-input-bound success receipt verification through SDK and CLI.
+- Three real installed libraries, positive/negative/recovery runs and cross-language receipt checks.
+- Installable wheel tested outside the source tree; repeatable evidence script and package provenance.
+
+## Next smallest gaps
+
+1. Improve discovery from existing type stubs and explicit external JSON contracts before adding another IR.
+2. Run a real independently maintained MCP server with the official client and preserve negotiation failures.
+3. Stabilize public SDK regression contracts over multiple releases and recruit an independent consumer.
+4. Join a real external capability to TINP's authorized routing/failover path, without moving OPP ownership.
+
+## External gates
+
+An independently operated consumer/security review has not run. TINP authority,
+physical devices, trusted time and key custody cannot be substituted by OPP hashes.
+Local measurements are not production performance or availability commitments.
+
+## 无设备替代验证已完成（2026-09-12）
+
+GitHub [远端执行 34692267549](https://github.com/xingxuling/TINP/actions/runs/34692267549) 的 Linux 生产端及 Linux / Windows 复核端全部成功。真实库运行与证据交接已离开当前电脑；仍不代表双物理设备、独立操作员或真实 Authority Provider。
+
+Final code replay: [34692507409](https://github.com/xingxuling/TINP/actions/runs/34692507409), all three hosted jobs PASS; OPP `7c4970c`, TINP `692c0e4`. The earlier run is retained as historical evidence.

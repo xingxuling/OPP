@@ -47,8 +47,13 @@ class BoundedTextIO(io.TextIOBase):
 
 
 def _emit(obj: dict) -> None:
-    sys.stdout.write(json.dumps(obj, ensure_ascii=False, separators=(",", ":")))
-    sys.stdout.flush()
+    # ``-I`` ignores PYTHON* environment variables, so the child must own its
+    # UTF-8 byte boundary explicitly.  The parent already decodes this stream
+    # as UTF-8; relying on the host locale breaks Chinese and other non-ASCII
+    # payloads on Windows code pages.
+    raw = json.dumps(obj, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+    sys.stdout.buffer.write(raw)
+    sys.stdout.buffer.flush()
 
 
 def main(argv=None) -> int:
@@ -68,7 +73,7 @@ def main(argv=None) -> int:
         _emit({"ok": False, "error": "OUTPUT_LIMIT_INVALID"})
         return 64
     try:
-        payload = json.loads(sys.stdin.read())
+        payload = json.loads(sys.stdin.buffer.read().decode("utf-8"))
     except Exception:
         _emit({"ok": False, "error": "INPUT_JSON_INVALID"})
         return 65

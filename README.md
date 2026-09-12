@@ -243,3 +243,15 @@ OPP 当前**不声称**：
 ## License
 
 MIT License，见 [`LICENSE`](LICENSE)。
+
+## 外部接入候选（2026-09-12）
+
+新增 `opp.sdk` 公开入口与 `opp interop verify` 离线复核。三个独立维护的真实库完成安装包执行、桥接、错误输入拒绝与显式恢复；这仍由本机操作员完成，不是独立第三方验收。
+
+[SDK 接入与复现](docs/PUBLIC_SDK.md) · [真实项目证据与限制](docs/EXTERNAL_ONBOARDING.md) · [下一步](ROADMAP.md)
+
+## 无设备替代验证已完成（2026-09-12）
+
+GitHub [远端执行 34692267549](https://github.com/xingxuling/TINP/actions/runs/34692267549) 的 Linux 生产端及 Linux / Windows 复核端全部成功。真实库运行与证据交接已离开当前电脑；仍不代表双物理设备、独立操作员或真实 Authority Provider。
+
+Final code replay: [34692507409](https://github.com/xingxuling/TINP/actions/runs/34692507409), all three hosted jobs PASS; OPP `7c4970c`, TINP `692c0e4`. The earlier run is retained as historical evidence.
