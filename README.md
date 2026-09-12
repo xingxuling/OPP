@@ -1,14 +1,44 @@
 # OPP — Open Reality Protocols
 
-**用于描述、比较、连接和验证软件能力的开放协议与工具层。**
+**当你不断把新的 API、Agent、开源项目和内部系统接在一起时，OPP 用来先判断“到底能不能接、差在哪、需要怎么转”，再决定是否执行。**
 
-两个系统都能工作，不代表它们能直接接起来。字段、接口契约、权限和证据格式只要有一项不同，通常就要人工读文档、写适配器、反复测试。
+两个系统都能工作，不代表它们能直接接起来。字段、接口契约、类型和证据格式只要有一项不同，通常就要人工读文档、写 Adapter、反复测试。
 
-OPP 做的事很简单：**先把双方看懂，再判断能不能接；能接时生成受限的桥接方案，明确授权后再执行，并留下回执。**
+OPP 做的事很直接：
+
+> **先把双方看懂 → 判断兼容性 → 生成受限桥接方案 → 明确授权后执行 → 留下回执。**
 
 > 当前状态：Candidate  
 > Core Protocols：`0.1.0-candidate.1`  
 > Runtime / Bridge / Semantic Tooling：`0.3.0-candidate.1`
+
+## 为什么我不直接写一个 Adapter？
+
+如果你只有两个稳定系统，直接写几十行 Adapter 往往更简单，**这时候不一定需要 OPP**。
+
+OPP 开始有价值，是在下面这种情况：
+
+- 接入对象越来越多；
+- API / Schema 经常变化；
+- Agent 会动态发现新的工具；
+- 想在执行前先知道是“精确兼容、可转换、有损、不兼容还是未知”；
+- 想把重复发生的接口判断变成可复用流程；
+- 执行以后还需要知道这次到底用了什么转换、结果对应哪份回执。
+
+它不是为了把简单集成复杂化，而是为了减少**不断重复理解接口和写胶水代码**的工作。
+
+## 和你已经认识的工具有什么区别？
+
+| 技术/方式 | 主要解决什么 | OPP 补在哪里 |
+|---|---|---|
+| **直接写 Adapter** | 两个具体系统之间的手工转换 | 接入对象多时，先自动检查差异和可转换性 |
+| **SDK / REST / gRPC** | 已知接口怎么调用 | 判断两个端点是否真的兼容 |
+| **OpenAPI / JSON Schema** | 描述接口和结构 | 读取结构后做兼容性和桥接判断 |
+| **MCP** | Agent 怎么发现和调用工具 | 工具接入前后的能力、输入输出和桥接检查 |
+| **A2A** | Agent 与 Agent 怎么协作通信 | 更关注能力契约和数据形状是否能互操作 |
+| **TINP** | 身份、权限、路由、恢复、执行证据 | OPP 回答“能不能接”，TINP 处理“谁能调用、失败怎么办” |
+
+完整说明见 [`docs/COMPARISON.md`](docs/COMPARISON.md)。
 
 ## 3 分钟试一下
 
@@ -22,7 +52,31 @@ python -m opp interop run examples/interop-run.json examples/interop-input.json 
 
 完整说明见 [`DEMO.md`](DEMO.md)。
 
+一次成功的互操作结果会包含类似下面的结构；实际根值和结果由本次运行决定：
+
+```json
+{
+  "receipt": {
+    "status": "PASS",
+    "producerRequestRoot": "...",
+    "producerReceiptRoot": "...",
+    "bridgePlanRoot": "...",
+    "consumerReceiptRoot": "...",
+    "finalResultRoot": "...",
+    "receiptRoot": "..."
+  },
+  "producer": {"...": "..."},
+  "transformed": {"...": "..."},
+  "consumer": {"...": "..."},
+  "result": {"...": "..."}
+}
+```
+
+这个结构来自当前 `Producer -> Bridge -> Consumer` 运行时；它证明的是**这一条具体运行成功**，不是任意第三方项目都能自动兼容。
+
 ## 它能做什么
+
+当前工具链可以：
 
 - 从 Python、JavaScript、TypeScript 和 JSON Schema 提取接口形状；
 - 判断两个接口是精确兼容、结构兼容、有损、不兼容还是未知；
@@ -67,6 +121,22 @@ flowchart LR
 
 静态扫描不会执行目标仓库代码。只有显式提供 Invocation Spec，并传入 `--allow-execution` 时才进入原生调用。
 
+## 适合谁 / 不适合谁
+
+### 适合
+
+- 需要持续接入不同 API、Agent 工具和内部系统的平台；
+- 需要在执行前自动检查接口兼容性的团队；
+- 正在做 API / Schema 迁移或开源项目复用审计；
+- 需要受限转换和互操作回执的自动化系统。
+
+### 暂时不适合
+
+- 两个系统已经有稳定官方 SDK，而且结构长期不变；
+- 只想找成熟生产级 ESB / iPaaS 产品的客户；
+- 需要任意语言、任意运行时都能自动执行的通用平台；
+- 需要已经通过独立第三方安全认证的系统。
+
 ## OPP 和 TINP 的分工
 
 ```text
@@ -106,13 +176,13 @@ OPP 当前**不声称**：
 ## 文档入口
 
 - [`DEMO.md`](DEMO.md) — 3 分钟演示
+- [`docs/COMPARISON.md`](docs/COMPARISON.md) — 和 Adapter / SDK / MCP / A2A 的关系
 - [`docs/USE_CASES.md`](docs/USE_CASES.md) — 什么时候值得用 OPP
 - [`docs/REAL_WORLD_EXAMPLES.md`](docs/REAL_WORLD_EXAMPLES.md) — 三个现实业务映射
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — 架构和模块分工
 - [`docs/SPECIFICATION.md`](docs/SPECIFICATION.md) — 协议规范
-- [`CONTRIBUTING.md`](CONTRIBUTING.md) — 参与开发
-- [`SECURITY.md`](SECURITY.md) — 安全问题报告
 - [`ROADMAP.md`](ROADMAP.md) — 后续路线
+- [`SECURITY.md`](SECURITY.md) — 安全边界与报告方式
 
 ## 状态与许可
 
