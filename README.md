@@ -9,6 +9,14 @@ OPP 解决一个很具体的问题：两个系统都“会做事”，但接口�
 > Runtime / Bridge / Semantic Tooling：`0.3.0-candidate.1`  
 > 状态：**Candidate**。不是互联网标准，也不是生产安全认证。
 
+## 从这里开始
+
+- 想知道它到底能用在哪：[`docs/USE_CASES.md`](docs/USE_CASES.md)
+- 想直接跑起来：看下面的“快速开始”
+- 想看当前测试和边界：[`STATUS.md`](STATUS.md)
+- 想参与开发：[`CONTRIBUTING.md`](CONTRIBUTING.md)
+- 想报告安全问题：[`SECURITY.md`](SECURITY.md)
+
 ## 一分钟理解
 
 假设系统 A 输出：
@@ -37,6 +45,34 @@ OPP 可以做三件事：
 
 它的目标不是替代现有 API，而是减少“每接一个系统都重新理解、重新写胶水代码”的工作。
 
+## 三个最常见的用途
+
+### 1. 判断两个项目能不能接
+
+```text
+Project A
+   |
+   | output
+   v
+  OPP
+   |
+   | compatibility + bridge plan
+   v
+Project B
+```
+
+适合做接口兼容检查、API 迁移、旧系统接新系统、开源项目复用前审计。
+
+### 2. 给 Agent 接工具前先检查契约
+
+先看清楚“这个工具到底会什么、要什么输入、会返回什么”，再决定是否调用，而不是只靠名字猜。
+
+### 3. 自动化执行后留下可验证回执
+
+不仅知道“跑过了”，还保留这次能力协商、转换和执行对应的证据。
+
+更多例子见 [`docs/USE_CASES.md`](docs/USE_CASES.md)。
+
 ## 现在能做什么
 
 - 校验 OPP 协议对象和 JSON Schema；
@@ -49,6 +85,20 @@ OPP 可以做三件事：
 - 运行 `Producer -> Bridge -> Consumer`，并生成互操作回执；
 - 为桥接、能力协商和执行结果保留可验证证据。
 
+## 工作方式
+
+```mermaid
+flowchart LR
+    A[Producer] --> B[扫描接口]
+    B --> C{兼容吗?}
+    C -->|是| D[生成桥接计划]
+    C -->|未知/不兼容| E[停止并报告原因]
+    D --> F[Consumer]
+    F --> G[Interop Receipt]
+```
+
+静态扫描不会执行目标仓库代码。只有显式提供 Invocation Spec，并传入 `--allow-execution` 时才会进入原生调用。
+
 ## 适合什么场景
 
 - AI Agent / MCP / A2A 工具接入；
@@ -57,6 +107,8 @@ OPP 可以做三件事：
 - API / Schema 迁移；
 - 自动生成集成方案前的静态审计；
 - 需要留下执行回执和证据链的自动化流程。
+
+如果两个系统已经有稳定 SDK、字段完全一致，也不需要审计或桥接，直接调用现有 SDK 通常更简单。
 
 ## 快速开始
 
@@ -108,6 +160,17 @@ python -m unittest discover -s tests -v
 
 当前仓库测试状态见 [`STATUS.md`](STATUS.md)。
 
+## OPP 和 TINP 的分工
+
+```text
+OPP：这个系统会什么？两个系统能不能接？怎么转换？
+TINP：谁能调用？怎么传？失败怎么办？怎么恢复？
+```
+
+OPP 可以独立使用；需要身份、权限、路由和恢复时，再进入 TINP 的职责范围。
+
+TINP：<https://github.com/xingxuling/TINP>
+
 ## OPP 的 6 个核心协议
 
 | 协议 | 用途 |
@@ -120,29 +183,6 @@ python -m unittest discover -s tests -v
 | **CHP** — Civilization Handshake Protocol | 两个陌生系统在交互前先协商版本、能力和约束 |
 
 `Reality` 和 `Civilization` 是 OPP 协议族内部命名，不代表系统自动拥有现实世界权威，也不代表任何外部标准地位。
-
-## 工作方式
-
-```text
-Producer
-   |
-   | output schema
-   v
-OPP Semantic Scan
-   |
-   | compatibility check
-   v
-Bridge Plan
-   |
-   | allowed declarative transform
-   v
-Consumer
-   |
-   v
-Interop Receipt
-```
-
-静态扫描不会执行目标仓库代码。只有显式提供 Invocation Spec，并传入 `--allow-execution` 时才会进入原生调用。
 
 ## 安全边界
 
@@ -164,7 +204,7 @@ Interop Receipt
 - 已通过独立第三方互操作认证；
 - 已成为任何外部标准。
 
-详细边界见 [`docs/NATIVE_INTEROP.md`](docs/NATIVE_INTEROP.md) 和 [`STATUS.md`](STATUS.md)。
+详细边界见 [`docs/NATIVE_INTEROP.md`](docs/NATIVE_INTEROP.md)、[`SECURITY.md`](SECURITY.md) 和 [`STATUS.md`](STATUS.md)。
 
 ## 项目结构
 
@@ -184,12 +224,15 @@ docs/           规范、设计和边界说明
 
 ## 文档
 
+- [`docs/USE_CASES.md`](docs/USE_CASES.md) — 什么时候值得用 OPP
 - [`docs/SPECIFICATION.md`](docs/SPECIFICATION.md) — 协议规范
 - [`docs/BRIDGE_COMPILER.md`](docs/BRIDGE_COMPILER.md) — Bridge Compiler
 - [`docs/SEMANTIC_BRIDGE.md`](docs/SEMANTIC_BRIDGE.md) — 语义桥
 - [`docs/AUTO_CONNECT.md`](docs/AUTO_CONNECT.md) — 自动连接
 - [`docs/NATIVE_INTEROP.md`](docs/NATIVE_INTEROP.md) — 原生调用与互操作边界
 - [`docs/GOVERNANCE.md`](docs/GOVERNANCE.md) — 治理边界
+- [`CONTRIBUTING.md`](CONTRIBUTING.md) — 参与开发
+- [`SECURITY.md`](SECURITY.md) — 安全问题报告与边界
 
 ## 项目状态
 
