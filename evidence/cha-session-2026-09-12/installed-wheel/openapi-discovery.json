@@ -1,0 +1,60 @@
+{
+  "info": {
+    "title": "JMESPath sorter",
+    "version": "1"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/sort": {
+      "post": {
+        "operationId": "sort_sequence",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "values": {
+                    "items": {
+                      "type": "integer"
+                    },
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "values"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "ordered": {
+                      "items": {
+                        "type": "integer"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "ordered"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Sorted numbers"
+          }
+        }
+      }
+    }
+  }
+}

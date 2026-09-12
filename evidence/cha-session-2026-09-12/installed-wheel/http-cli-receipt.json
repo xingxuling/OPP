@@ -1,0 +1,77 @@
+{
+  "authorityGranted": false,
+  "boundary": "Provider-reported execution, not authenticated or independent runtime attestation. Failed calls may have executed; no automatic retry or rollback.",
+  "contractRoot": "8a41547d2cdbf544451ad56c58f229753fddf8016da713676802de2701f98da6",
+  "error": null,
+  "format": "taowind.opp.session-receipt.v0.1",
+  "implicitRetries": 0,
+  "input": {
+    "values": [
+      3,
+      1,
+      2
+    ]
+  },
+  "inputRoot": "c2d02feadd9a74ac8989f91e0f89044215f3f18e368c414771d457b8246ce293",
+  "receiptRoot": "46a5626dc8e2d1b917beac7035174f6ac1c17999d3b2db9192b32f168317158f",
+  "result": {
+    "groups": [
+      [
+        1,
+        2
+      ],
+      [
+        3
+      ]
+    ]
+  },
+  "resultRoot": "9e8b0b415fa283d985641b4f750f6f8b47d26505d4b93678d1e2c071e1ac256e",
+  "status": "PASS",
+  "steps": [
+    {
+      "declarationRoot": "e60883dae00bb7555296f36dab9677fe3775cc75dc338fbace9a0df4c85057b8",
+      "stage": "discover-producer"
+    },
+    {
+      "declarationRoot": "2d44321e546e79eed9f5ecff9ab51b31bb5d8cdc8178aa52a939ecf2992176f8",
+      "stage": "discover-consumer"
+    },
+    {
+      "stage": "producer-output",
+      "value": {
+        "ordered": [
+          1,
+          2,
+          3
+        ]
+      },
+      "valueRoot": "16d76a81a7871ad5afbaae19220c4f82494f862a49850c3fab684a907506a6d5"
+    },
+    {
+      "stage": "adapter",
+      "value": {
+        "entries": [
+          1,
+          2,
+          3
+        ]
+      },
+      "valueRoot": "d770c722c85eacdbea58e4804c1a140bb36fe880dc8da7bbda04ac82938c49d2"
+    },
+    {
+      "stage": "consumer-output",
+      "value": {
+        "groups": [
+          [
+            1,
+            2
+          ],
+          [
+            3
+          ]
+        ]
+      },
+      "valueRoot": "9e8b0b415fa283d985641b4f750f6f8b47d26505d4b93678d1e2c071e1ac256e"
+    }
+  ]
+}

@@ -99,3 +99,9 @@ CHP 的最小流程：
 ## 10. 安全与证据边界
 
 OPP 是语义协议层，不是认证、加密、网络沙箱或法律授权系统。生产部署必须叠加实际身份认证、传输加密、权限控制、审计与密钥管理。
+
+## 11. CHA 动态会话 profile（可选，向后兼容）
+
+新增 `extensions.session.profile = opp.session.v0.1`，以现有 RCP 描述组合不同能力的输出和输入。旧 `negotiate_capability` 的精确同能力协商不变；新 `negotiate_session` 输出 DIRECT / ADAPT / NEGOTIATE / DEGRADE / REJECT，并仅在证据和约束明确时生成可执行 Session Contract。
+
+完整字段、结果含义、Adapter 生成、版本漂移、权限与证据边界见 [CHA_SESSION.md](CHA_SESSION.md)。此 profile 不增加核心协议；MCP/OpenAPI/REST/CLI/Agent 等仍是表层协议或 Provider，业务语义不能被静默转换。

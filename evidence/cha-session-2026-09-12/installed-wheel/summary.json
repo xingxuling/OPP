@@ -1,0 +1,102 @@
+{
+  "artifactSha256": {
+    "boltons-source.json": "789ef55bccd7ba57b1fcdadb957b2329b1815f493724b1ed9a09293cc8cc8fb8",
+    "capabilities.json": "0a8d2a39808df224ced24cce7bbe97a73efb1ef6fe384df8f41139ce1f8f0147",
+    "cli-discovery.json": "727eb7e099a2dbac378c3ed6747271f0753ce305263538bc52f56048f4388e80",
+    "http-cli-handshake.json": "f1866461503c32e00dac7de5ac9f4d755cff5be7a2a9f67700cddebcc87f60db",
+    "http-cli-negotiation.json": "3fac4785a0dc1854294d2ff03ff20c27e092593deb119083a5ede5b4f1641676",
+    "http-cli-receipt.json": "be11c1d2ba9ffd3204cf03024e6b1ed6d3ab5f8e9d9f66969308df09278ef73f",
+    "http-failure.json": "092ee6298e94f37f888a409820e98bd6ec646c2f4a5a985516da58e6b5ea0b31",
+    "http-recovery.json": "0ff01765ed1de53387755dd909af88095475c4c278c3d62291fe9a15483f609f",
+    "jmespath-source.json": "8e563e3f14159842d4ed100b5d2bfc0f7264377314327f3b5f11d7e6df39c595",
+    "more-itertools-source.json": "35a2e59c9b60f3bff7813ac4f49a438c20eb2863258b21ae051c969ad9080705",
+    "native-discovery.json": "9351d53f64c62034aadd6953e482d1cbf6a6bb6433fdb8ee68b61b453d158c5a",
+    "native-invocation-receipts.json": "657b44b4b76164d33b9f53e00a1de386784e48868fdcca54feb5752d369249ac",
+    "openapi-discovery.json": "09ac48d2f8ab956c3fd3794cb86526d192a13c413ce8e46222aca472839bd943",
+    "python-http-handshake.json": "6743312cb334e8cb1d2ecb8ea40685bfacee4906a80676842503f809917268a1",
+    "python-http-negotiation.json": "2d01697644500fce2cf01534ac7e3e9a6296cc2979a7d07fb6bced9186a02c95",
+    "python-http-receipt.json": "4c72ec5ed0a45ce30fff303fa071d749e3abe9013f7755fc914ceaba7d41a2b2",
+    "static-semantic-scan.json": "5e9eaee20481d63a44c133dbb983669547e855aad92fb664147d3d183c3c69ef",
+    "surface-calls.json": "5eee1e1dd45db08dc5016e35fb8d0017668080255478ee6dd26bb00ea4d0d4ba"
+  },
+  "automatic": [
+    "native descriptors/OpenAPI parsing",
+    "CHP without shared business capability IDs",
+    "explicit concept matching",
+    "rename synthesis",
+    "runtime schemas",
+    "drift recheck",
+    "offline receipt verification"
+  ],
+  "boundary": "Three real installed third-party libraries, three local interface kinds, one operator/physical host. Wrappers authored here. No independent OPP implementation, production network, trusted time or authority attestation. MCP import tested; MCP execution and gRPC NOT_RUN.",
+  "environment": {
+    "oppModule": "C:\\Users\\User\\Documents\\RCL\\_inspect\\opp-cha-installed-env\\Lib\\site-packages\\opp\\__init__.py",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "python": "3.11.6"
+  },
+  "expectedRoots": {
+    "http-cli": {
+      "contractRoot": "8a41547d2cdbf544451ad56c58f229753fddf8016da713676802de2701f98da6",
+      "receiptRoot": "46a5626dc8e2d1b917beac7035174f6ac1c17999d3b2db9192b32f168317158f"
+    },
+    "python-http": {
+      "contractRoot": "cfa66cf9be78e92562e3f26e3f4aaec49d40e2e619024d1f371b28f8a4827d72",
+      "receiptRoot": "2bf4d5af27dabb6c60994a8f50af941c2e7da1396f20456fed697bd4b00a398f"
+    }
+  },
+  "format": "opp.cha-session-evidence.v0.1",
+  "libraries": {
+    "boltons": "26.2.0",
+    "jmespath": "1.1.0",
+    "more-itertools": "11.1.0",
+    "taowind-opp": "0.3.0.dev1"
+  },
+  "manual": [
+    "three surface wrappers",
+    "field concept/unit assertions",
+    "stateless declaration",
+    "provider registration",
+    "execution consent",
+    "operator-directed recovery"
+  ],
+  "sessions": [
+    {
+      "elapsedMs": 647.937700006878,
+      "offlineVerification": "PASS",
+      "outcome": "ADAPT",
+      "result": {
+        "ordered": [
+          1,
+          2,
+          3
+        ]
+      },
+      "session": "python-http"
+    },
+    {
+      "elapsedMs": 1058.1643000186887,
+      "offlineVerification": "PASS",
+      "outcome": "ADAPT",
+      "result": {
+        "groups": [
+          [
+            1,
+            2
+          ],
+          [
+            3
+          ]
+        ]
+      },
+      "session": "http-cli"
+    }
+  ],
+  "sourceFiles": {
+    "cli_actor.py": "6ae4b71d22c7f9b7ba5823ceda32b4ec8b2f3ef11814aefa70865661a2e29173",
+    "http_actor.py": "f551e825e41cc02793a1c75391785fe85d2cde6e11c1f0447be4e1ddb0ec6d3f",
+    "native_actor.py": "27b18b5635c4ff28658ae597471e97272fe43412154be27fb8eebbc119e2c47d",
+    "run_demo.py": "06677f409805ea3d93a5a19bdf6f98a24828d57760df88748d9b7d9f4b2ac02d"
+  },
+  "status": "PASS",
+  "totalElapsedMs": 5649.732799996855
+}

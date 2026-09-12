@@ -1,0 +1,34 @@
+[
+  {
+    "durationMs": 1.47570000262931,
+    "inputRoot": "c2d02feadd9a74ac8989f91e0f89044215f3f18e368c414771d457b8246ce293",
+    "outputRoot": "16d76a81a7871ad5afbaae19220c4f82494f862a49850c3fab684a907506a6d5",
+    "status": 200,
+    "surface": "HTTP"
+  },
+  {
+    "durationMs": 1.728000002913177,
+    "inputRoot": "c2d02feadd9a74ac8989f91e0f89044215f3f18e368c414771d457b8246ce293",
+    "outputRoot": "16d76a81a7871ad5afbaae19220c4f82494f862a49850c3fab684a907506a6d5",
+    "status": 200,
+    "surface": "HTTP"
+  },
+  {
+    "exitCode": 0,
+    "inputRoot": "d770c722c85eacdbea58e4804c1a140bb36fe880dc8da7bbda04ac82938c49d2",
+    "outputRoot": "9e8b0b415fa283d985641b4f750f6f8b47d26505d4b93678d1e2c071e1ac256e",
+    "surface": "CLI"
+  },
+  {
+    "failure": "HTTP_STATUS_503",
+    "inputRoot": "bff720f7ade3c6880454bb05885db9d3d67bbf43973fe6e008fb25bf5d740d3f",
+    "surface": "HTTP"
+  },
+  {
+    "durationMs": 21.62529999623075,
+    "inputRoot": "bff720f7ade3c6880454bb05885db9d3d67bbf43973fe6e008fb25bf5d740d3f",
+    "outputRoot": "f9bcee14a6c5c469dde8c0dbe822d30d4107d39441622538646aefff5dd81428",
+    "status": 200,
+    "surface": "HTTP"
+  }
+]

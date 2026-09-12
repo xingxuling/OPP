@@ -4,3 +4,6 @@
 
 # Captured service logs retain original trailing spaces as evidence.
 /evidence/external-onboarding-2026-09-12/**/*.log -whitespace
+/evidence/cha-session-2026-09-12/** -text whitespace=cr-at-eol
+/evidence/cha-session-2026-09-12/**/*.log -whitespace
+/examples/cha-session/*.py -text

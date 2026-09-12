@@ -15,6 +15,11 @@ from .bridge.semantic_model import SemanticPort
 from .runtime import run_invocation, run_interop, InvocationError, InteropError
 from .runtime.model import InvocationSpec
 from .runtime.verification import verify_interop_result
+from .surfaces import describe_surface, describe_openapi, describe_mcp_tool
+from .session import (
+    OUTCOMES, SessionError, SurfaceProvider, negotiate_session, run_session,
+    verify_session_contract, verify_session_receipt,
+)
 
 SDK_API_VERSION = 1
 __all__ = [
@@ -24,4 +29,7 @@ __all__ = [
     'plan_repository_connection', 'compare_ports', 'synthesize_bridge',
     'apply_transform', 'SemanticPort', 'InvocationSpec', 'run_invocation',
     'run_interop', 'InvocationError', 'InteropError', 'verify_interop_result',
+    'describe_surface', 'describe_openapi', 'describe_mcp_tool', 'OUTCOMES',
+    'SessionError', 'SurfaceProvider', 'negotiate_session', 'run_session',
+    'verify_session_contract', 'verify_session_receipt',
 ]
