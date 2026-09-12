@@ -1,0 +1,46 @@
+{
+  "format": "opp.business-demo-evidence.v0.1",
+  "generatedAt": "2026-09-12",
+  "sourceCommit": "643e392075ca20760144d5ae7507c480527ce2b6",
+  "command": "python examples/business_demo.py",
+  "scenario": "legacy-booking-form-to-crm",
+  "result": {
+    "场景": "旧预约表单 -> 新 CRM 线索",
+    "说明": "这是本地演示，不连接真实预约系统或 CRM。重点是字段差异如何被显式转换并留下回执。",
+    "原始输入": {
+      "name": "陈小姐",
+      "phone": "+852 6123 4567",
+      "service": "physio-first-visit",
+      "slot": "2026-09-15 14:30",
+      "notes": "希望安排下午时段"
+    },
+    "旧系统输出": {
+      "name": "陈小姐",
+      "phone": "+852 6123 4567",
+      "service": "physio-first-visit",
+      "slot": "2026-09-15 14:30",
+      "notes": "希望安排下午时段",
+      "debug_source": "legacy-booking-form"
+    },
+    "OPP 转换后": {
+      "customer_name": "陈小姐",
+      "phone": "+852 6123 4567",
+      "service_code": "physio-first-visit",
+      "preferred_time": "2026-09-15 14:30",
+      "notes": "希望安排下午时段",
+      "channel": "legacy-web-form"
+    },
+    "新系统结果": {
+      "accepted": true,
+      "customer_name": "陈小姐",
+      "phone": "+852 6123 4567",
+      "service_code": "physio-first-visit",
+      "preferred_time": "2026-09-15 14:30",
+      "notes": "希望安排下午时段",
+      "channel": "legacy-web-form"
+    },
+    "状态": "PASS",
+    "回执根": "5e8669216c4b7a8c0b4675da8c05b4e7a0f41b6afb56ccce2b4a4fe31256521f"
+  },
+  "boundary": "This evidence proves only the bundled local business demo on the pinned source snapshot. It does not prove arbitrary third-party CRM compatibility or production readiness."
+}
