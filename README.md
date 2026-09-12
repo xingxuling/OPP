@@ -243,3 +243,9 @@ OPP 当前**不声称**：
 ## License
 
 MIT License，见 [`LICENSE`](LICENSE)。
+
+## 外部接入候选（2026-09-12）
+
+新增 `opp.sdk` 公开入口与 `opp interop verify` 离线复核。三个独立维护的真实库完成安装包执行、桥接、错误输入拒绝与显式恢复；这仍由本机操作员完成，不是独立第三方验收。
+
+[SDK 接入与复现](docs/PUBLIC_SDK.md) · [真实项目证据与限制](docs/EXTERNAL_ONBOARDING.md) · [下一步](ROADMAP.md)

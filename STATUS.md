@@ -25,3 +25,7 @@
 - Independent third-party interoperability（独立第三方互操作）：unverified / 未验证
 - External standard status（外部标准地位）：none / 无
 - GitHub Actions：not required / not used（不依赖 / 未使用）
+
+## 2026-09-12 external onboarding candidate
+
+Public SDK + original-input-bound offline verification implemented. Three installed third-party libraries passed concrete positive/negative/re-invocation scenarios. Static unknown types remain unknown; malformed plan roots fail before execution. See docs/EXTERNAL_ONBOARDING.md and evidence/external-onboarding-2026-09-12. External operator, production and TINP multi-host gates remain open.

@@ -1,0 +1,3 @@
+boltons==26.2.0
+more-itertools==11.1.0
+jmespath==1.1.0
