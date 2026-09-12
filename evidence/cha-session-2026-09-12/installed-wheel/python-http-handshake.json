@@ -1,0 +1,42 @@
+{
+  "constraints": [
+    "握手不得创建 offer 之外的新权限 / handshake must not create authority absent from offers"
+  ],
+  "evidenceRefs": [],
+  "extensions": {},
+  "format": "taowind.opp.reality-envelope.v0.1",
+  "id": "chp:python-boltons:http-jmespath",
+  "integrity": {
+    "algorithm": "sha256",
+    "contentRoot": "d35288a374d804537332e4407f9fbcf028566dd72406338dccc8b041ec4f91ae"
+  },
+  "issuedAt": "2026-09-12T12:59:39.510097Z",
+  "issuer": {
+    "displayName": "python-boltons",
+    "id": "python-boltons",
+    "type": "runtime"
+  },
+  "kind": "protocol",
+  "payload": {
+    "agreedProtocols": [
+      "opp.chp.v0.1",
+      "opp.rcp.v0.1"
+    ],
+    "authorityScopes": [],
+    "evidencePolicy": {
+      "acceptDerivedEvidence": false,
+      "minimumConfidence": 0.0
+    },
+    "participants": [
+      "python-boltons",
+      "http-jmespath"
+    ],
+    "phase": "agreement",
+    "reasons": [],
+    "sharedCapabilities": [],
+    "status": "accepted"
+  },
+  "protocol": "opp.chp.v0.1",
+  "status": "candidate",
+  "version": "0.1.0-candidate.1"
+}

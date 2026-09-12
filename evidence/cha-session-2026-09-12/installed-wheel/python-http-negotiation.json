@@ -1,0 +1,269 @@
+{
+  "authorityGranted": false,
+  "contract": {
+    "adapter": {
+      "adapterRoot": "c216b28cc55b728025531e8301081ff984c5b225eb37c479c6fbfa61a261fab9",
+      "droppedFields": [],
+      "semanticMapping": {
+        "values": "unique_items"
+      },
+      "semanticOperations": [
+        {
+          "from": "unique_items",
+          "op": "rename",
+          "to": "values"
+        }
+      ],
+      "structuralBridge": {
+        "authority": {
+          "available": [],
+          "promotionPerformed": false,
+          "required": []
+        },
+        "boundary": "Generated plans only transform supplied JSON-like values. They cannot create missing required information, privileges, native runtime support, or semantic truth / 生成计划只转换已提供的 JSON 类数据；不能创造缺失的必需信息、权限、原生运行支持或语义真实性。",
+        "bridgeId": "bridge-plan-e19ee62756686c435204c0df",
+        "compatibility": {
+          "authorityGap": [],
+          "boundary": "Compatibility is inferred from declared/static shapes and tags. It is not proof that either native runtime actually interoperates / 兼容性来自声明或静态形状与语义标签推断，不证明原生运行时实际互操作。",
+          "classification": "exact",
+          "confidence": 0.55,
+          "consumerPort": "session-input",
+          "format": "taowind.opp.bridge-compatibility.v0.1",
+          "missingInformation": [],
+          "operations": [],
+          "producerPort": "session-output",
+          "reasons": [
+            "$:exact-shape"
+          ],
+          "semanticCompatible": null,
+          "typeCompatible": true
+        },
+        "consumerPort": "session-input",
+        "executionModel": "opp-declarative-json-transform",
+        "format": "taowind.opp.auto-bridge-plan.v0.1",
+        "operations": [
+          {
+            "op": "identity"
+          }
+        ],
+        "planRoot": "85e9a40c0c81417a0642ad62d207d3d8c9e074889a0cd2458957041a6f69741b",
+        "producerPort": "session-output",
+        "safety": {
+          "arbitraryCodeGeneration": false,
+          "authorityInvention": false,
+          "informationInvention": false,
+          "lossyAllowed": false,
+          "sourceCodeExecution": false
+        },
+        "status": "candidate",
+        "version": "0.2.0-candidate.1"
+      }
+    },
+    "allowedDrops": [],
+    "authorityGranted": false,
+    "availableAuthority": [],
+    "boundary": "Candidate declaration agreement; caller owns provider trust, authority and transport. No implicit retries.",
+    "consumer": {
+      "extensions": {
+        "session": {
+          "profile": "opp.session.v0.1",
+          "semantics": {
+            "input": {
+              "values": {
+                "concept": "urn:cha-demo:integer-sequence",
+                "unit": "1"
+              }
+            },
+            "output": {
+              "ordered": {
+                "concept": "urn:cha-demo:integer-sequence",
+                "unit": "1"
+              }
+            }
+          },
+          "surface": {
+            "bindingId": "http",
+            "discoveryRoot": "4f80e34e47370e3bd5393a8d63e144360e5fa445844e05ba1ebabac9bcdfdf11",
+            "kind": "openapi-json",
+            "method": "post",
+            "path": "/sort",
+            "responseStatus": "200",
+            "revision": "1"
+          }
+        }
+      },
+      "format": "taowind.opp.reality-envelope.v0.1",
+      "id": "rcp:http-jmespath:sort_sequence",
+      "integrity": {
+        "algorithm": "sha256",
+        "contentRoot": "569562340e811d9f82cb6f66274002332c42081ad221530905d583e15fff5656"
+      },
+      "issuedAt": "1970-01-01T00:00:00Z",
+      "issuer": {
+        "id": "http-jmespath",
+        "type": "service"
+      },
+      "kind": "capability",
+      "payload": {
+        "authorityRequired": [],
+        "availability": "candidate-only",
+        "capabilityId": "sort_sequence",
+        "claimBoundary": "Provider declarations and semantic assertions, not authenticated facts.",
+        "determinism": "unknown",
+        "domain": "surface-provider",
+        "evidence": [
+          "4f80e34e47370e3bd5393a8d63e144360e5fa445844e05ba1ebabac9bcdfdf11"
+        ],
+        "inputModalities": [
+          "json"
+        ],
+        "inputSchema": {
+          "additionalProperties": false,
+          "properties": {
+            "values": {
+              "items": {
+                "type": "integer"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "values"
+          ],
+          "type": "object"
+        },
+        "name": "sort_sequence",
+        "operation": "sort_sequence",
+        "outputModalities": [
+          "json"
+        ],
+        "outputSchema": {
+          "additionalProperties": false,
+          "properties": {
+            "ordered": {
+              "items": {
+                "type": "integer"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "ordered"
+          ],
+          "type": "object"
+        },
+        "reversibility": "unknown",
+        "sideEffects": [],
+        "statefulness": "stateless"
+      },
+      "protocol": "opp.rcp.v0.1",
+      "status": "candidate",
+      "version": "0.1.0-candidate.1"
+    },
+    "contractRoot": "cfa66cf9be78e92562e3f26e3f4aaec49d40e2e619024d1f371b28f8a4827d72",
+    "format": "taowind.opp.session-contract.v0.1",
+    "goal": "sort_sequence",
+    "outcome": "ADAPT",
+    "producer": {
+      "extensions": {
+        "session": {
+          "profile": "opp.session.v0.1",
+          "semantics": {
+            "input": {
+              "legacy_items": {
+                "concept": "urn:cha-demo:integer-sequence",
+                "unit": "1"
+              }
+            },
+            "output": {
+              "unique_items": {
+                "concept": "urn:cha-demo:integer-sequence",
+                "unit": "1"
+              }
+            }
+          },
+          "surface": {
+            "bindingId": "native",
+            "discoveryRoot": "c97773f3fb9909839bf900d5f2085e88e83b16e562e724f224318a516425068f",
+            "kind": "python-function",
+            "revision": "1"
+          }
+        }
+      },
+      "format": "taowind.opp.reality-envelope.v0.1",
+      "id": "rcp:python-boltons:unique_numbers",
+      "integrity": {
+        "algorithm": "sha256",
+        "contentRoot": "2e9a3bc8d39ac2cf12e9a6f2b4dd842674243c046a937e302cf0a925b7c64990"
+      },
+      "issuedAt": "1970-01-01T00:00:00Z",
+      "issuer": {
+        "id": "python-boltons",
+        "type": "service"
+      },
+      "kind": "capability",
+      "payload": {
+        "authorityRequired": [],
+        "availability": "candidate-only",
+        "capabilityId": "unique_numbers",
+        "claimBoundary": "Provider declarations and semantic assertions, not authenticated facts.",
+        "determinism": "unknown",
+        "domain": "surface-provider",
+        "evidence": [
+          "c97773f3fb9909839bf900d5f2085e88e83b16e562e724f224318a516425068f"
+        ],
+        "inputModalities": [
+          "json"
+        ],
+        "inputSchema": {
+          "additionalProperties": false,
+          "properties": {
+            "legacy_items": {
+              "items": {
+                "type": "integer"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "legacy_items"
+          ],
+          "type": "object"
+        },
+        "name": "unique_numbers",
+        "operation": "unique_numbers",
+        "outputModalities": [
+          "json"
+        ],
+        "outputSchema": {
+          "additionalProperties": false,
+          "properties": {
+            "unique_items": {
+              "items": {
+                "type": "integer"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "unique_items"
+          ],
+          "type": "object"
+        },
+        "reversibility": "unknown",
+        "sideEffects": [],
+        "statefulness": "stateless"
+      },
+      "protocol": "opp.rcp.v0.1",
+      "status": "candidate",
+      "version": "0.1.0-candidate.1"
+    },
+    "profile": "opp.session.v0.1"
+  },
+  "format": "taowind.opp.session-negotiation.v0.1",
+  "negotiationRoot": "3892cf006d90c35ad5e45ada59219c2fba4cf54cf6baca77872d3355e3027401",
+  "outcome": "ADAPT",
+  "reasons": [
+    "EXPLICIT_SEMANTICS_AND_SCHEMA_PROOF"
+  ]
+}

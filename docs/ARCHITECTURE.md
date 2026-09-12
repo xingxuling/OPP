@@ -8,6 +8,8 @@ OPP 不替代 HTTP、REST、MCP、A2A 或数据库协议。
 
 它更像这些接口之上的一层“连接前检查 + 受限转换 + 可验证执行”。
 
+CHA 定位下，本轮新增 `surfaces.py` 与 `session.py`，把下述现有部分组合为动态会话：RCP capability → 显式字段语义/约束协商 → Session Contract → 已有结构 bridge/transform → 调用方 Provider → rooted receipt。它们不替换四个原有部分，也不承担新的网络或授权所有权。详细边界见 [CHA Session](CHA_SESSION.md)。
+
 ```mermaid
 flowchart LR
     A[现有系统 / Agent / API] --> B[OPP 接口扫描]

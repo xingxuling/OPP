@@ -1,0 +1,123 @@
+[
+  {
+    "receipt": {
+      "adapterKind": "python-function",
+      "authority": {
+        "inheritedFromEnvironment": false,
+        "promotionPerformed": false,
+        "required": []
+      },
+      "boundary": "PASS proves only this explicit invocation completed under the OPP bounded child-process policy. It does not prove the target is safe or strongly sandboxed / PASS 只证明本次显式调用在 OPP 有界子进程策略下完成，不证明目标代码安全或具备强沙箱隔离。",
+      "durationMs": 313.211,
+      "entrypoint": "native_actor.py:unique_numbers",
+      "error": null,
+      "executionBoundary": {
+        "cwdPolicy": "ephemeral",
+        "environmentPolicy": "sanitized",
+        "explicitConsentRequired": true,
+        "shellUsed": false,
+        "strongOsSandboxClaimed": false
+      },
+      "exitCode": 0,
+      "format": "taowind.opp.invocation-receipt.v0.1",
+      "receiptRoot": "48a5731c8e4bc59c5c52727d7e8641b390072d0480778f19bc4cf92603fa1f1a",
+      "requestRoot": "93ee43879ddfed98a6df72f14db61eaa1e132e3784d84cf4a78f71da6ad6e881",
+      "resultRoot": "8d67564553340518da576f9edaa0971ce7a34c759b6bbed4c437311219098e1e",
+      "specId": "cha-native",
+      "status": "PASS",
+      "stderrBytes": 0,
+      "stdoutBytes": 81,
+      "targetStderr": "",
+      "targetStdout": "",
+      "timedOut": false,
+      "version": "0.3.0-candidate.1"
+    },
+    "result": {
+      "unique_items": [
+        3,
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "receipt": {
+      "adapterKind": "python-function",
+      "authority": {
+        "inheritedFromEnvironment": false,
+        "promotionPerformed": false,
+        "required": []
+      },
+      "boundary": "PASS proves only this explicit invocation completed under the OPP bounded child-process policy. It does not prove the target is safe or strongly sandboxed / PASS 只证明本次显式调用在 OPP 有界子进程策略下完成，不证明目标代码安全或具备强沙箱隔离。",
+      "durationMs": 385.416,
+      "entrypoint": "native_actor.py:unique_numbers",
+      "error": null,
+      "executionBoundary": {
+        "cwdPolicy": "ephemeral",
+        "environmentPolicy": "sanitized",
+        "explicitConsentRequired": true,
+        "shellUsed": false,
+        "strongOsSandboxClaimed": false
+      },
+      "exitCode": 0,
+      "format": "taowind.opp.invocation-receipt.v0.1",
+      "receiptRoot": "0631fd34b1503ddbf496f40712f8761a814a05c44e99faefae16052ecde249d4",
+      "requestRoot": "bb8abe5b167cdeeb02b60b91fe338ac461ae97e3604f08e121820d8aa49acacb",
+      "resultRoot": "9c0e8f6e7e2f44084485188c2b5047db150aeef9160d2ff6564fb2ff4b0359c1",
+      "specId": "cha-native",
+      "status": "PASS",
+      "stderrBytes": 0,
+      "stdoutBytes": 79,
+      "targetStderr": "",
+      "targetStdout": "",
+      "timedOut": false,
+      "version": "0.3.0-candidate.1"
+    },
+    "result": {
+      "unique_items": [
+        2,
+        1
+      ]
+    }
+  },
+  {
+    "receipt": {
+      "adapterKind": "python-function",
+      "authority": {
+        "inheritedFromEnvironment": false,
+        "promotionPerformed": false,
+        "required": []
+      },
+      "boundary": "PASS proves only this explicit invocation completed under the OPP bounded child-process policy. It does not prove the target is safe or strongly sandboxed / PASS 只证明本次显式调用在 OPP 有界子进程策略下完成，不证明目标代码安全或具备强沙箱隔离。",
+      "durationMs": 366.78,
+      "entrypoint": "native_actor.py:unique_numbers",
+      "error": null,
+      "executionBoundary": {
+        "cwdPolicy": "ephemeral",
+        "environmentPolicy": "sanitized",
+        "explicitConsentRequired": true,
+        "shellUsed": false,
+        "strongOsSandboxClaimed": false
+      },
+      "exitCode": 0,
+      "format": "taowind.opp.invocation-receipt.v0.1",
+      "receiptRoot": "0631fd34b1503ddbf496f40712f8761a814a05c44e99faefae16052ecde249d4",
+      "requestRoot": "bb8abe5b167cdeeb02b60b91fe338ac461ae97e3604f08e121820d8aa49acacb",
+      "resultRoot": "9c0e8f6e7e2f44084485188c2b5047db150aeef9160d2ff6564fb2ff4b0359c1",
+      "specId": "cha-native",
+      "status": "PASS",
+      "stderrBytes": 0,
+      "stdoutBytes": 79,
+      "targetStderr": "",
+      "targetStdout": "",
+      "timedOut": false,
+      "version": "0.3.0-candidate.1"
+    },
+    "result": {
+      "unique_items": [
+        2,
+        1
+      ]
+    }
+  }
+]

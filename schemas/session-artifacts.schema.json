@@ -1,0 +1,262 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "OPP CHA session candidate artifacts; semantic/root verification additionally required",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/contract"
+    },
+    {
+      "$ref": "#/$defs/negotiation"
+    },
+    {
+      "$ref": "#/$defs/receipt"
+    }
+  ],
+  "$defs": {
+    "contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format",
+        "profile",
+        "outcome",
+        "goal",
+        "producer",
+        "consumer",
+        "adapter",
+        "availableAuthority",
+        "allowedDrops",
+        "authorityGranted",
+        "boundary",
+        "contractRoot"
+      ],
+      "properties": {
+        "format": {
+          "const": "taowind.opp.session-contract.v0.1"
+        },
+        "profile": {
+          "const": "opp.session.v0.1"
+        },
+        "outcome": {
+          "enum": [
+            "DIRECT",
+            "ADAPT",
+            "DEGRADE"
+          ]
+        },
+        "goal": {
+          "type": "string"
+        },
+        "producer": {
+          "type": "object",
+          "required": [
+            "protocol",
+            "payload",
+            "extensions"
+          ],
+          "properties": {
+            "protocol": {
+              "const": "opp.rcp.v0.1"
+            },
+            "payload": {
+              "type": "object"
+            },
+            "extensions": {
+              "type": "object"
+            }
+          }
+        },
+        "consumer": {
+          "type": "object",
+          "required": [
+            "protocol",
+            "payload",
+            "extensions"
+          ],
+          "properties": {
+            "protocol": {
+              "const": "opp.rcp.v0.1"
+            },
+            "payload": {
+              "type": "object"
+            },
+            "extensions": {
+              "type": "object"
+            }
+          }
+        },
+        "adapter": {
+          "type": "object"
+        },
+        "availableAuthority": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "allowedDrops": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "authorityGranted": {
+          "const": false
+        },
+        "boundary": {
+          "type": "string"
+        },
+        "contractRoot": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "negotiation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format",
+        "outcome",
+        "reasons",
+        "contract",
+        "authorityGranted",
+        "negotiationRoot"
+      ],
+      "properties": {
+        "format": {
+          "const": "taowind.opp.session-negotiation.v0.1"
+        },
+        "outcome": {
+          "enum": [
+            "DIRECT",
+            "ADAPT",
+            "NEGOTIATE",
+            "DEGRADE",
+            "REJECT"
+          ]
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "contract": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contract"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "authorityGranted": {
+          "const": false
+        },
+        "negotiationRoot": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "enum": [
+                  "NEGOTIATE",
+                  "REJECT"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "contract": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "contract": {
+                "$ref": "#/$defs/contract"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format",
+        "contractRoot",
+        "input",
+        "inputRoot",
+        "steps",
+        "status",
+        "error",
+        "result",
+        "resultRoot",
+        "authorityGranted",
+        "implicitRetries",
+        "boundary",
+        "receiptRoot"
+      ],
+      "properties": {
+        "format": {
+          "const": "taowind.opp.session-receipt.v0.1"
+        },
+        "contractRoot": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "input": {},
+        "inputRoot": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "status": {
+          "enum": [
+            "PASS",
+            "FAIL"
+          ]
+        },
+        "error": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "result": {},
+        "resultRoot": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "authorityGranted": {
+          "const": false
+        },
+        "implicitRetries": {
+          "const": 0
+        },
+        "boundary": {
+          "type": "string"
+        },
+        "receiptRoot": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    }
+  }
+}

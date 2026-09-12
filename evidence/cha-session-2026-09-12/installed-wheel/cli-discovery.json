@@ -1,0 +1,37 @@
+{
+  "command": "chunk_pairs",
+  "stdin": {
+    "additionalProperties": false,
+    "properties": {
+      "entries": {
+        "items": {
+          "type": "integer"
+        },
+        "type": "array"
+      }
+    },
+    "required": [
+      "entries"
+    ],
+    "type": "object"
+  },
+  "stdout": {
+    "additionalProperties": false,
+    "properties": {
+      "groups": {
+        "items": {
+          "items": {
+            "type": "integer"
+          },
+          "type": "array"
+        },
+        "type": "array"
+      }
+    },
+    "required": [
+      "groups"
+    ],
+    "type": "object"
+  },
+  "version": "1"
+}

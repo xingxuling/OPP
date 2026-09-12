@@ -1,0 +1,34 @@
+{
+  "input": {
+    "additionalProperties": false,
+    "properties": {
+      "legacy_items": {
+        "items": {
+          "type": "integer"
+        },
+        "type": "array"
+      }
+    },
+    "required": [
+      "legacy_items"
+    ],
+    "type": "object"
+  },
+  "name": "unique_numbers",
+  "output": {
+    "additionalProperties": false,
+    "properties": {
+      "unique_items": {
+        "items": {
+          "type": "integer"
+        },
+        "type": "array"
+      }
+    },
+    "required": [
+      "unique_items"
+    ],
+    "type": "object"
+  },
+  "revision": "1"
+}

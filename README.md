@@ -1,12 +1,18 @@
 # OPP
 
-**Software Interoperability & Capability Bridging Toolkit**  
-**软件互操作与能力桥接工具**
+**Dynamic Interoperability Meta-Protocol for CHA**
+**面向复杂异质自主系统的动态互操作元协议**
 
 > Protocol family name: **Open Reality Protocols**（协议族内部名称）  
 > 当前状态：**Candidate**  
 > Core Protocols：`0.1.0-candidate.1`  
 > Runtime / Bridge / Semantic Tooling：`0.3.0-candidate.1`
+
+OPP 面向 CHA（Complex Heterogeneous Autonomous Systems）。关键是接口异质、未知语义、权限限制、版本漂移和契约不匹配；主体可以是 API、CLI、设备、服务或 Agent，数量不是前提。双方无需提前统一业务能力 ID 或字段名，但必须提供最小 OPP 能力描述与可核对的语义声明。
+
+本轮新增 **Session candidate**：发现能力 → `DIRECT / ADAPT / NEGOTIATE / DEGRADE / REJECT` → 生成绑定接口版本的会话契约 → 复用声明式 Adapter → 显式执行 → 离线核验。原有 RCP 精确协商和运行时入口保持兼容。
+
+真实运行的最小异质闭环见 [CHA Session 协议与复现](docs/CHA_SESSION.md)：Python/Boltons → HTTP/OpenAPI/JMESPath，以及 HTTP → CLI/more-itertools。三种接口、三项真实第三方库；接入包装与语义声明由本项目提供，不代表三家独立实现了 OPP。MCP 声明导入已有测试，MCP 执行、gRPC 接入及独立操作员验证仍未完成。
 
 当你不断把新的 API、Agent、开源项目和内部系统接在一起时，真正重复的工作往往不是“会不会写代码”，而是：
 

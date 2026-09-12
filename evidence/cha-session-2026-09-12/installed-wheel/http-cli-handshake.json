@@ -1,0 +1,42 @@
+{
+  "constraints": [
+    "握手不得创建 offer 之外的新权限 / handshake must not create authority absent from offers"
+  ],
+  "evidenceRefs": [],
+  "extensions": {},
+  "format": "taowind.opp.reality-envelope.v0.1",
+  "id": "chp:http-jmespath:cli-more-itertools",
+  "integrity": {
+    "algorithm": "sha256",
+    "contentRoot": "9f4fb227d306c6792221f09a2709745e555549d3c14a56d0951288db6ce6b35f"
+  },
+  "issuedAt": "2026-09-12T12:59:40.159359Z",
+  "issuer": {
+    "displayName": "http-jmespath",
+    "id": "http-jmespath",
+    "type": "runtime"
+  },
+  "kind": "protocol",
+  "payload": {
+    "agreedProtocols": [
+      "opp.chp.v0.1",
+      "opp.rcp.v0.1"
+    ],
+    "authorityScopes": [],
+    "evidencePolicy": {
+      "acceptDerivedEvidence": false,
+      "minimumConfidence": 0.0
+    },
+    "participants": [
+      "http-jmespath",
+      "cli-more-itertools"
+    ],
+    "phase": "agreement",
+    "reasons": [],
+    "sharedCapabilities": [],
+    "status": "accepted"
+  },
+  "protocol": "opp.chp.v0.1",
+  "status": "candidate",
+  "version": "0.1.0-candidate.1"
+}

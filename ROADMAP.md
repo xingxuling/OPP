@@ -94,3 +94,13 @@ Local measurements are not production performance or availability commitments.
 GitHub [远端执行 34692267549](https://github.com/xingxuling/TINP/actions/runs/34692267549) 的 Linux 生产端及 Linux / Windows 复核端全部成功。真实库运行与证据交接已离开当前电脑；仍不代表双物理设备、独立操作员或真实 Authority Provider。
 
 Final code replay: [34692507409](https://github.com/xingxuling/TINP/actions/runs/34692507409), all three hosted jobs PASS; OPP `7c4970c`, TINP `692c0e4`. The earlier run is retained as historical evidence.
+
+## 2026-09-12 CHA Session candidate
+
+- 已新增有界 Surface → RCP 导入、五类协商、版本绑定的 Session Contract。
+- 已复用语义端口、结构桥合成和 JSON 转换；没有更改旧 RCP 精确协商。
+- Python/Boltons → HTTP/JMESPath、HTTP → CLI/more-itertools 真实运行通过，HTTP 503 与显式恢复保留负证据。
+- 未证明语义/约束、未经同意的裁剪不能执行；MCP 声明导入已测，MCP transport/gRPC 未实现验证。
+- 测试、安装包复跑、来源/许可证和 RCL stress 边界见 [本轮证据](evidence/cha-session-2026-09-12/README.md)。
+
+下一最短缺口：独立维护 MCP server 的真实调用与声明漂移、独立接入者语义评审、TINP 授权/版本前置条件接合。多方协商和通用 Schema 推理不以大重构抢先实现。

@@ -1,0 +1,16 @@
+{
+  "sourceCommit": "916322bafee1906a838fff359c1c982533b00a89",
+  "committedArtifactBytes": "PASS",
+  "actorSourceHashes": "PASS",
+  "summarySha256": "445454ae2bb3662da69b58b347196a311669cfaf5703ea7dc40b6f36aa7b3667",
+  "wheelSha256": "8f93268da91b57edb9dfc3d525126f74b1557aab2fb24771d06b2e1d257432d8",
+  "wheelCommittedSourceComparison": "PASS_AFTER_CRLF_LF_NORMALIZATION",
+  "wheelByteIdenticalToGitSource": false,
+  "lineEndingDifferences": [
+    "opp/sdk.py",
+    "opp/session.py",
+    "opp/surfaces.py",
+    "opp/resources/schemas/session-artifacts.schema.json"
+  ],
+  "boundary": "Raw evidence and actor-source hashes match Git archive exactly. Four package text files differ only by Windows CRLF versus Git LF; no byte-identical or reproducible-wheel claim. This is a local archive consistency check, not hosted CI or independent review."
+}

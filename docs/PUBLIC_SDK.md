@@ -29,6 +29,13 @@ decorator registration, MCP discovery and arbitrary OpenAPI are not automaticall
 converted into executable providers. A positive shape comparison does not prove
 business semantics. See the real [external library experiment](EXTERNAL_ONBOARDING.md).
 
+The additive [CHA Session profile](CHA_SESSION.md) now imports a bounded explicit
+OpenAPI 3.1 operation or MCP tools/list declaration through `describe_openapi` and
+`describe_mcp_tool`. This is separate from repository scanning. Callers register
+transport providers; imported descriptions never execute themselves. Use
+`negotiate_session` and `run_session` for different capability IDs and explicitly
+proven field meanings. Original exact `negotiate_capability` is unchanged.
+
 For explicitly reviewed native calls, use `InvocationSpec`, `SemanticPort`,
 `synthesize_bridge`, `run_invocation` and `run_interop` from the same namespace.
 Execution requires `allow_execution=True` (or CLI `--allow-execution`). SourceRoot
