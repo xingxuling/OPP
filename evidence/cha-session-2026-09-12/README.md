@@ -12,6 +12,7 @@ Branch: `codex/opp-cha-session-v01`. No production/authority/independent-operato
 - Wheel SHA-256: `8f93268da91b57edb9dfc3d525126f74b1557aab2fb24771d06b2e1d257432d8`.
 - Summary SHA-256: `445454ae2bb3662da69b58b347196a311669cfaf5703ea7dc40b6f36aa7b3667`.
 - Offline verifier under that explicit summary pin: **PASS**, two successful sessions plus explicit recovery. The pin must be independently retained for independent tamper protection.
+- [Post-commit archive check](post-commit-check.json): evidence bytes and actor source hashes match the committed archive exactly; four wheel text files match Git source after CRLF/LF normalization. No reproducible-wheel claim.
 
 | Maintained external project | Actual surface/run | Automatically identified | Manual work | Failure/recovery boundary | Evidence |
 |---|---|---|---|---|---|
