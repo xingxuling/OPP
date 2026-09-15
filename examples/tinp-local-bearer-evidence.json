@@ -1,0 +1,30 @@
+{
+  "format": "taowind.opp.reality-envelope.v0.1",
+  "protocol": "opp.rep.v0.1",
+  "version": "0.1.0-candidate.1",
+  "kind": "evidence",
+  "id": "rep:tinp-local-bearer:example",
+  "status": "candidate",
+  "issuedAt": "2026-09-15T00:00:00.000Z",
+  "issuer": {"id": "tinp-runtime", "type": "runtime"},
+  "payload": {
+    "claim": "OPP exchange was carried by a TINP local-LAN candidate route",
+    "classification": "transport-observation-only"
+  },
+  "constraints": [
+    "transport evidence must not create or expand authority",
+    "LAN discovery does not establish real-world identity",
+    "local transport does not imply confidentiality"
+  ],
+  "evidenceRefs": [],
+  "extensions": {
+    "transportEvidence": {
+      "protocol": "taowind.tinp.v0.2",
+      "bearerProfile": "tinp.local-first.v0.1",
+      "scope": "local-lan",
+      "metered": false,
+      "publicEgress": false,
+      "routeReceiptRef": "example-only"
+    }
+  }
+}
