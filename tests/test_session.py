@@ -70,10 +70,11 @@ class SessionTests(unittest.TestCase):
         receipt = run_session(contract, {"legacy": 7}, providers=self.providers(), allow_execution=True)
         self.assertEqual("PASS", receipt["status"])
         self.assertEqual({"modern": 7}, receipt["result"])
+        self.assertEqual("producer-rediscovery", receipt["steps"][3]["stage"])
         self.assertTrue(verify_session_receipt(contract, receipt,
             expected_contract_root=contract["contractRoot"], expected_receipt_root=receipt["receiptRoot"]))
         changed = deepcopy(receipt)
-        changed["steps"][3]["value"]["modern"] = 8
+        changed["steps"][4]["value"]["modern"] = 8
         changed["receiptRoot"] = content_root({k: v for k, v in changed.items() if k != "receiptRoot"})
         with self.assertRaises(SessionError):
             verify_session_receipt(contract, changed, expected_contract_root=contract["contractRoot"],
@@ -113,6 +114,21 @@ class SessionTests(unittest.TestCase):
         providers["old"] = SurfaceProvider("old", lambda: self.p, changing)
         result = run_session(contract, {"legacy": 3}, providers=providers, allow_execution=True)
         self.assertEqual("consumer-rediscovery", result["error"]["stage"])
+
+    def test_producer_drift_during_call_fails_before_consumer(self):
+        contract = self.negotiate()["contract"]
+        providers = self.providers()
+        def changing(x):
+            self.p["extensions"]["session"]["surface"]["revision"] = "2"
+            self.p = seal_envelope(self.p)
+            return x
+        providers["old"] = SurfaceProvider("old", lambda: self.p, changing)
+        providers["new"] = SurfaceProvider("new", lambda: self.c, lambda x: self.fail("consumer called"))
+        result = run_session(contract, {"legacy": 3}, providers=providers, allow_execution=True)
+        self.assertEqual("FAIL", result["status"])
+        self.assertEqual("producer-rediscovery", result["error"]["stage"])
+        self.assertEqual("CAPABILITY_DRIFT:producer", result["error"]["code"])
+        self.assertTrue(result["error"]["executionMayHaveOccurred"])
 
     def test_runtime_schema_failure_does_not_call_consumer(self):
         providers = self.providers()
