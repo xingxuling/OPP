@@ -256,6 +256,11 @@ def run_session(contract, producer_input, *, providers, allow_execution=False,
         stage = "producer-output"
         steps.append({"stage": "producer-output", "value": deepcopy(value), "valueRoot": content_root(value)})
         _validate(value, contract["producer"]["payload"]["outputSchema"], "PRODUCER_OUTPUT")
+        stage = "producer-rediscovery"
+        current_producer = selected["producer"].describe()
+        if content_root(current_producer) != content_root(contract["producer"]):
+            raise SessionError("CAPABILITY_DRIFT:producer")
+        steps.append({"stage": "producer-rediscovery", "declarationRoot": content_root(current_producer)})
         stage = "adapter"
         transformed = _transform(contract, value)
         _validate(transformed, contract["consumer"]["payload"]["inputSchema"], "CONSUMER_INPUT")
@@ -296,19 +301,27 @@ def verify_session_receipt(contract, receipt, *, expected_contract_root, expecte
             or receipt.get("implicitRetries") != 0):
         raise SessionError("RECEIPT_NOT_SUCCESSFUL_BOUND_SESSION")
     steps = receipt["steps"]
-    if [s["stage"] for s in steps] != ["discover-producer", "discover-consumer", "producer-output", "adapter", "consumer-output"]:
+    sequence = [s["stage"] for s in steps]
+    legacy_sequence = ["discover-producer", "discover-consumer", "producer-output", "adapter", "consumer-output"]
+    hardened_sequence = ["discover-producer", "discover-consumer", "producer-output",
+                         "producer-rediscovery", "adapter", "consumer-output"]
+    if sequence not in (legacy_sequence, hardened_sequence):
         raise SessionError("RECEIPT_STAGE_SEQUENCE_INVALID")
     for index, role in enumerate(("producer", "consumer")):
         if steps[index]["declarationRoot"] != content_root(contract[role]):
             raise SessionError("DISCOVERY_ROOT_MISMATCH")
+    adapter_index, consumer_output_index = (4, 5) if sequence == hardened_sequence else (3, 4)
+    if sequence == hardened_sequence and steps[3]["declarationRoot"] != content_root(contract["producer"]):
+        raise SessionError("DISCOVERY_ROOT_MISMATCH")
     _validate(receipt["input"], contract["producer"]["payload"]["inputSchema"], "PRODUCER_INPUT")
-    for step, schema in zip(steps[2:], (contract["producer"]["payload"]["outputSchema"],
-            contract["consumer"]["payload"]["inputSchema"], contract["consumer"]["payload"]["outputSchema"])):
+    for step, schema in ((steps[2], contract["producer"]["payload"]["outputSchema"]),
+                         (steps[adapter_index], contract["consumer"]["payload"]["inputSchema"]),
+                         (steps[consumer_output_index], contract["consumer"]["payload"]["outputSchema"])):
         _validate(step["value"], schema, step["stage"])
         if content_root(step["value"]) != step["valueRoot"]:
             raise SessionError("STAGE_VALUE_ROOT_MISMATCH")
-    if (_transform(contract, steps[2]["value"]) != steps[3]["value"] or
-            receipt["result"] != steps[4]["value"] or
+    if (_transform(contract, steps[2]["value"]) != steps[adapter_index]["value"] or
+            receipt["result"] != steps[consumer_output_index]["value"] or
             receipt["inputRoot"] != content_root(receipt["input"]) or
             receipt["resultRoot"] != content_root(receipt["result"])):
         raise SessionError("RECEIPT_DATAFLOW_MISMATCH")
