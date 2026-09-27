@@ -71,12 +71,20 @@ class SessionTests(unittest.TestCase):
         self.assertEqual("PASS", receipt["status"])
         self.assertEqual({"modern": 7}, receipt["result"])
         self.assertEqual("producer-rediscovery", receipt["steps"][3]["stage"])
+        self.assertEqual("consumer-rediscovery", receipt["steps"][5]["stage"])
+        self.assertEqual("consumer-post-call-rediscovery", receipt["steps"][7]["stage"])
         self.assertTrue(verify_session_receipt(contract, receipt,
             expected_contract_root=contract["contractRoot"], expected_receipt_root=receipt["receiptRoot"]))
         changed = deepcopy(receipt)
         changed["steps"][4]["value"]["modern"] = 8
         changed["receiptRoot"] = content_root({k: v for k, v in changed.items() if k != "receiptRoot"})
         with self.assertRaises(SessionError):
+            verify_session_receipt(contract, changed, expected_contract_root=contract["contractRoot"],
+                                   expected_receipt_root=changed["receiptRoot"])
+        changed = deepcopy(receipt)
+        changed["steps"][7]["declarationRoot"] = "0" * 64
+        changed["receiptRoot"] = content_root({k: v for k, v in changed.items() if k != "receiptRoot"})
+        with self.assertRaisesRegex(SessionError, "DISCOVERY_ROOT"):
             verify_session_receipt(contract, changed, expected_contract_root=contract["contractRoot"],
                                    expected_receipt_root=changed["receiptRoot"])
 
@@ -129,6 +137,24 @@ class SessionTests(unittest.TestCase):
         self.assertEqual("producer-rediscovery", result["error"]["stage"])
         self.assertEqual("CAPABILITY_DRIFT:producer", result["error"]["code"])
         self.assertTrue(result["error"]["executionMayHaveOccurred"])
+
+    def test_consumer_drift_during_call_fails_after_execution(self):
+        contract = self.negotiate()["contract"]
+        providers = self.providers()
+        calls = []
+        def changing(x):
+            calls.append(deepcopy(x))
+            self.c["extensions"]["session"]["surface"]["revision"] = "2"
+            self.c = seal_envelope(self.c)
+            return x
+        providers["new"] = SurfaceProvider("new", lambda: self.c, changing)
+        result = run_session(contract, {"legacy": 3}, providers=providers, allow_execution=True)
+        self.assertEqual(1, len(calls))
+        self.assertEqual("FAIL", result["status"])
+        self.assertEqual("consumer-post-call-rediscovery", result["error"]["stage"])
+        self.assertEqual("CAPABILITY_DRIFT:consumer", result["error"]["code"])
+        self.assertTrue(result["error"]["executionMayHaveOccurred"])
+        self.assertIsNone(result["result"])
 
     def test_runtime_schema_failure_does_not_call_consumer(self):
         providers = self.providers()

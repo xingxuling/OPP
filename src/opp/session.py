@@ -266,13 +266,21 @@ def run_session(contract, producer_input, *, providers, allow_execution=False,
         _validate(transformed, contract["consumer"]["payload"]["inputSchema"], "CONSUMER_INPUT")
         steps.append({"stage": "adapter", "value": deepcopy(transformed), "valueRoot": content_root(transformed)})
         stage = "consumer-rediscovery"
-        if content_root(selected["consumer"].describe()) != content_root(contract["consumer"]):
+        current_consumer = selected["consumer"].describe()
+        if content_root(current_consumer) != content_root(contract["consumer"]):
             raise SessionError("CAPABILITY_DRIFT:consumer")
+        steps.append({"stage": "consumer-rediscovery", "declarationRoot": content_root(current_consumer)})
         stage = "consumer-call"
         output = selected["consumer"].invoke(deepcopy(transformed))
         stage = "consumer-output"
         steps.append({"stage": "consumer-output", "value": deepcopy(output), "valueRoot": content_root(output)})
         _validate(output, contract["consumer"]["payload"]["outputSchema"], "CONSUMER_OUTPUT")
+        stage = "consumer-post-call-rediscovery"
+        current_consumer = selected["consumer"].describe()
+        if content_root(current_consumer) != content_root(contract["consumer"]):
+            raise SessionError("CAPABILITY_DRIFT:consumer")
+        steps.append({"stage": "consumer-post-call-rediscovery",
+                      "declarationRoot": content_root(current_consumer)})
     except Exception as exc:
         error = {"stage": stage, "code": str(exc) if isinstance(exc, SessionError) else type(exc).__name__,
                  "executionMayHaveOccurred": stage not in {"discovery", "producer-input"}}
@@ -303,16 +311,29 @@ def verify_session_receipt(contract, receipt, *, expected_contract_root, expecte
     steps = receipt["steps"]
     sequence = [s["stage"] for s in steps]
     legacy_sequence = ["discover-producer", "discover-consumer", "producer-output", "adapter", "consumer-output"]
-    hardened_sequence = ["discover-producer", "discover-consumer", "producer-output",
-                         "producer-rediscovery", "adapter", "consumer-output"]
-    if sequence not in (legacy_sequence, hardened_sequence):
+    producer_hardened_sequence = ["discover-producer", "discover-consumer", "producer-output",
+                                  "producer-rediscovery", "adapter", "consumer-output"]
+    fully_hardened_sequence = ["discover-producer", "discover-consumer", "producer-output",
+                               "producer-rediscovery", "adapter", "consumer-rediscovery",
+                               "consumer-output", "consumer-post-call-rediscovery"]
+    if sequence not in (legacy_sequence, producer_hardened_sequence, fully_hardened_sequence):
         raise SessionError("RECEIPT_STAGE_SEQUENCE_INVALID")
     for index, role in enumerate(("producer", "consumer")):
         if steps[index]["declarationRoot"] != content_root(contract[role]):
             raise SessionError("DISCOVERY_ROOT_MISMATCH")
-    adapter_index, consumer_output_index = (4, 5) if sequence == hardened_sequence else (3, 4)
-    if sequence == hardened_sequence and steps[3]["declarationRoot"] != content_root(contract["producer"]):
-        raise SessionError("DISCOVERY_ROOT_MISMATCH")
+    if sequence == fully_hardened_sequence:
+        adapter_index, consumer_output_index = 4, 6
+    elif sequence == producer_hardened_sequence:
+        adapter_index, consumer_output_index = 4, 5
+    else:
+        adapter_index, consumer_output_index = 3, 4
+    if sequence in (producer_hardened_sequence, fully_hardened_sequence):
+        if steps[3]["declarationRoot"] != content_root(contract["producer"]):
+            raise SessionError("DISCOVERY_ROOT_MISMATCH")
+    if sequence == fully_hardened_sequence:
+        if (steps[5]["declarationRoot"] != content_root(contract["consumer"]) or
+                steps[7]["declarationRoot"] != content_root(contract["consumer"])):
+            raise SessionError("DISCOVERY_ROOT_MISMATCH")
     _validate(receipt["input"], contract["producer"]["payload"]["inputSchema"], "PRODUCER_INPUT")
     for step, schema in ((steps[2], contract["producer"]["payload"]["outputSchema"]),
                          (steps[adapter_index], contract["consumer"]["payload"]["inputSchema"]),
