@@ -1,4 +1,6 @@
 from copy import deepcopy
+import json
+from pathlib import Path
 
 import pytest
 
@@ -121,3 +123,17 @@ def test_tamper_is_detected():
     tampered["actionId"] = "action:tampered"
     with pytest.raises(ActionContractError, match="ROOT_INVALID"):
         verify_action_contract(tampered)
+
+
+def test_cross_repo_workspace_read_fixture_is_reproducible():
+    root = Path(__file__).resolve().parents[1]
+    declared = json.loads((root / "examples" / "agent-action-workspace-read-capability.json").read_text(encoding="utf-8"))
+    expected = json.loads((root / "examples" / "agent-action-workspace-read-contract.json").read_text(encoding="utf-8"))
+    actual = build_action_contract(
+        declared,
+        action_id="action:workspace-read",
+        accepted_effects=["filesystem.read"],
+        resources={"filesystem": ["workspace/project/file.txt"]},
+    )
+    assert actual == expected
+    assert verify_action_contract(actual, capability=declared)
