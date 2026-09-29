@@ -20,6 +20,10 @@ from .session import (
     OUTCOMES, SessionError, SurfaceProvider, negotiate_session, run_session,
     verify_session_contract, verify_session_receipt,
 )
+from .action_contract import (
+    ACTION_CONTRACT_FORMAT, ACTION_CONTRACT_VERSION, BOUNDED_EFFECT_KINDS,
+    ActionContractError, build_action_contract, verify_action_contract,
+)
 
 SDK_API_VERSION = 1
 __all__ = [
@@ -32,4 +36,6 @@ __all__ = [
     'describe_surface', 'describe_openapi', 'describe_mcp_tool', 'OUTCOMES',
     'SessionError', 'SurfaceProvider', 'negotiate_session', 'run_session',
     'verify_session_contract', 'verify_session_receipt',
+    'ACTION_CONTRACT_FORMAT', 'ACTION_CONTRACT_VERSION', 'BOUNDED_EFFECT_KINDS',
+    'ActionContractError', 'build_action_contract', 'verify_action_contract',
 ]
