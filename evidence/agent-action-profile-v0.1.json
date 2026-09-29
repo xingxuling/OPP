@@ -1,0 +1,24 @@
+{
+  "format": "opp.agent-action-profile-evidence.v0.1",
+  "status": "LOCAL_CANDIDATE_VALIDATED",
+  "date": "2026-09-29",
+  "profile": "opp.agent-action.v0.1",
+  "localEvidence": {
+    "focusedTests": "5/5 passed",
+    "uploadedBaselineRegression": "46 passed, 7 subtests passed",
+    "githubActionsUsed": false
+  },
+  "demonstrated": [
+    "read-only workspace action compiles to workspace.read",
+    "npm lifecycle scripts expose process.spawn",
+    "scm.write exposes scm.write + network.egress",
+    "unknown operation fails closed",
+    "contract root detects authority tampering"
+  ],
+  "nonClaims": [
+    "No authority is granted by OPP",
+    "No action is executed by this profile",
+    "No sandbox or production security certification",
+    "No free-form prompt inference"
+  ]
+}
