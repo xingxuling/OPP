@@ -6,6 +6,8 @@ Execution remains opt-in. See docs/PUBLIC_SDK.md for supported boundaries.
 from . import (
     canonical_json_bytes, content_root, seal_envelope, verify_envelope_root,
     validate_envelope, negotiate_handshake, negotiate_capability,
+    AGENT_ACTION_PROFILE, AgentActionContract, AgentActionContractError,
+    compile_agent_action_contract, verify_agent_action_contract,
 )
 from .bridge import (
     verify_repository_semantics, plan_repository_connection, compare_ports,
@@ -32,4 +34,6 @@ __all__ = [
     'describe_surface', 'describe_openapi', 'describe_mcp_tool', 'OUTCOMES',
     'SessionError', 'SurfaceProvider', 'negotiate_session', 'run_session',
     'verify_session_contract', 'verify_session_receipt',
+    'AGENT_ACTION_PROFILE', 'AgentActionContract', 'AgentActionContractError',
+    'compile_agent_action_contract', 'verify_agent_action_contract',
 ]
