@@ -261,3 +261,24 @@ MIT License，见 [`LICENSE`](LICENSE)。
 GitHub [远端执行 34692267549](https://github.com/xingxuling/TINP/actions/runs/34692267549) 的 Linux 生产端及 Linux / Windows 复核端全部成功。真实库运行与证据交接已离开当前电脑；仍不代表双物理设备、独立操作员或真实 Authority Provider。
 
 Final code replay: [34692507409](https://github.com/xingxuling/TINP/actions/runs/34692507409), all three hosted jobs PASS; OPP `7c4970c`, TINP `692c0e4`. The earlier run is retained as historical evidence.
+
+
+## Agent Action Contract candidate（2026-09-29）
+
+OPP 现在有一条面向 AI Agent / MCP 的有界安全 profile：
+
+```text
+MCP tools/list
+   ↓
+RCP capability
+   ↓
+Agent Action Contract
+   ↓
+authority / effect / resource / reversibility
+   ↓
+TINP + RCL enforcement
+```
+
+它不会根据工具名或 MCP annotations 自动授予权限。已知权限（例如 `workspace.read`）会进入显式安全效果与资源绑定；真正调用时，`path` 等参数还必须和 root-bound resource 一致。
+
+当前实现见 [Agent Action Contract](docs/AGENT_ACTION_CONTRACT.md) 与 [MCP Action Binding](docs/MCP_AGENT_ACTION_BINDING.md)。这是 Candidate，不是生产沙箱或认证系统。
