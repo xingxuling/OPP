@@ -8,6 +8,10 @@ from .action import (
     ACTION_FORMAT, KNOWN_EFFECTS, ActionContractError,
     build_action_contract, verify_action_contract,
 )
+from .mcp_action import (
+    MCP_ACTION_BINDING_FORMAT, MCPActionBindingError,
+    bind_mcp_tool_action, verify_mcp_action_binding,
+)
 
 __version__ = "0.3.0-candidate.1"
 __all__ = [
@@ -15,4 +19,6 @@ __all__ = [
     "validate_envelope", "ValidationIssue", "negotiate_handshake", "negotiate_capability",
     "ACTION_FORMAT", "KNOWN_EFFECTS", "ActionContractError",
     "build_action_contract", "verify_action_contract",
+    "MCP_ACTION_BINDING_FORMAT", "MCPActionBindingError",
+    "bind_mcp_tool_action", "verify_mcp_action_binding",
 ]
