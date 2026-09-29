@@ -44,10 +44,20 @@ def capability(*, effects, authority=("workspace.read",), reversibility="reversi
     })
 
 
-def test_readonly_contract_is_rooted_and_never_grants_authority():
+def test_read_scope_becomes_a_resource_bound_security_effect():
     declared = capability(effects=[])
-    contract = build_action_contract(declared, action_id="action:read")
+    rejected = build_action_contract(declared, action_id="action:read")
+    assert rejected["status"] == "negotiate"
+    assert "RESOURCE_BINDING_REQUIRED:filesystem.read" in rejected["reasons"]
+
+    contract = build_action_contract(
+        declared,
+        action_id="action:read",
+        accepted_effects=["filesystem.read"],
+        resources={"filesystem": ["workspace/project/file.txt"]},
+    )
     assert contract["status"] == "accepted"
+    assert contract["declaredEffects"] == ["filesystem.read"]
     assert contract["authorityGranted"] is False
     assert contract["requiresTINP"] is True
     assert verify_action_contract(contract, capability=declared)
