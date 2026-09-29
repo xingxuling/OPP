@@ -26,7 +26,7 @@ TINP enforcement
 ## 核心不变量
 
 1. **能力声明不等于权限。** `authorityGranted` 永远是 `false`。
-2. **副作用必须完整确认。** Provider 声明的全部 sideEffects 必须由调用方显式接受。
+2. **安全效果必须完整确认。** Provider 声明的全部 `sideEffects`，以及 `workspace.read` 等已知显式权限所对应的资源访问效果，都必须由调用方显式接受。
 3. **未知副作用不猜。** 未进入已知 effect vocabulary（副作用词表）的值进入 `negotiate`。
 4. **高风险副作用必须绑定资源。** 文件、网络、命令、包安装等不能只写“允许”，还要说明作用对象。
 5. **root 绑定能力和行动。** TINP 可以跨语言复算 SHA-256 canonical JSON root（规范 JSON 内容根）。
@@ -45,7 +45,7 @@ TINP enforcement
 - `registry.publish`
 - `git.write`
 
-兼容别名包括 `workspace.write → filesystem.write`、`npm.postinstall → package.script` 等。
+兼容别名包括 `workspace.read → filesystem.read`、`workspace.write → filesystem.write`、`npm.postinstall → package.script` 等。这里不是自由推断：只有固定词表中的显式 scope（权限范围）才会被提升为安全效果，其他自定义 scope 仍只作为权限要求保留。
 
 ## 资源绑定
 
