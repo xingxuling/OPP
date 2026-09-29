@@ -65,6 +65,23 @@ def _effects(values: Iterable[str]) -> list[str]:
     return sorted({_canon_effect(v) for v in values})
 
 
+def _declared_effects(payload: Mapping[str, Any]) -> list[str]:
+    """Combine explicit side effects with known access effects implied by explicit scopes.
+
+    This is deliberately a tiny exact mapping, not free-form inference. For example
+    workspace.read is normalized to filesystem.read, while an unrelated custom scope
+    such as artifact.structure.compile is preserved only as an authority requirement.
+    """
+    effects = set(_effects(payload.get("sideEffects", ())))
+    for scope in payload.get("authorityRequired", ()):
+        if not isinstance(scope, str):
+            raise ActionContractError("ACTION_AUTHORITY_SCOPE_INVALID")
+        raw = scope.strip().lower()
+        if raw in KNOWN_EFFECTS or raw in _EFFECT_ALIASES:
+            effects.add(_canon_effect(raw))
+    return sorted(effects)
+
+
 def _resources(value: Mapping[str, Any] | None) -> dict[str, list[str]]:
     value = {} if value is None else value
     if not isinstance(value, Mapping) or set(value) - _RESOURCE_KEYS:
@@ -100,15 +117,17 @@ def build_action_contract(
 ) -> dict[str, Any]:
     """Create a fail-closed action contract from an RCP declaration.
 
-    The caller must acknowledge the provider's complete declared effect set.
-    Unknown effects force negotiation rather than being silently downgraded.
-    Authority is copied as a requirement only; OPP never grants it.
+    The caller must acknowledge the provider's complete declared security effect set.
+    Known explicit authority scopes such as workspace.read are normalized into resource
+    access effects so read access cannot bypass resource binding merely because it is not
+    a state-changing side effect. Unknown effects force negotiation rather than being
+    silently downgraded. Authority is copied as a requirement only; OPP never grants it.
     """
     if not isinstance(action_id, str) or not action_id.strip() or len(action_id) > 256:
         raise ActionContractError("ACTION_ID_INVALID")
 
     payload = _payload(capability, "provider")
-    declared = _effects(payload.get("sideEffects", ()))
+    declared = _declared_effects(payload)
     accepted = _effects(accepted_effects)
     bound = _resources(resources)
     reasons: list[str] = []
@@ -183,7 +202,7 @@ def verify_action_contract(
             raise ActionContractError("ACTION_CONTRACT_CAPABILITY_ID_MISMATCH")
         if body.get("requiredAuthority") != sorted(set(payload.get("authorityRequired", ()))):
             raise ActionContractError("ACTION_CONTRACT_AUTHORITY_DRIFT")
-        if declared != _effects(payload.get("sideEffects", ())):
+        if declared != _declared_effects(payload):
             raise ActionContractError("ACTION_CONTRACT_DECLARATION_DRIFT")
     return True
 
