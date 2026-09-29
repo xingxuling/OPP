@@ -1,7 +1,7 @@
 """Emit one bounded OPP Action Contract for the TINP gateway demo."""
 import json
 
-from opp.sdk import build_action_contract
+from opp.action_contract import build_action_contract
 
 capability = {
     "format": "taowind.opp.reality-envelope.v0.1",
