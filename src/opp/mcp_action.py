@@ -44,6 +44,7 @@ def bind_mcp_tool_action(
     reversibility: str,
     accepted_effects: Iterable[str],
     resources: Mapping[str, Any] | None = None,
+    resource_bindings: Mapping[str, Iterable[str]] | None = None,
     statefulness: str = "unknown",
 ) -> dict[str, Any]:
     """Create a rooted MCP -> RCP -> Agent Action binding.
@@ -78,6 +79,30 @@ def bind_mcp_tool_action(
         accepted_effects=accepted_effects,
         resources=resources,
     )
+    resource_bindings = {} if resource_bindings is None else resource_bindings
+    if not isinstance(resource_bindings, Mapping):
+        raise MCPActionBindingError("MCP_RESOURCE_BINDINGS_INVALID")
+    allowed_resource_keys = {"filesystem", "network", "commands", "packages"}
+    if set(resource_bindings) - allowed_resource_keys:
+        raise MCPActionBindingError("MCP_RESOURCE_BINDING_KEY_UNKNOWN")
+    normalized_bindings: dict[str, list[str]] = {}
+    input_properties = tool_value["inputSchema"].get("properties", {})
+    if not isinstance(input_properties, Mapping):
+        raise MCPActionBindingError("MCP_TOOL_INPUT_PROPERTIES_REQUIRED")
+    for key in sorted(allowed_resource_keys):
+        fields = resource_bindings.get(key, ())
+        if isinstance(fields, (str, bytes)):
+            raise MCPActionBindingError(f"MCP_RESOURCE_BINDING_ARRAY_REQUIRED:{key}")
+        values = []
+        for field in fields:
+            if not isinstance(field, str) or not field.strip() or field not in input_properties:
+                raise MCPActionBindingError(f"MCP_RESOURCE_BINDING_FIELD_INVALID:{key}")
+            values.append(field.strip())
+        normalized_bindings[key] = sorted(set(values))
+    for key, values in contract["resources"].items():
+        if values and not normalized_bindings.get(key):
+            raise MCPActionBindingError(f"MCP_RESOURCE_BINDING_REQUIRED:{key}")
+
     body = {
         "format": MCP_ACTION_BINDING_FORMAT,
         "toolName": tool_value["name"],
@@ -86,6 +111,7 @@ def bind_mcp_tool_action(
         "capabilityRoot": content_root(declaration),
         "actionContract": contract,
         "actionContractRoot": contract["contractRoot"],
+        "resourceBindings": normalized_bindings,
         "authorityGranted": False,
         "annotationsTrusted": False,
         "boundary": (
@@ -112,6 +138,15 @@ def verify_mcp_action_binding(
         raise MCPActionBindingError("MCP_ACTION_BINDING_EXPECTED_ROOT_MISMATCH")
     if body.get("authorityGranted") is not False or body.get("annotationsTrusted") is not False:
         raise MCPActionBindingError("MCP_ACTION_BINDING_TRUST_BOUNDARY_INVALID")
+    resource_bindings = body.get("resourceBindings")
+    if not isinstance(resource_bindings, Mapping) or set(resource_bindings) != {"commands", "filesystem", "network", "packages"}:
+        raise MCPActionBindingError("MCP_ACTION_RESOURCE_BINDINGS_INVALID")
+    input_properties = body.get("capabilityDeclaration", {}).get("payload", {}).get("inputSchema", {}).get("properties", {})
+    if not isinstance(input_properties, Mapping):
+        raise MCPActionBindingError("MCP_ACTION_INPUT_PROPERTIES_INVALID")
+    for key, fields in resource_bindings.items():
+        if not isinstance(fields, list) or any(not isinstance(field, str) or field not in input_properties for field in fields):
+            raise MCPActionBindingError(f"MCP_ACTION_RESOURCE_BINDING_FIELD_INVALID:{key}")
     declaration = body.get("capabilityDeclaration")
     contract = body.get("actionContract")
     if content_root(declaration) != body.get("capabilityRoot"):
@@ -119,6 +154,9 @@ def verify_mcp_action_binding(
     if contract.get("contractRoot") != body.get("actionContractRoot"):
         raise MCPActionBindingError("MCP_ACTION_CONTRACT_ROOT_MISMATCH")
     verify_action_contract(contract, capability=declaration, expected_root=body["actionContractRoot"])
+    for key, values in contract.get("resources", {}).items():
+        if values and not resource_bindings.get(key):
+            raise MCPActionBindingError(f"MCP_ACTION_RESOURCE_BINDING_REQUIRED:{key}")
     if contract.get("capabilityId") != body.get("toolName"):
         raise MCPActionBindingError("MCP_ACTION_TOOL_CAPABILITY_MISMATCH")
     if tool is not None:
