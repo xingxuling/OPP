@@ -38,6 +38,7 @@ def test_mcp_tool_binds_to_rooted_agent_action_contract():
         reversibility="reversible",
         accepted_effects=["filesystem.read"],
         resources={"filesystem": ["workspace/project/readme.md"]},
+        resource_bindings={"filesystem": ["path"]},
         statefulness="stateless",
     )
     assert binding["authorityGranted"] is False
@@ -60,6 +61,7 @@ def test_mcp_annotations_do_not_grant_authority_or_remove_resource_binding():
         reversibility="reversible",
         accepted_effects=[],
         resources={},
+        resource_bindings={},
         statefulness="stateless",
     )
     assert binding["actionContract"]["status"] == "negotiate"
@@ -80,6 +82,7 @@ def test_tool_descriptor_drift_is_detected():
         reversibility="reversible",
         accepted_effects=["filesystem.read"],
         resources={"filesystem": ["workspace/project/readme.md"]},
+        resource_bindings={"filesystem": ["path"]},
         statefulness="stateless",
     )
     drifted = deepcopy(raw)
@@ -101,8 +104,47 @@ def test_binding_tamper_fails_closed():
         reversibility="reversible",
         accepted_effects=["filesystem.read"],
         resources={"filesystem": ["workspace/project/readme.md"]},
+        resource_bindings={"filesystem": ["path"]},
         statefulness="stateless",
     )
     binding["toolName"] = "shell.exec"
     with pytest.raises(MCPActionBindingError, match="BINDING_ROOT_INVALID"):
         verify_mcp_action_binding(binding)
+
+
+def test_nonempty_contract_resource_requires_argument_binding():
+    raw = tool()
+    with pytest.raises(MCPActionBindingError, match="RESOURCE_BINDING_REQUIRED:filesystem"):
+        bind_mcp_tool_action(
+            raw,
+            participant="mcp:workspace",
+            binding_id="server:workspace",
+            revision="1",
+            action_id="action:mcp-workspace-read",
+            authority_required=["workspace.read"],
+            side_effects=[],
+            reversibility="reversible",
+            accepted_effects=["filesystem.read"],
+            resources={"filesystem": ["workspace/project/readme.md"]},
+            resource_bindings={},
+            statefulness="stateless",
+        )
+
+
+def test_resource_binding_must_reference_real_input_field():
+    raw = tool()
+    with pytest.raises(MCPActionBindingError, match="RESOURCE_BINDING_FIELD_INVALID:filesystem"):
+        bind_mcp_tool_action(
+            raw,
+            participant="mcp:workspace",
+            binding_id="server:workspace",
+            revision="1",
+            action_id="action:mcp-workspace-read",
+            authority_required=["workspace.read"],
+            side_effects=[],
+            reversibility="reversible",
+            accepted_effects=["filesystem.read"],
+            resources={"filesystem": ["workspace/project/readme.md"]},
+            resource_bindings={"filesystem": ["not_a_field"]},
+            statefulness="stateless",
+        )
