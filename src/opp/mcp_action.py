@@ -106,6 +106,7 @@ def bind_mcp_tool_action(
     body = {
         "format": MCP_ACTION_BINDING_FORMAT,
         "toolName": tool_value["name"],
+        "mcpTool": tool_value,
         "mcpToolRoot": content_root(tool_value),
         "capabilityDeclaration": declaration,
         "capabilityRoot": content_root(declaration),
@@ -138,6 +139,10 @@ def verify_mcp_action_binding(
         raise MCPActionBindingError("MCP_ACTION_BINDING_EXPECTED_ROOT_MISMATCH")
     if body.get("authorityGranted") is not False or body.get("annotationsTrusted") is not False:
         raise MCPActionBindingError("MCP_ACTION_BINDING_TRUST_BOUNDARY_INVALID")
+    if not isinstance(body.get("mcpTool"), Mapping) or content_root(body["mcpTool"]) != body.get("mcpToolRoot"):
+        raise MCPActionBindingError("MCP_ACTION_TOOL_ROOT_MISMATCH")
+    if body["mcpTool"].get("name") != body.get("toolName"):
+        raise MCPActionBindingError("MCP_ACTION_TOOL_NAME_MISMATCH")
     resource_bindings = body.get("resourceBindings")
     if not isinstance(resource_bindings, Mapping) or set(resource_bindings) != {"commands", "filesystem", "network", "packages"}:
         raise MCPActionBindingError("MCP_ACTION_RESOURCE_BINDINGS_INVALID")
