@@ -23,6 +23,11 @@ def _tool(tool: Mapping[str, Any]) -> dict[str, Any]:
     if not isinstance(tool, Mapping):
         raise MCPActionBindingError("MCP_TOOL_OBJECT_REQUIRED")
     value = deepcopy(dict(tool))
+    # MCP _meta is intentionally excluded from the semantic descriptor root.
+    # TaoWind publishes the bindingRoot back through _meta, so including it would
+    # create a circular hash dependency. Security-relevant schemas, annotations,
+    # title/description and all other descriptor fields remain root-bound.
+    value.pop("_meta", None)
     name = value.get("name")
     if not isinstance(name, str) or not name.strip() or len(name) > 256:
         raise MCPActionBindingError("MCP_TOOL_NAME_INVALID")
