@@ -3,25 +3,45 @@ from copy import deepcopy
 import pytest
 
 from opp.action import ActionContractError, build_action_contract, verify_action_contract
+from opp.integrity import seal_envelope
 
 
 def capability(*, effects, authority=("workspace.read",), reversibility="reversible"):
-    return {
+    return seal_envelope({
         "format": "taowind.opp.reality-envelope.v0.1",
         "protocol": "opp.rcp.v0.1",
         "version": "0.1.0-candidate.1",
         "kind": "capability",
         "id": "capability:agent-tool",
         "status": "candidate",
-        "issuer": {"id": "tool", "type": "runtime"},
+        "issuedAt": "2026-09-29T00:00:00Z",
+        "issuer": {"id": "tool", "type": "runtime", "displayName": "tool"},
         "payload": {
             "capabilityId": "agent.tool",
+            "name": "Agent tool",
+            "domain": "agent.action",
             "operation": "run",
+            "inputModalities": ["json"],
+            "outputModalities": ["json"],
+            "inputSchema": None,
+            "outputSchema": None,
+            "determinism": "unknown",
+            "statefulness": "session",
+            "streaming": False,
             "authorityRequired": list(authority),
             "sideEffects": list(effects),
             "reversibility": reversibility,
+            "availability": "candidate-only",
+            "costProfile": {},
+            "latencyProfile": {},
+            "rights": {},
+            "evidence": ["test:agent-action"],
+            "claimBoundary": "Test fixture only.",
         },
-    }
+        "constraints": [],
+        "evidenceRefs": [],
+        "extensions": {},
+    })
 
 
 def test_readonly_contract_is_rooted_and_never_grants_authority():
