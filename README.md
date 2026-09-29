@@ -123,6 +123,18 @@ OPP 可以独立使用。需要身份、权限、路由和恢复时，再进入 
 
 TINP：<https://github.com/xingxuling/TINP>
 
+## Agent Action Trust Plane candidate
+
+当前分支新增一条面向 Code Agent / MCP 高风险动作的有界 Action Contract（行动合同）：
+
+- Prompt / README / 网页文本只作为 action input，不会自动变成权限；
+- 显式绑定 filesystem.write、network.egress、credential.read、process.spawn；
+- 每个 effect 同时绑定具体 resource；
+- contract 绑定 capability、authority requirement、副作用、可逆性、输入根与内容根；
+- OPP 固定 authorityGranted=false，真正授权交给 TINP signed lease + RCL gate。
+
+详细规范与边界见 [OPP Action Contract v0.1](docs/ACTION_CONTRACT.md)。
+
 ## 技术最小 Demo（3 分钟）
 
 如果想看更纯粹的接口扫描和互操作夹具：
