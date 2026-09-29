@@ -6,6 +6,7 @@ external authority plane such as TINP can admit or reject.
 """
 from __future__ import annotations
 from copy import deepcopy
+import re
 from typing import Any, Mapping, Sequence
 
 from .capability import _payload
@@ -17,6 +18,7 @@ BOUNDED_EFFECT_KINDS = frozenset({
     "filesystem.write", "network.egress", "credential.read", "process.spawn",
 })
 _HIGH_RISK = frozenset({"credential.read", "process.spawn"})
+_HASH = re.compile(r"^[0-9a-f]{64}$")
 
 
 class ActionContractError(ValueError):
@@ -36,6 +38,21 @@ def _effect(value: Mapping[str, Any]) -> dict[str, str]:
     return {"kind": kind, "resource": resource}
 
 
+def _risk(payload: Mapping[str, Any], effects: Sequence[Mapping[str, str]]) -> str:
+    kinds = {x["kind"] for x in effects}
+    if kinds & _HIGH_RISK or payload.get("reversibility") == "irreversible":
+        return "high"
+    return "medium" if kinds else "low"
+
+
+def _normalized_effects(values: Sequence[Mapping[str, Any]]) -> list[dict[str, str]]:
+    effects = [_effect(x) for x in values]
+    pairs = [(x["kind"], x["resource"]) for x in effects]
+    if len(set(pairs)) != len(pairs):
+        raise ActionContractError("DUPLICATE_ACTION_EFFECT")
+    return sorted(effects, key=lambda x: (x["kind"], x["resource"]))
+
+
 def build_action_contract(
     capability: Mapping[str, Any],
     *,
@@ -48,21 +65,10 @@ def build_action_contract(
         raise ActionContractError("SUBJECT_ID_INVALID")
 
     declared = set(payload.get("sideEffects", ()))
-    effects = [_effect(x) for x in requested_effects]
+    effects = _normalized_effects(requested_effects)
     if any(x["kind"] not in declared for x in effects):
         raise ActionContractError("UNDECLARED_SIDE_EFFECT")
 
-    pairs = [(x["kind"], x["resource"]) for x in effects]
-    if len(set(pairs)) != len(pairs):
-        raise ActionContractError("DUPLICATE_ACTION_EFFECT")
-    effects = sorted(effects, key=lambda x: (x["kind"], x["resource"]))
-
-    kinds = {x["kind"] for x in effects}
-    risk = (
-        "high"
-        if kinds & _HIGH_RISK or payload.get("reversibility") == "irreversible"
-        else ("medium" if kinds else "low")
-    )
     body = {
         "format": ACTION_CONTRACT_FORMAT,
         "version": ACTION_CONTRACT_VERSION,
@@ -74,7 +80,7 @@ def build_action_contract(
         "authorityRequired": sorted(set(payload.get("authorityRequired", ()))),
         "requestedEffects": effects,
         "reversibility": payload["reversibility"],
-        "riskClass": risk,
+        "riskClass": _risk(payload, effects),
         "actionInputRoot": content_root(action_input),
         "authorityGranted": False,
         "boundary": (
@@ -104,11 +110,22 @@ def verify_action_contract(
         or contract["version"] != ACTION_CONTRACT_VERSION
     ):
         raise ActionContractError("ACTION_CONTRACT_VERSION_UNSUPPORTED")
+    if (
+        not isinstance(contract["subjectId"], str)
+        or not contract["subjectId"].strip()
+        or len(contract["subjectId"]) > 1024
+    ):
+        raise ActionContractError("SUBJECT_ID_INVALID")
+    if not isinstance(contract["actionInputRoot"], str) or not _HASH.fullmatch(contract["actionInputRoot"]):
+        raise ActionContractError("ACTION_INPUT_ROOT_INVALID")
 
     root = contract["contractRoot"]
     body = {k: deepcopy(v) for k, v in contract.items() if k != "contractRoot"}
-    if root != content_root(body) or (
-        expected_root is not None and root != expected_root
+    if (
+        not isinstance(root, str)
+        or not _HASH.fullmatch(root)
+        or root != content_root(body)
+        or (expected_root is not None and root != expected_root)
     ):
         raise ActionContractError("ACTION_CONTRACT_ROOT_INVALID")
 
@@ -120,28 +137,24 @@ def verify_action_contract(
         or contract["operation"] != payload["operation"]
     ):
         raise ActionContractError("CAPABILITY_BINDING_INVALID")
-    if contract["authorityRequired"] != sorted(
-        set(payload.get("authorityRequired", ()))
-    ):
+    if contract["authorityRequired"] != sorted(set(payload.get("authorityRequired", ()))):
         raise ActionContractError("AUTHORITY_BINDING_INVALID")
 
-    effects = [_effect(x) for x in contract["requestedEffects"]]
-    if effects != sorted(effects, key=lambda x: (x["kind"], x["resource"])):
+    effects = _normalized_effects(contract["requestedEffects"])
+    if effects != contract["requestedEffects"]:
         raise ActionContractError("ACTION_EFFECT_ORDER_INVALID")
-    if any(
-        x["kind"] not in set(payload.get("sideEffects", ())) for x in effects
-    ):
+    if any(x["kind"] not in set(payload.get("sideEffects", ())) for x in effects):
         raise ActionContractError("UNDECLARED_SIDE_EFFECT")
+    if contract["reversibility"] != payload["reversibility"]:
+        raise ActionContractError("REVERSIBILITY_BINDING_INVALID")
+    if contract["riskClass"] != _risk(payload, effects):
+        raise ActionContractError("RISK_CLASS_BINDING_INVALID")
     if contract["authorityGranted"] is not False:
         raise ActionContractError("AUTHORITY_PROMOTION_FORBIDDEN")
     return True
 
 
 __all__ = [
-    "ACTION_CONTRACT_FORMAT",
-    "ACTION_CONTRACT_VERSION",
-    "BOUNDED_EFFECT_KINDS",
-    "ActionContractError",
-    "build_action_contract",
-    "verify_action_contract",
+    "ACTION_CONTRACT_FORMAT", "ACTION_CONTRACT_VERSION", "BOUNDED_EFFECT_KINDS",
+    "ActionContractError", "build_action_contract", "verify_action_contract",
 ]
