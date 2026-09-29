@@ -148,3 +148,38 @@ def test_resource_binding_must_reference_real_input_field():
             resource_bindings={"filesystem": ["not_a_field"]},
             statefulness="stateless",
         )
+
+
+def test_mcp_meta_is_not_part_of_semantic_tool_root():
+    raw = tool()
+    raw["_meta"] = {"taowind/bindingRoot": "placeholder", "host/debug": "mutable"}
+    with_meta = bind_mcp_tool_action(
+        raw,
+        participant="mcp:workspace",
+        binding_id="server:workspace",
+        revision="1",
+        action_id="action:mcp-workspace-read",
+        authority_required=["workspace.read"],
+        side_effects=[],
+        reversibility="reversible",
+        accepted_effects=["filesystem.read"],
+        resources={"filesystem": ["workspace/project/readme.md"]},
+        resource_bindings={"filesystem": ["path"]},
+        statefulness="stateless",
+    )
+    without_meta = bind_mcp_tool_action(
+        tool(),
+        participant="mcp:workspace",
+        binding_id="server:workspace",
+        revision="1",
+        action_id="action:mcp-workspace-read",
+        authority_required=["workspace.read"],
+        side_effects=[],
+        reversibility="reversible",
+        accepted_effects=["filesystem.read"],
+        resources={"filesystem": ["workspace/project/readme.md"]},
+        resource_bindings={"filesystem": ["path"]},
+        statefulness="stateless",
+    )
+    assert with_meta["mcpToolRoot"] == without_meta["mcpToolRoot"]
+    assert with_meta["mcpTool"] == without_meta["mcpTool"]
