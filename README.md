@@ -1,74 +1,138 @@
-# OPP
+# OPP：先判断两个接口能否衔接，再执行受限的数据转换
 
-**Dynamic Interoperability Meta-Protocol for CHA**
-**面向复杂异质自主系统的动态互操作元协议**
+> 文档代码基线：`main@da65ab1d26c01c5e2939294e415b9fd07b7dbe5a`，远端核对时间2026-10-03 12:32 UTC。附件报告没有记录源码commit，以下报告结果不自动归属于此基线。
 
-> Protocol family name: **Open Reality Protocols**（协议族内部名称）  
-> 当前状态：**Candidate**  
-> Core Protocols：`0.1.0-candidate.1`  
-> Runtime / Bridge / Semantic Tooling：`0.3.0-candidate.1`
+你有两个已经存在的程序。一个输出 `unique_items`，另一个只接受 `values`。你需要知道：它们是否表示同一种数据，能不能只改字段名，哪些字段会被丢弃，以及接口变更后是否必须停止调用。
 
-OPP 面向 CHA（Complex Heterogeneous Autonomous Systems）。关键是接口异质、未知语义、权限限制、版本漂移和契约不匹配；主体可以是 API、CLI、设备、服务或 Agent，数量不是前提。双方无需提前统一业务能力 ID 或字段名，但必须提供最小 OPP 能力描述与可核对的语义声明。
+OPP 当前提供一个 Python 候选 SDK，帮助开发者完成这条流程：
 
-本轮新增 **Session candidate**：发现能力 → `DIRECT / ADAPT / NEGOTIATE / DEGRADE / REJECT` → 生成绑定接口版本的会话契约 → 复用声明式 Adapter → 显式执行 → 离线核验。原有 RCP 精确协商和运行时入口保持兼容。
+1. 给两端提供输入/输出 Schema、接口版本、字段意义和单位
+2. 判断可直接衔接、可无损改名、需明确同意裁剪、证据不足或不可衔接
+3. 对可执行结果生成绑定双方声明的契约和声明式转换
+4. 调用者明确允许执行后，调用已经注册的 Provider
+5. 保存成功或失败回执，供离线核验
 
-真实运行的最小异质闭环见 [CHA Session 协议与复现](docs/CHA_SESSION.md)：Python/Boltons → HTTP/OpenAPI/JMESPath，以及 HTTP → CLI/more-itertools。三种接口、三项真实第三方库；接入包装与语义声明由本项目提供，不代表三家独立实现了 OPP。MCP 声明导入已有测试，MCP 执行、gRPC 接入及独立操作员验证仍未完成。
+> 当前状态：Candidate；Python 包 `taowind-opp` / `0.3.0.dev1`；Core Protocols `0.1.0-candidate.1`；Runtime / Bridge / Semantic Tooling `0.3.0-candidate.1`
 
-当你不断把新的 API、Agent、开源项目和内部系统接在一起时，真正重复的工作往往不是“会不会写代码”，而是：
+OPP 不会仅根据字段名猜业务含义。HTTP/CLI 的实际调用代码、超时、输出限制和身份权限策略仍由接入者提供。当前适合验证接口集成方案，不是任意系统的一键连接器。
 
-- 重新读双方接口；
-- 找字段和类型差异；
-- 判断哪些能直接接，哪些会丢信息；
-- 写 Adapter；
-- 接口一变，再来一次；
-- 出问题后还要还原当时到底用了什么转换。
+## 先看一个确实存在的例子
 
-OPP 做的事很直接：
+仓库中的 `examples/cha-session/run_demo.py` 有两条独立会话：
 
-> **先把双方看懂 → 判断兼容性 → 生成受限桥接方案 → 明确授权后执行 → 留下回执。**
+| 会话 | 输入 | OPP 的转换 | 输出 |
+|---|---|---|---|
+| Python / Boltons → 本地 HTTP / JMESPath | `{"legacy_items":[3,1,3,2]}` | Python 去重后，将 `unique_items` 改名为 `values` | `{"ordered":[1,2,3]}` |
+| 本地 HTTP / JMESPath → CLI / more-itertools | `{"values":[3,1,2]}` | HTTP 排序后，将 `ordered` 改名为 `entries` | `{"groups":[[1,2],[3]]}` |
 
-## 先看一个业务 Demo
+这是真实库、真实本地进程和 HTTP 调用；接口包装与字段意义声明由本项目作者编写。它不是三家独立实现的 OPP，也不是一个跨三端的原子事务。
 
-最容易理解 OPP 的方式，不是先读协议，而是看一个普通系统对接：
+## 从零运行：Windows PowerShell
 
-```text
-旧预约表单                 新 CRM
-name            ->         customer_name
-service         ->         service_code
-slot            ->         preferred_time
-缺少 channel    ->         注入默认来源
-多余 debug      ->         不传给 CRM
+前置条件：Python 3.10+。在 OPP 仓库根目录按顺序执行。这个演示会启动本地进程和 loopback HTTP 服务，并在脚本内显式允许执行；只应对已审查的仓库代码运行。
+
+```powershell
+python -m venv .venv-doc-demo
+$py = Join-Path $PWD '.venv-doc-demo/Scripts/python.exe'
+& $py -m pip install .
+& $py -m pip install -r examples/external-projects/requirements.txt
+& $py examples/cha-session/run_demo.py --out .runs/cha-session-doc-demo --require-installed
 ```
 
-直接运行：
+`.runs/cha-session-doc-demo` 必须是尚不存在的目录。再次运行时使用新目录，不要覆盖先前证据。macOS/Linux 使用 `.venv-doc-demo/bin/python` 执行相同 Python 参数。
 
-```bash
-python -m pip install -e .
-python examples/business_demo.py
+成功时检查：
+
+- 输出 `status` 是 `PASS`
+- `sessions` 中两条结果分别为上表的排序和分组输出，`outcome` 为 `ADAPT`
+- 新目录包含原始接口描述、协商、契约、两条会话回执、HTTP 失败和显式恢复记录
+- 本次成功并不自动证明其他输入、其他服务或真实公网可用
+
+## 谁做什么
+
+| 仍由开发者做 | 当前代码自动做 |
+|---|---|
+| 写 Python/HTTP/CLI 包装与传输限制 | 导入有界接口描述，校验 Schema |
+| 声明字段 concept/unit、stateless 与权限上下文 | 按明确语义匹配，判定兼容结果 |
+| 注册 Provider、选择消费者目标 | 生成受限字段映射并绑定契约根 |
+| 同意具体字段裁剪、明确允许执行 | 执行前检查契约与接口漂移，检查中间结果 |
+| 故障后选择健康 Provider 并重新调用 | 对每次成功/失败留下独立回执，不隐藏重试 |
+
+## 五种结果：拿到结果后该做什么
+
+- `DIRECT`：数据无需字段转换；仍要通过执行授权、当前权限与接口版本检查
+- `ADAPT`：可以做已证明的无损字段改名；不代表单位换算或任意复杂数据改写
+- `DEGRADE`：仅裁剪调用者逐项同意的额外字段；同意范围写入 `allowedDrops`
+- `NEGOTIATE`：缺少语义、约束或裁剪同意；不会产生可执行契约。补充材料后重新协商
+- `REJECT`：例如单位冲突、权限不足或目标不匹配；修正输入或接入条件后再试
+
+“可执行契约”不等于“已经获准执行”。`run_session` 仍需要 `allow_execution=True`，并重新提供本次 `available_authority`；协商时的权限声明不会自动成为执行时的权限。
+
+## 当前兼容范围
+
+- Python：有当前候选原生函数调用路径
+- HTTP/OpenAPI：已有本地真实执行案例；导入器支持 OpenAPI 3.1 的有界单 JSON-body operation，不是完整 OpenAPI 实现
+- CLI：有调用者注册的本地 JSON 标准输入/输出 Provider 案例；不是自动执行任意命令
+- MCP：已有 tools/list 描述导入测试；缺少 outputSchema 保持未知。尚未证明独立 MCP server 实际调用
+- gRPC：尚未实现本轮接入
+- Session：当前面向明确声明的无状态、封闭 JSON 对象；复杂有状态、副作用、流与未解释政策不能静默通过
+
+## 失败不会怎样被掩盖
+
+接口漂移会停止当前调用；生产者输出不符合 Schema 时不会继续调用消费者。HTTP 503 的恢复示例是调用者显式换回健康 Provider 后重新调用，不是自动故障转移，也没有原子回滚或通用 exactly-once 保证。回执有根代表可核对绑定关系，不代替可信身份、独立保存的可信根或强 OS 沙箱。
+
+## 想先看预约表单 → CRM 的字段变换？
+
+完成上述安装后运行：
+
+```powershell
+& $py examples/business_demo.py
 ```
 
-当前固定示例的实际运行结果：
+这个例子的输入是姓名、电话、服务、预约时段和备注；输出把 `name/service/slot` 改成 `customer_name/service_code/preferred_time`，保留 `phone/notes`，加入 `channel`，不传 `debug_source`。脚本实际执行两个本地 Python fixture，返回新对象与回执，不连接真实 CRM。
 
-```json
-{
-  "OPP 转换后": {
-    "customer_name": "陈小姐",
-    "phone": "+852 6123 4567",
-    "service_code": "physio-first-visit",
-    "preferred_time": "2026-09-15 14:30",
-    "channel": "legacy-web-form"
-  },
-  "新系统结果": {
-    "accepted": true
-  },
-  "状态": "PASS",
-  "回执根": "5e8669216c4b7a8c0b4675da8c05b4e7a0f41b6afb56ccce2b4a4fe31256521f"
-}
+注意：这些字段规则和默认值已经由作者写进 `examples/business_demo.py` 的 bridge，不是 OPP 自行理解预约业务或自动发现规则。该脚本内置 `allow_execution=True`。它展示预设桥接执行；前面的 Session 示例展示根据明确语义声明合成受限映射，Session 不会自行发明默认值。
+
+[完整业务说明](BUSINESS_DEMO.md) · [完整输出](evidence/business-demo-output.json) · [Session 接入](docs/CHA_SESSION.md)
+
+## 安装与失败排查
+
+先安装，再运行 demo 或测试；否则 `ModuleNotFoundError: No module named 'opp'` 只表示当前解释器未安装该包。始终使用同一个虚拟环境解释器。
+
+```powershell
+& $py -m unittest discover -s tests -v
 ```
 
-这不是示意 JSON。完整可复核输出保存在 [`evidence/business-demo-output.json`](evidence/business-demo-output.json)，完整业务说明见 [`BUSINESS_DEMO.md`](BUSINESS_DEMO.md)。
+Windows 创建符号链接可能需要相应系统权限。若 `test_symlink_entrypoint_rejected` 在创建链接时出现 `WinError 1314`，应把它记为环境错误，不可写成全部测试通过，也不能直接推断业务调用失败。此处不要求为演示扩大系统权限。
 
-这个 Demo 不访问真实 CRM，也不代表任意 CRM 都能自动接入。它只证明当前候选运行时中的这条具体 `Producer -> Bridge -> Consumer` 链路可以真实完成。
+## OPP 与 TINP 如何组合
+
+OPP 的 Session 负责有界接口兼容、映射、契约与调用证据。TINP 的受控执行入口负责身份、权限、路由和恢复。当前可复核的一条组合链是：OPP 生成 native interop result，TINP 对既有结果校验并生成 acceptance binding。
+
+该验收的 `authorityGranted:false` 与 `sideEffects:false` 表示验收本身不新增权限或动作；它不把此前执行变成已预授权，也不是任意 bridge 一键接入生产 TINP 网络。[TINP 仓库及接入说明](https://github.com/xingxuling/TINP)
+
+## 四份提交材料：观察、来源与适用范围
+
+以下材料由使用者提交用于本次评审，尚未连同其全部原始数据在本仓库归档。材料没有提供可核对的源码commit；“报告自述”与“本次静态代码核对”分开。另一项正在进行的本机基准不包含在这里，不填入其结果。
+
+| 来源与精确位置 | 材料显示什么 | 能支持到哪里 |
+|---|---|---|
+| `opp.txt` L6–134、L139–218、L219–258 | 初次先运行后安装报`ModuleNotFoundError`；安装后66项：64通过、1跳过、1个`WinError1314`；业务demo为PASS | 该终端环境里的安装、测试与固定demo；不是完整测试全部通过 |
+| `tinp.txt` L9–68、L70–71、L314–323 | alpha.29三步故障demo；旧式test入口；223项通过、0失败 | 该次本机运行；源码commit未知，不能当729113b完整复测 |
+| `OPP-TINP兼容性测试报告.pdf` p4–9 | 补依赖后TINP223/223；OPP64通过/1失败/1跳过；握手150/150、协商180/180、联合12/12；篡改检测25/26 | 报告自述的受控样本，包含负例；不是通用可靠性或独立认证 |
+| `report.md` L3–16、L42、L63–77 | 每场景1000次、25,000记录；HTTP完整链1000/1000、均值45.248ms；自述33/33复核 | Ryzen9700X/Python3.12.14、单机合成数据与本地HTTP；未随附samples/summary/manifest，未在本次重算 |
+
+PDF p4/p10 的缺依赖失败需要保留为当次观察。其“未声明依赖”的解释与已查源码中存在requirements不同：旧代码通过默认`python`调用，声明依赖并不保证该解释器安装了依赖。新TINP测试引导是后续代码变化，不能用来否认报告当时失败。
+
+性能口径也不能混用：PDF p6 的CLI进程端到端约230.0ms（n=12），p8 的TINP校验47.11µs；`report.md` 的本地HTTP全链路45.248ms（n=1000）来自另一台机器和另一条路径。它们不能组成“优化前后”的结论。恢复样本是调用者显式切换健康Provider后的重新调用，不是生产自动恢复率。
+
+## 如何判断这里的“验证通过”
+
+仓库的[Session证据账本](evidence/cha-session-2026-09-12/README.md)与[业务demo输出](evidence/business-demo-output.json)是对应固定场景的归档。运行命令才能获得你这次环境的结果；本文不把归档 PASS 当成当前机器的新测试。
+
+报告测试或性能时请同时记录 commit、运行日期、解释器与依赖版本、场景、样本数、计时范围、原始数据和复核方式。正确拒绝负例、成功执行正例与兼容范围分别报告。CLI进程启动、纯协商和HTTP全链路是不同指标；不能跨机器、跨路径直接比较平均耗时。
+
+回执离线核验应使用外部保管的预期根；仅把同一文件里可被一起替换的根互相比对不能建立独立信任。
 
 ## 为什么我不直接写一个 Adapter？
 
@@ -97,57 +161,6 @@ OPP 开始有价值，是在下面这些情况：
 | **TINP** | 身份、权限、路由、恢复、执行证据 | OPP 回答“能不能接”，TINP 处理“谁能调用、失败怎么办” |
 
 更完整说明见 [`docs/COMPARISON.md`](docs/COMPARISON.md)。
-
-## OPP + TINP 怎么一起用？
-
-```text
-企业现有系统 / API / Agent / MCP
-              ↓
-             OPP
-        能不能接？怎么转？
-              ↓
-             TINP
-     谁能调用？失败怎么办？
-              ↓
-       实际执行 + 回执 + 恢复
-```
-
-简单说：
-
-```text
-OPP：这个系统会什么？两个系统能不能接？怎么转换？
-TINP：谁能调用？怎么传？失败怎么办？怎么恢复？
-```
-
-OPP 可以独立使用。需要身份、权限、路由和恢复时，再进入 TINP 的职责范围。
-
-TINP：<https://github.com/xingxuling/TINP>
-
-## 技术最小 Demo（3 分钟）
-
-如果想看更纯粹的接口扫描和互操作夹具：
-
-```bash
-python -m pip install -e .
-python -m opp semantic verify examples/semantic-fixtures --profile generic
-python -m opp interop run examples/interop-run.json examples/interop-input.json \
-  --allow-execution \
-  --out interop-result.json
-```
-
-完整说明见 [`DEMO.md`](DEMO.md)。
-
-## 当前工具链能做什么
-
-- 从 Python、JavaScript、TypeScript 和 JSON Schema 提取接口形状；
-- 判断两个接口是精确兼容、结构兼容、有损、不兼容还是未知；
-- 生成受限的声明式转换：`identity`、`rename`、`select`、`inject-default`；
-- 自动搜索 `producer output -> consumer input` 的连接路径；
-- 显式授权后执行受支持的 Python 顶层函数；
-- 运行真实的 `Producer -> Bridge -> Consumer` 链路；
-- 为协商、转换和执行留下可验证回执。
-
-静态扫描不会执行目标仓库代码。只有显式提供 Invocation Spec，并传入 `--allow-execution` 时才进入原生调用。
 
 ## 适合谁 / 不适合谁
 
@@ -205,7 +218,9 @@ python -m opp interop run examples/interop-run.json examples/interop-input.json 
 详细记录模板见 [`docs/PILOT_METRICS.md`](docs/PILOT_METRICS.md)。
 
 <details>
-<summary><strong>协议族内部结构：六个核心协议（第一次使用 OPP 可以先不看）</strong></summary>
+<summary><strong>## 协议族内部结构：六个核心协议
+
+OPP 的协议族内部名称为 Open Reality Protocols；CHA 指 Complex Heterogeneous Autonomous Systems。第一次运行不需要先记住这些术语。</strong></summary>
 
 | 协议 | 人话解释 | 作用 |
 |---|---|---|
@@ -250,13 +265,13 @@ OPP 当前**不声称**：
 
 MIT License，见 [`LICENSE`](LICENSE)。
 
-## 外部接入候选（2026-09-12）
+## 外部接入候选（2026-09-12，仓库报告）
 
 新增 `opp.sdk` 公开入口与 `opp interop verify` 离线复核。三个独立维护的真实库完成安装包执行、桥接、错误输入拒绝与显式恢复；这仍由本机操作员完成，不是独立第三方验收。
 
 [SDK 接入与复现](docs/PUBLIC_SDK.md) · [真实项目证据与限制](docs/EXTERNAL_ONBOARDING.md) · [下一步](ROADMAP.md)
 
-## 无设备替代验证已完成（2026-09-12）
+## 历史托管验证记录（2026-09-12，仓库报告）
 
 GitHub [远端执行 34692267549](https://github.com/xingxuling/TINP/actions/runs/34692267549) 的 Linux 生产端及 Linux / Windows 复核端全部成功。真实库运行与证据交接已离开当前电脑；仍不代表双物理设备、独立操作员或真实 Authority Provider。
 
