@@ -218,9 +218,9 @@ OPP 开始有价值，是在下面这些情况：
 详细记录模板见 [`docs/PILOT_METRICS.md`](docs/PILOT_METRICS.md)。
 
 <details>
-<summary><strong>## 协议族内部结构：六个核心协议
+<summary><strong>协议族内部结构：六个核心协议</strong></summary>
 
-OPP 的协议族内部名称为 Open Reality Protocols；CHA 指 Complex Heterogeneous Autonomous Systems。第一次运行不需要先记住这些术语。</strong></summary>
+OPP 的协议族内部名称为 Open Reality Protocols；CHA 指 Complex Heterogeneous Autonomous Systems。第一次运行不需要先记住这些术语。
 
 | 协议 | 人话解释 | 作用 |
 |---|---|---|
