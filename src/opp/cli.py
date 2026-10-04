@@ -4,6 +4,7 @@ import argparse, json, sys
 from pathlib import Path
 from .handshake import negotiate_handshake
 from .validation import validate_envelope
+from .integrity import LEGACY_CANONICAL_PROFILE, BINARY64_CANONICAL_PROFILE
 
 def load(path: str) -> dict: return json.loads(Path(path).read_text(encoding="utf-8"))
 def _csv(value:str|None): return [x.strip() for x in (value or '').split(',') if x.strip()]
@@ -72,15 +73,15 @@ def _runtime_cmd(args) -> int:
     try:
         if args.command == 'interop' and args.interop_command == 'verify':
             from .runtime.verification import verify_interop_result
-            verify_interop_result(load(args.result), load(args.spec), load(args.input))
+            verify_interop_result(load(args.result), load(args.spec), load(args.input), canonical_profile=args.canonical_profile)
             print(json.dumps({'status': 'PASS', 'networkRequests': 0, 'targetExecutions': 0,
                               'boundary': 'Input-bound integrity validation; no independent execution attestation'}))
             return 0
         if args.command == "invoke":
-            result=run_invocation(load(args.spec),load(args.input),allow_execution=args.allow_execution)
+            result=run_invocation(load(args.spec),load(args.input),allow_execution=args.allow_execution,canonical_profile=args.canonical_profile)
         else:
-            result=run_interop(load(args.spec),load(args.input),allow_execution=args.allow_execution)
-    except (InvocationError,InteropError) as exc:
+            result=run_interop(load(args.spec),load(args.input),allow_execution=args.allow_execution,canonical_profile=args.canonical_profile)
+    except (InvocationError,InteropError,ValueError) as exc:
         _print_json({"status":"FAIL","状态":"失败","error":str(exc),"boundary":"执行必须显式授权；扫描本身不会执行源码 / execution requires explicit consent; scanning never executes source"})
         return 4
     text=json.dumps(result,ensure_ascii=False,indent=2)
@@ -118,6 +119,9 @@ def main(argv=None) -> int:
     p_run=rsub.add_parser("run",help="执行一个互操作运行规范 / execute one interoperability run spec"); p_run.add_argument("spec"); p_run.add_argument("input"); p_run.add_argument("--allow-execution",action="store_true"); p_run.add_argument("--out")
     p_check=rsub.add_parser('verify',help='离线复核成功回执 / verify a successful receipt without execution')
     p_check.add_argument('spec'); p_check.add_argument('input'); p_check.add_argument('result')
+    for command in (p_irun, p_run, p_check):
+        command.add_argument('--canonical-profile', default=LEGACY_CANONICAL_PROFILE,
+                             choices=[LEGACY_CANONICAL_PROFILE, BINARY64_CANONICAL_PROFILE])
     args=parser.parse_args(argv)
     if args.command=="bridge": return _bridge_cmd(args)
     if args.command=="semantic": return _semantic_cmd(args)
