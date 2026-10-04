@@ -9,7 +9,7 @@ import tempfile
 import time
 from pathlib import Path
 from typing import Any
-from ..integrity import content_root
+from ..integrity import content_root, LEGACY_CANONICAL_PROFILE, native_receipt_format
 from .model import InvocationSpec
 
 ENTRY_RE = re.compile(r"^([^:]+\.py):([A-Za-z_][A-Za-z0-9_]*)$")
@@ -60,15 +60,15 @@ def _sanitized_env() -> dict[str, str]:
     return env
 
 
-def _receipt_core(spec: InvocationSpec, input_root: str, *, status: str, exit_code: int | None, timed_out: bool, result_root: str | None, stdout_bytes: int, stderr_bytes: int, target_stdout: str, target_stderr: str, error: str | None) -> dict[str, Any]:
-    return {
-        "format": "taowind.opp.invocation-receipt.v0.1",
+def _receipt_core(spec: InvocationSpec, input_root: str, *, status: str, exit_code: int | None, timed_out: bool, result_root: str | None, stdout_bytes: int, stderr_bytes: int, target_stdout: str, target_stderr: str, error: str | None, canonical_profile: str = LEGACY_CANONICAL_PROFILE) -> dict[str, Any]:
+    core = {
+        "format": native_receipt_format("invocation", canonical_profile),
         "version": "0.3.0-candidate.1",
         "specId": spec.spec_id,
         "adapterKind": spec.adapter_kind,
         "entrypoint": spec.entrypoint,
         "status": status,
-        "requestRoot": content_root({"spec": spec.to_dict(), "inputRoot": input_root}),
+        "requestRoot": content_root({"spec": spec.to_dict(), "inputRoot": input_root}, profile=canonical_profile),
         "resultRoot": result_root,
         "exitCode": exit_code,
         "timedOut": timed_out,
@@ -87,11 +87,15 @@ def _receipt_core(spec: InvocationSpec, input_root: str, *, status: str, exit_co
         },
         "boundary": "PASS proves only this explicit invocation completed under the OPP bounded child-process policy. It does not prove the target is safe or strongly sandboxed / PASS 只证明本次显式调用在 OPP 有界子进程策略下完成，不证明目标代码安全或具备强沙箱隔离。",
     }
+    if canonical_profile != LEGACY_CANONICAL_PROFILE:
+        core["canonicalProfile"] = canonical_profile
+    return core
 
 
-def run_invocation(spec_or_dict: InvocationSpec | dict[str, Any], payload: Any, *, allow_execution: bool = False) -> dict[str, Any]:
+def run_invocation(spec_or_dict: InvocationSpec | dict[str, Any], payload: Any, *, allow_execution: bool = False, canonical_profile: str = LEGACY_CANONICAL_PROFILE) -> dict[str, Any]:
     try:
         spec = spec_or_dict if isinstance(spec_or_dict, InvocationSpec) else InvocationSpec.from_dict(spec_or_dict)
+        native_receipt_format("invocation", canonical_profile)
     except (TypeError, ValueError) as exc:
         raise InvocationError(str(exc)) from exc
     if not allow_execution:
@@ -109,7 +113,9 @@ def run_invocation(spec_or_dict: InvocationSpec | dict[str, Any], payload: Any, 
         raise InvocationError("INVOCATION_POLICY_UNSUPPORTED")
     runner = Path(__file__).with_name("child_python.py").resolve()
     input_bytes = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
-    input_root = content_root(payload)
+    root = lambda value: content_root(value, profile=canonical_profile)
+    receipt_core = lambda *args, **kwargs: _receipt_core(*args, canonical_profile=canonical_profile, **kwargs)
+    input_root = root(payload)
     started = time.perf_counter()
     with tempfile.TemporaryDirectory(prefix="opp-invoke-") as td:
         try:
@@ -125,16 +131,16 @@ def run_invocation(spec_or_dict: InvocationSpec | dict[str, Any], payload: Any, 
             )
             stdout, stderr = proc.stdout, proc.stderr
             if len(stdout) > spec.max_output_bytes or len(stderr) > spec.max_output_bytes:
-                core = _receipt_core(spec, input_root, status="FAIL", exit_code=proc.returncode, timed_out=False, result_root=None, stdout_bytes=len(stdout), stderr_bytes=len(stderr), target_stdout="", target_stderr="", error="OUTPUT_LIMIT_EXCEEDED")
-                return {"receipt": {**core, "durationMs": round((time.perf_counter()-started)*1000, 3), "receiptRoot": content_root(core)}, "result": None}
+                core = receipt_core(spec, input_root, status="FAIL", exit_code=proc.returncode, timed_out=False, result_root=None, stdout_bytes=len(stdout), stderr_bytes=len(stderr), target_stdout="", target_stderr="", error="OUTPUT_LIMIT_EXCEEDED")
+                return {"receipt": {**core, "durationMs": round((time.perf_counter()-started)*1000, 3), "receiptRoot": root(core)}, "result": None}
             try:
                 envelope = json.loads(stdout.decode("utf-8"))
             except Exception:
                 envelope = {"ok": False, "error": "CHILD_OUTPUT_JSON_INVALID", "targetStdout": "", "targetStderr": stderr.decode("utf-8", errors="replace")}
             ok = bool(envelope.get("ok")) and proc.returncode == 0
             result = envelope.get("result") if ok else None
-            result_root = content_root(result) if ok else None
-            core = _receipt_core(
+            result_root = root(result) if ok else None
+            core = receipt_core(
                 spec, input_root,
                 status="PASS" if ok else "FAIL",
                 exit_code=proc.returncode,
@@ -146,8 +152,8 @@ def run_invocation(spec_or_dict: InvocationSpec | dict[str, Any], payload: Any, 
                 target_stderr=str(envelope.get("targetStderr") or "")[:spec.max_output_bytes],
                 error=None if ok else str(envelope.get("error") or "INVOCATION_FAILED"),
             )
-            return {"receipt": {**core, "durationMs": round((time.perf_counter()-started)*1000, 3), "receiptRoot": content_root(core)}, "result": result}
+            return {"receipt": {**core, "durationMs": round((time.perf_counter()-started)*1000, 3), "receiptRoot": root(core)}, "result": result}
         except subprocess.TimeoutExpired as exc:
             stdout = exc.stdout or b""; stderr = exc.stderr or b""
-            core = _receipt_core(spec, input_root, status="FAIL", exit_code=None, timed_out=True, result_root=None, stdout_bytes=len(stdout), stderr_bytes=len(stderr), target_stdout="", target_stderr="", error="INVOCATION_TIMEOUT")
-            return {"receipt": {**core, "durationMs": round((time.perf_counter()-started)*1000, 3), "receiptRoot": content_root(core)}, "result": None}
+            core = receipt_core(spec, input_root, status="FAIL", exit_code=None, timed_out=True, result_root=None, stdout_bytes=len(stdout), stderr_bytes=len(stderr), target_stdout="", target_stderr="", error="INVOCATION_TIMEOUT")
+            return {"receipt": {**core, "durationMs": round((time.perf_counter()-started)*1000, 3), "receiptRoot": root(core)}, "result": None}
