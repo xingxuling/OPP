@@ -1,0 +1,43 @@
+{
+  "format": "taowind.opp.reality-envelope.v0.1",
+  "protocol": "opp.rcp.v0.1",
+  "version": "0.1.0-candidate.1",
+  "kind": "capability",
+  "id": "capability:workspace.read.v1",
+  "status": "candidate",
+  "issuedAt": "2026-09-29T00:00:00Z",
+  "issuer": {
+    "id": "test-workspace-provider",
+    "type": "runtime",
+    "displayName": "test-workspace-provider"
+  },
+  "payload": {
+    "capabilityId": "workspace.read",
+    "name": "Bounded workspace read",
+    "domain": "agent.action",
+    "operation": "read",
+    "inputModalities": ["json"],
+    "outputModalities": ["json"],
+    "inputSchema": null,
+    "outputSchema": null,
+    "determinism": "unknown",
+    "statefulness": "stateless",
+    "streaming": false,
+    "authorityRequired": ["workspace.read"],
+    "sideEffects": [],
+    "reversibility": "reversible",
+    "availability": "candidate-only",
+    "costProfile": {},
+    "latencyProfile": {},
+    "rights": {},
+    "evidence": ["test:agent-action-contract"],
+    "claimBoundary": "Cross-repository test fixture only."
+  },
+  "constraints": [],
+  "evidenceRefs": [],
+  "extensions": {},
+  "integrity": {
+    "algorithm": "sha256",
+    "contentRoot": "73c120da5b508e9d8f6a36ac98b1e86b3465d9db930b9e29654fd9565349ee33"
+  }
+}

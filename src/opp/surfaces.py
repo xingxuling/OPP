@@ -9,7 +9,7 @@ SESSION_PROFILE = "opp.session.v0.1"
 
 def describe_surface(*, participant, capability_id, input_schema, output_schema,
                      surface, semantics, authority_required=(),
-                     side_effects=(), statefulness="unknown"):
+                     side_effects=(), statefulness="unknown", reversibility="unknown"):
     """Create an RCP declaration, with explicit caller-supplied semantic evidence.
 
     Surface must include kind, bindingId, revision and discoveryRoot. No command,
@@ -31,7 +31,7 @@ def describe_surface(*, participant, capability_id, input_schema, output_schema,
             "inputSchema": deepcopy(input_schema), "outputSchema": deepcopy(output_schema),
             "determinism": "unknown", "statefulness": statefulness,
             "authorityRequired": list(authority_required), "sideEffects": list(side_effects),
-            "reversibility": "unknown", "availability": "candidate-only",
+            "reversibility": reversibility, "availability": "candidate-only",
             "evidence": [surface["discoveryRoot"]],
             "claimBoundary": "Provider declarations and semantic assertions, not authenticated facts.",
         },
